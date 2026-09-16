@@ -1,34 +1,36 @@
-package com.example.coursevault.module;
+package com.example.coursevault.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Course_resources")
-public class CourseResource {
+@Table
+public class ExternalLink {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(nullable = false)
-    private String title;
+
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Enumerated(EnumType.STRING)
-    private ResourceType type;
+    private String topic;
 
     @Column(nullable = false)
-    private String filePath;
+    private String title;
 
-    public CourseResource(Course course, String filePath, int id, String title, ResourceType type) {
-        this.course = course;
-        this.filePath = filePath;
-        this.id = id;
-        this.title = title;
-        this.type = type;
+    @Column(nullable = false)
+    private String url;
+
+    public ExternalLink() {
     }
 
-    public CourseResource() {
+    public ExternalLink(Course course, int id, String title, String topic, String url) {
+        this.course = course;
+        this.id = id;
+        this.title = title;
+        this.topic = topic;
+        this.url = url;
     }
 
     public Course getCourse() {
@@ -37,14 +39,6 @@ public class CourseResource {
 
     public void setCourse(Course course) {
         this.course = course;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public int getId() {
@@ -63,11 +57,19 @@ public class CourseResource {
         this.title = title;
     }
 
-    public ResourceType getType() {
-        return type;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setType(ResourceType type) {
-        this.type = type;
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

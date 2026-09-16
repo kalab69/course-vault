@@ -1,4 +1,4 @@
-package com.example.coursevault.module;
+package com.example.coursevault.model;
 
 import jakarta.persistence.*;
 

@@ -1,36 +1,34 @@
-package com.example.coursevault.module;
+package com.example.coursevault.model;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table
-public class ExternalLink {
-
+@Table(name = "Course_resources")
+public class CourseResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @Column(nullable = false)
+    private String title;
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    private String topic;
+    @Enumerated(EnumType.STRING)
+    private ResourceType type;
 
     @Column(nullable = false)
-    private String title;
+    private String filePath;
 
-    @Column(nullable = false)
-    private String url;
-
-    public ExternalLink() {
-    }
-
-    public ExternalLink(Course course, int id, String title, String topic, String url) {
+    public CourseResource(Course course, String filePath, int id, String title, ResourceType type) {
         this.course = course;
+        this.filePath = filePath;
         this.id = id;
         this.title = title;
-        this.topic = topic;
-        this.url = url;
+        this.type = type;
+    }
+
+    public CourseResource() {
     }
 
     public Course getCourse() {
@@ -39,6 +37,14 @@ public class ExternalLink {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public int getId() {
@@ -57,19 +63,11 @@ public class ExternalLink {
         this.title = title;
     }
 
-    public String getTopic() {
-        return topic;
+    public ResourceType getType() {
+        return type;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setType(ResourceType type) {
+        this.type = type;
     }
 }
