@@ -9,11 +9,12 @@ public class CourseResourceResponse {
     private Course course;
     private ResourceType type;
     private String filePath;
-    public CourseResourceResponse(Course course, String filePath, String title, ResourceType type) {
+    public CourseResourceResponse(int id,Course course, String filePath, String title, ResourceType type) {
         this.course = course;
         this.filePath = filePath;
         this.title = title;
         this.type = type;
+        this.id = id;
     }
 
     public CourseResourceResponse() {
