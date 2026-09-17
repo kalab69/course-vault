@@ -1,0 +1,179 @@
+/* ═══ FORCE DARK MODE ALWAYS ═══ */
+.root {
+    -fx-background-color: #000000;
+    -fx-font-family: "Segoe UI", "System";
+    -fx-font-size: 13px;
+}
+
+/* Fix black center area */
+.scroll-pane {
+    -fx-background-color: #000000;
+    -fx-background: #000000;
+}
+.scroll-pane .viewport {
+    -fx-background-color: #000000;
+}
+.scroll-pane > .viewport > .vbox {
+    -fx-background-color: #000000;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-font-weight: 500;
+    -fx-cursor: hand;
+    -fx-padding: 8 20 8 20; 
+}
+
+/* 
+   This replaces your old layout separators! 
+   It draws a crisp, solid vertical line exactly on the right edge of the button bounding box.
+*/
+.nav-border-right {
+    -fx-border-style: solid;
+    /* 
+       We use a linear gradient running from top to bottom (to y).
+       - Top 25% is transparent
+       - Middle (from 25% to 75%) is solid white
+       - Bottom 25% is transparent
+       This makes a perfectly centered vertical separator line that takes up exactly 50% of the height!
+    */
+    -fx-border-color: transparent linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%) transparent transparent;
+    
+    /* Sets the exact thickness of your separator line (1px wide on the right side) */
+    -fx-border-width: 0 1 0 0; 
+}
+
+/* ═══ COMBINATION CLASS FOR HOME BUTTON ═══ */
+.nav-border-both {
+    /* 1. Tell JavaFX the border stroke style is solid */
+    -fx-border-style: solid;
+
+    /* 2. Set the gradient on BOTH the Right (2nd) and Left (4th) slots
+          Sequence Order: [Top] [Right] [Bottom] [Left] */
+    -fx-border-color: transparent 
+                      linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%) 
+                      transparent 
+                      linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%);
+    
+    /* 3. Set a 1px thickness on both the left and right sides 
+          Sequence Order: [Top: 0] [Right: 1] [Bottom: 0] [Left: 1] */
+    -fx-border-width: 0 1 0 1; 
+}
+
+
+/* Keep your existing smooth tracking shape settings */
+.navIndicator {
+    -fx-fill: #FFFFFF;
+    -fx-arc-width: 0;   
+    -fx-arc-height: 0;
+}
+
+.nav-button:hover {
+    -fx-text-fill: #000000;
+}
+
+.selectable-title {
+    -fx-background-color: transparent; 
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-padding: 30 0 0 40;
+    -fx-background-insets: 0;
+}
+
+.selectable-title:focused {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.selectable-title:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(30, 130, 120, 1.0), 30, 0.7, 0, 0); 
+}
+
+.context-menu {
+    -fx-background-color: #1A1A1A; 
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+}
+
+.context-menu .menu-item .label {
+    -fx-font-size: 12px !important; 
+    -fx-font-weight: normal !important;
+    -fx-text-fill: #FFFFFF !important; 
+}
+
+.context-menu .menu-item:focused {
+    -fx-background-color: #1E8278; 
+}
+
+.sidebar-title {
+    -fx-text-fill: #666666; 
+    -fx-font-family: "Segoe UI", "Inter", sans-serif;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0px; 
+    -fx-padding: 0;
+}
+
+#sidebarContainer {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.sidebar-trigger-btn {
+    -fx-background-color: transparent; 
+    -fx-text-fill: #FFFFFF;
+    
+    -fx-padding: 10px 15px 10px 15px; 
+    
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-max-width: 210px; 
+}
+
+.sidebar-trigger-btn:hover {
+    -fx-text-fill: #000000; 
+}
+
+.sidebarIndicator {
+    -fx-fill: #FFFFFF;         
+    -fx-arc-width: 0;   
+    -fx-arc-height: 0;
+}
+
+.sidebar-flyout {
+    -fx-background-color: #0A0A0A; 
+    -fx-border-color: #1A1A1A;
+    -fx-border-width: 1px;
+    -fx-padding: 5px 0px 5px 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 15, 0, 0, 5);
+}
+
+.sidebar-flyout .menu-item {
+    -fx-padding: 8px 25px 8px 15px;
+    -fx-background-color: transparent;
+}
+
+.sidebar-flyout .menu-item .label {
+    -fx-text-fill: #CCCCCC; 
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: 500;
+}
+
+.sidebar-flyout .menu-item:focused, 
+.sidebar-flyout .menu-item:hover {
+    -fx-background-color: #1E8278;
+}
+
+.sidebar-flyout .menu-item:focused .label,
+.sidebar-flyout .menu-item:hover .label {
+    -fx-text-fill: #FFFFFF; 
+}

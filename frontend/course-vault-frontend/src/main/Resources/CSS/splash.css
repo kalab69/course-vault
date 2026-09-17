@@ -1,0 +1,13 @@
+
+
+    #appTitle {
+        -fx-font-size: 40px;
+        -fx-font-family: "Lucida Fax"; /* or your custom font */
+        -fx-text-fill: #FFFFFF;
+    }
+
+    .root {
+    -fx-background-color: #000000;
+}
+
+
