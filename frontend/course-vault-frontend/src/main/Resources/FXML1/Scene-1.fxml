@@ -58,6 +58,7 @@
                            <styleClass>
                               <String fx:value="nav-button" />
                               <String fx:value="nav-border-both" />
+                              <String fx:value="profileButton" />
                            </styleClass>
                         </Button>
                      </children>

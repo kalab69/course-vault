@@ -61,6 +61,7 @@ public class Scene1Controller implements Initializable {
     private ContextMenu departmentsFlyout;
     private ContextMenu examFlyout;
     private ContextMenu referenceFlyout;
+    private ContextMenu profileDropdown;
 
     // ─────────────────────────────────────────────────────────────────────────
     @Override
@@ -76,7 +77,6 @@ public class Scene1Controller implements Initializable {
         setupSlidingHover(homeButton);
         setupSlidingHover(myCourseButton);
         setupSlidingHover(browseButton);
-        setupSlidingHover(profileButton);
 
         // Fade out indicator when mouse leaves the entire navbar
         navBar.setOnMouseExited(e -> {
@@ -118,6 +118,7 @@ public class Scene1Controller implements Initializable {
 
         // Step 1 — Build flyout menus FIRST so fields are never null
         setupCascadingSidebarMenu();
+        setupProfileDropdown();
 
         // Step 2 — Mouse exit handler WITH flyout check so moving into
         //          a flyout does NOT close it. This is the ONLY place
@@ -446,5 +447,143 @@ public class Scene1Controller implements Initializable {
                 });
             }
         });
+    }
+
+    private void setupProfileDropdown() {
+        this.profileDropdown = new ContextMenu();
+        profileDropdown.getStyleClass().add("sidebar-flyout");
+        profileDropdown.setAutoHide(true);
+
+        // ── Slide down animation when shown ──────────────────────────────
+        profileDropdown.setOnShown(e -> {
+            javafx.scene.Node content = profileDropdown.getSkin().getNode();
+            if (content != null) {
+
+                // Slide animation
+                content.setScaleY(0.0);
+                content.setTranslateY(
+                        -content.getBoundsInLocal().getHeight() / 2);
+                content.setOpacity(0.0);
+
+                javafx.animation.Timeline slideDown
+                        = new javafx.animation.Timeline(
+                                new javafx.animation.KeyFrame(Duration.ZERO,
+                                        new javafx.animation.KeyValue(
+                                                content.scaleYProperty(), 0.0,
+                                                javafx.animation.Interpolator.EASE_OUT),
+                                        new javafx.animation.KeyValue(
+                                                content.translateYProperty(),
+                                                -content.getBoundsInLocal().getHeight() / 2,
+                                                javafx.animation.Interpolator.EASE_OUT),
+                                        new javafx.animation.KeyValue(
+                                                content.opacityProperty(), 0.0,
+                                                javafx.animation.Interpolator.EASE_OUT)
+                                ),
+                                new javafx.animation.KeyFrame(Duration.millis(200),
+                                        new javafx.animation.KeyValue(
+                                                content.scaleYProperty(), 1.0,
+                                                javafx.animation.Interpolator.EASE_OUT),
+                                        new javafx.animation.KeyValue(
+                                                content.translateYProperty(), 0.0,
+                                                javafx.animation.Interpolator.EASE_OUT),
+                                        new javafx.animation.KeyValue(
+                                                content.opacityProperty(), 1.0,
+                                                javafx.animation.Interpolator.EASE_OUT)
+                                )
+                        );
+                slideDown.play();
+
+                // Hide when mouse leaves the dropdown
+                content.setOnMouseExited(ev -> {
+                    double mouseX = ev.getScreenX();
+                    double mouseY = ev.getScreenY();
+
+                    javafx.animation.PauseTransition delay
+                            = new javafx.animation.PauseTransition(
+                                    Duration.millis(100));
+                    delay.setOnFinished(evv -> {
+                        javafx.geometry.Bounds btnBounds
+                                = profileButton.localToScreen(
+                                        profileButton.getBoundsInLocal());
+                        if (btnBounds == null
+                                || !btnBounds.contains(mouseX, mouseY)) {
+                            profileDropdown.hide();
+                        }
+                    });
+                    delay.play();
+                });
+            }
+        });
+
+        // ── Menu items ────────────────────────────────────────────────────
+        MenuItem account = new MenuItem("   👤  Account");
+        MenuItem addFile = new MenuItem("   📄  Add File");
+        MenuItem settings = new MenuItem("   ⚙   Settings");
+
+        account.setOnAction(e -> System.out.println("Account"));
+        addFile.setOnAction(e -> System.out.println("Add File"));
+        settings.setOnAction(e -> System.out.println("Settings"));
+
+        profileDropdown.getItems().addAll(
+                account, addFile, settings);
+
+        // ── COMBINED hover: sliding indicator + dropdown ──────────────────
+        // NOTE: setupSlidingHover(profileButton) must be REMOVED
+        //       from initialize() — this replaces it
+        profileButton.setOnMouseEntered(e -> {
+
+            // Sliding indicator — same logic as setupSlidingHover
+            double targetX = profileButton.getLayoutX();
+            double tightHeight = profileButton.getHeight() - 6;
+
+            navIndicator.setHeight(tightHeight);
+            navIndicator.setWidth(profileButton.getWidth());
+            navIndicator.setLayoutY(profileButton.getLayoutY() + 3);
+
+            slideTransition.stop();
+            slideTransition.setToX(targetX);
+            slideTransition.play();
+
+            fadeTransition.stop();
+            fadeTransition.setToValue(1.0);
+            fadeTransition.play();
+
+            // Show dropdown below the button
+            if (!profileDropdown.isShowing()) {
+                profileDropdown.show(profileButton,
+                        javafx.geometry.Side.BOTTOM, 0, 4);
+            }
+        });
+
+        // Hide dropdown when mouse leaves button (if not entering dropdown)
+        profileButton.setOnMouseExited(e -> {
+            double mouseX = e.getScreenX();
+            double mouseY = e.getScreenY();
+
+            javafx.animation.PauseTransition delay
+                    = new javafx.animation.PauseTransition(Duration.millis(100));
+            delay.setOnFinished(ev -> {
+                if (!isMouseOverDropdown(mouseX, mouseY)) {
+                    profileDropdown.hide();
+                }
+            });
+            delay.play();
+        });
+    }
+
+    private boolean isMouseOverDropdown(double screenX, double screenY) {
+        if (profileDropdown != null && profileDropdown.isShowing()) {
+            double fx = profileDropdown.getX();
+            double fy = profileDropdown.getY();
+            double fw = profileDropdown.getWidth();
+            double fh = profileDropdown.getHeight();
+            double buffer = 10;
+
+            return screenX >= fx - buffer
+                    && screenX <= fx + fw + buffer
+                    && screenY >= fy - buffer
+                    && screenY <= fy + fh + buffer;
+        }
+        return false;
     }
 }

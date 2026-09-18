@@ -36,6 +36,18 @@
             <artifactId>javafx-graphics</artifactId>
             <version>26</version>
         </dependency>
+        
+<!--         PDF viewer library for JavaFX 
+        <dependency>
+            <groupId>org.icepdf.os</groupId>
+            <artifactId>icepdf-core</artifactId>
+            <version>6.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.icepdf.os</groupId>
+            <artifactId>icepdf-viewer</artifactId>
+            <version>6.3.0</version>
+        </dependency>-->
     </dependencies>
 
     <build>
