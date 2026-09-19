@@ -296,9 +296,6 @@
     -fx-background-insets: 0;
 }
 
-/* ── 10. ACCORDION YEAR HEADERS ─────────────────────────────── */
- 
-/* The button that triggers Year I / Year II collapse */
 .year-toggle-btn {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -314,7 +311,6 @@
     -fx-background-radius: 6;
 }
  
-/* HBox row that holds button + year label — hover highlight */
 .year-header-row {
     -fx-padding: 4 0 4 0;
     -fx-spacing: 8;
