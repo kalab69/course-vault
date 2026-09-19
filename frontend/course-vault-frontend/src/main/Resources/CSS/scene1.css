@@ -23,7 +23,7 @@
     -fx-font-size: 14px;
     -fx-font-weight: 500;
     -fx-cursor: hand;
-    -fx-padding: 8 20 8 20; 
+    -fx-padding: 8 20 8 20;
 }
 
 /* 
@@ -40,9 +40,9 @@
        This makes a perfectly centered vertical separator line that takes up exactly 50% of the height!
     */
     -fx-border-color: transparent linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%) transparent transparent;
-    
+
     /* Sets the exact thickness of your separator line (1px wide on the right side) */
-    -fx-border-width: 0 1 0 0; 
+    -fx-border-width: 0 1 0 0;
 }
 
 /* ═══ COMBINATION CLASS FOR HOME BUTTON ═══ */
@@ -52,21 +52,21 @@
 
     /* 2. Set the gradient on BOTH the Right (2nd) and Left (4th) slots
           Sequence Order: [Top] [Right] [Bottom] [Left] */
-    -fx-border-color: transparent 
-                      linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%) 
-                      transparent 
-                      linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%);
-    
+    -fx-border-color: transparent
+        linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%)
+        transparent
+        linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%);
+
     /* 3. Set a 1px thickness on both the left and right sides 
           Sequence Order: [Top: 0] [Right: 1] [Bottom: 0] [Left: 1] */
-    -fx-border-width: 0 1 0 1; 
+    -fx-border-width: 0 1 0 1;
 }
 
 
 /* Keep your existing smooth tracking shape settings */
 .navIndicator {
     -fx-fill: #FFFFFF;
-    -fx-arc-width: 0;   
+    -fx-arc-width: 0;
     -fx-arc-height: 0;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .selectable-title {
-    -fx-background-color: transparent; 
+    -fx-background-color: transparent;
     -fx-text-fill: #FFFFFF;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 22px;
@@ -90,32 +90,32 @@
 }
 
 .selectable-title:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(30, 130, 120, 1.0), 30, 0.7, 0, 0); 
+    -fx-effect: dropshadow(three-pass-box, rgba(30, 130, 120, 1.0), 30, 0.7, 0, 0);
 }
 
 .context-menu {
-    -fx-background-color: #1A1A1A; 
+    -fx-background-color: #1A1A1A;
     -fx-border-color: #333333;
     -fx-border-width: 1px;
     -fx-padding: 5px;
 }
 
 .context-menu .menu-item .label {
-    -fx-font-size: 12px !important; 
+    -fx-font-size: 12px !important;
     -fx-font-weight: normal !important;
-    -fx-text-fill: #FFFFFF !important; 
+    -fx-text-fill: #FFFFFF !important;
 }
 
 .context-menu .menu-item:focused {
-    -fx-background-color: #1E8278; 
+    -fx-background-color: #1E8278;
 }
 
 .sidebar-title {
-    -fx-text-fill: #666666; 
+    -fx-text-fill: #666666;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-letter-spacing: 0px; 
+    -fx-letter-spacing: 0px;
     -fx-padding: 0;
 }
 
@@ -125,31 +125,31 @@
 }
 
 .sidebar-trigger-btn {
-    -fx-background-color: transparent; 
+    -fx-background-color: transparent;
     -fx-text-fill: #FFFFFF;
-    
-    -fx-padding: 10px 15px 10px 15px; 
-    
+
+    -fx-padding: 10px 15px 10px 15px;
+
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 13px;
     -fx-font-weight: 600;
     -fx-alignment: CENTER_LEFT;
     -fx-cursor: hand;
-    -fx-max-width: 210px; 
+    -fx-max-width: 210px;
 }
 
 .sidebar-trigger-btn:hover {
-    -fx-text-fill: #000000; 
+    -fx-text-fill: #000000;
 }
 
 .sidebarIndicator {
-    -fx-fill: #FFFFFF;         
-    -fx-arc-width: 0;   
+    -fx-fill: #FFFFFF;
+    -fx-arc-width: 0;
     -fx-arc-height: 0;
 }
 
 .sidebar-flyout {
-    -fx-background-color: #0A0A0A; 
+    -fx-background-color: #0A0A0A;
     -fx-border-color: #1A1A1A;
     -fx-border-width: 1px;
     -fx-padding: 5px 0px 5px 0px;
@@ -162,20 +162,20 @@
 }
 
 .sidebar-flyout .menu-item .label {
-    -fx-text-fill: #CCCCCC; 
+    -fx-text-fill: #CCCCCC;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 13px;
     -fx-font-weight: 500;
 }
 
-.sidebar-flyout .menu-item:focused, 
+.sidebar-flyout .menu-item:focused,
 .sidebar-flyout .menu-item:hover {
     -fx-background-color: #1E8278;
 }
 
 .sidebar-flyout .menu-item:focused .label,
 .sidebar-flyout .menu-item:hover .label {
-    -fx-text-fill: #FFFFFF; 
+    -fx-text-fill: #FFFFFF;
 }
 
 /* Fix profile button — remove any background JavaFX adds on hover */
@@ -191,4 +191,107 @@
     -fx-text-fill: #f1f5f9;
     -fx-border-radius: 6;
     -fx-background-radius: 6;
+}
+
+/* ── Welcome section ── */
+#welcomeLabel {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+#welcomeSub {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 13px;
+}
+
+/* ── Stat cards ── */
+.stat-card {
+    -fx-background-color: #05060A;
+    -fx-background-radius: 12;
+    -fx-border-color: #334155;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+    -fx-spacing: 6;
+    -fx-min-width: 120;
+    -fx-cursor: hand;
+}
+.stat-number {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+.stat-label {
+    -fx-text-fill: #A7B4CC;
+    -fx-font-size: 12px;
+}
+
+/* ── Section title ── */
+.section-title {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* ── Course cards ── */
+.course-card {
+    -fx-background-color: #05060A;
+    -fx-background-radius: 12;
+    -fx-border-color: #334155;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-padding: 16;
+    -fx-spacing: 10;
+    -fx-cursor: hand;
+}
+.course-title {
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.course-sub {
+    -fx-text-fill: #A7B4CC;
+    -fx-font-size: 11px;
+}
+
+/* ── Course tag chips ── */
+.tag-1 {
+    -fx-background-color: #312e81;
+    -fx-text-fill: #a5b4fc;
+    -fx-background-radius: 6;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.tag-2 {
+    -fx-background-color: #14532d;
+    -fx-text-fill: #86efac;
+    -fx-background-radius: 6;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.tag-3 {
+    -fx-background-color: #7c2d12;
+    -fx-text-fill: #fdba74;
+    -fx-background-radius: 6;
+    -fx-padding: 3 10 3 10;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* ── Progress bar ── */
+.progress-bar {
+    -fx-pref-height: 6px;
+    -fx-background-radius: 4;
+    -fx-min-width: 0;
+}
+.progress-bar .track {
+    -fx-background-color: #334155;
+    -fx-background-radius: 4;
+}
+.progress-bar .bar {
+    -fx-background-color: #6366f1;
+    -fx-background-radius: 4;
+    -fx-background-insets: 0;
 }

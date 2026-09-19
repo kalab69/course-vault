@@ -11,8 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Side;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -23,7 +25,6 @@ import javafx.util.Duration;
 
 public class Scene1Controller implements Initializable {
 
-    // ── FXML fields ───────────────────────────────────────────────────────────
     @FXML
     private Button homeButton;
     @FXML
@@ -50,20 +51,73 @@ public class Scene1Controller implements Initializable {
     private VBox sidebarContainer;
     @FXML
     private Rectangle sidebarIndicator;
+    @FXML
+    private Label welcomeLabel;
+    @FXML
+    private Label welcomeSub;
+    @FXML
+    private Label enrolledNum;
+    @FXML
+    private Label completedNum;
+    @FXML
+    private Label hoursNum;
+    @FXML
+    private ProgressBar prog1;
+    @FXML
+    private ProgressBar prog2;
+    @FXML
+    private ProgressBar prog3;
+    @FXML
+    private Label prog1Label;
+    @FXML
+    private Label prog2Label;
+    @FXML
+    private Label prog3Label;
+    @FXML
+    private VBox statCard1;
+    @FXML
+    private VBox statCard2;
+    @FXML
+    private VBox statCard3;
+    @FXML
+    private VBox courseCard1;
+    @FXML
+    private VBox courseCard2;
+    @FXML
+    private VBox courseCard3;
+    @FXML
+    private VBox csCard1;
+    @FXML
+    private VBox csCard2;
+    @FXML
+    private VBox csCard3;
+    @FXML
+    private VBox csCard4;
+    @FXML
+    private VBox csCard5;
+    @FXML
+    private VBox csCard6;
+    @FXML
+    private VBox csCard7;
+    @FXML
+    private VBox csCard8;
+    @FXML
+    private VBox csCard9;
+    @FXML
+    private VBox csCard10;
+    @FXML
+    private VBox csCard11;
 
-    // ── Animation fields ──────────────────────────────────────────────────────
     private TranslateTransition slideTransition;
     private FadeTransition fadeTransition;
     private TranslateTransition verticalSlideTransition;
     private FadeTransition verticalFadeTransition;
 
-    // ── Flyout fields (class-level so they are never null) ────────────────────
     private ContextMenu departmentsFlyout;
     private ContextMenu examFlyout;
     private ContextMenu referenceFlyout;
     private ContextMenu profileDropdown;
 
-    // ─────────────────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -78,21 +132,18 @@ public class Scene1Controller implements Initializable {
         setupSlidingHover(myCourseButton);
         setupSlidingHover(browseButton);
 
-        // Fade out indicator when mouse leaves the entire navbar
         navBar.setOnMouseExited(e -> {
             fadeTransition.stop();
             fadeTransition.setToValue(0.0);
             fadeTransition.play();
         });
 
-        // Snap indicator to home button once scene + layout are ready
         homeButton.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(() -> snapToButton(homeButton));
             }
         });
 
-        // Ctrl+A → focus and select the search/title field
         rootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.setOnKeyPressed(event -> {
@@ -105,7 +156,6 @@ public class Scene1Controller implements Initializable {
             }
         });
 
-        // Request focus so shortcuts work immediately on launch
         Platform.runLater(() -> rootPane.requestFocus());
 
         // ════════════════════════════════════════════════
@@ -116,19 +166,13 @@ public class Scene1Controller implements Initializable {
         sidebarIndicator.setOpacity(0.0);
         sidebarIndicator.toBack();
 
-        // Step 1 — Build flyout menus FIRST so fields are never null
         setupCascadingSidebarMenu();
         setupProfileDropdown();
 
-        // Step 2 — Mouse exit handler WITH flyout check so moving into
-        //          a flyout does NOT close it. This is the ONLY place
-        //          setOnMouseExited is set — setupCascadingSidebarMenu()
-        //          does NOT set it, avoiding the overwrite bug.
         sidebarContainer.setOnMouseExited(e -> {
             double mouseX = e.getScreenX();
             double mouseY = e.getScreenY();
 
-            // Only hide if mouse is NOT moving into an open flyout
             if (!isCursorOverFlyout(mouseX, mouseY)) {
                 verticalFadeTransition.stop();
                 verticalFadeTransition.setToValue(0.0);
@@ -137,8 +181,6 @@ public class Scene1Controller implements Initializable {
             }
         });
 
-        // Step 3 — Snap indicator to first sidebar button after layout pass
-        // Double runLater guarantees VBox sizing is fully computed
         sidebarContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 Platform.runLater(()
@@ -149,10 +191,46 @@ public class Scene1Controller implements Initializable {
             }
         });
 
-        // Step 4 — Attach combined hover handler AFTER flyouts exist
         setupVerticalSlidingHover(departmentMenuTrigger);
         setupVerticalSlidingHover(exammenuTrigger);
         setupVerticalSlidingHover(referencemenuTrigger);
+
+        welcomeLabel.setText("Welcome back, _____");
+        welcomeSub.setText("You have ___ courses in progress");
+
+        enrolledNum.setText("___");
+        completedNum.setText("___");
+        hoursNum.setText("___h");
+
+        setProgress(prog1, prog1Label, 0.72);  // 72%
+        setProgress(prog2, prog2Label, 0.38);  // 38%
+        setProgress(prog3, prog3Label, 0.15);  // 15%
+
+        Platform.runLater(() -> {
+            setupCardHoverAnimation(statCard1);
+            setupCardHoverAnimation(statCard2);
+            setupCardHoverAnimation(statCard3);
+            setupCardHoverAnimation(courseCard1);
+            setupCardHoverAnimation(courseCard2);
+            setupCardHoverAnimation(courseCard3);
+            setupCardHoverAnimation(csCard1);
+            setupCardHoverAnimation(csCard2);
+            setupCardHoverAnimation(csCard3);
+            setupCardHoverAnimation(csCard4);
+            setupCardHoverAnimation(csCard5);
+            setupCardHoverAnimation(csCard6);
+            setupCardHoverAnimation(csCard7);
+            setupCardHoverAnimation(csCard8);
+            setupCardHoverAnimation(csCard9);
+            setupCardHoverAnimation(csCard10);
+            setupCardHoverAnimation(csCard11);
+        });
+    }
+
+    private void setProgress(ProgressBar bar, Label label, double value) {
+        bar.setProgress(value);
+        int percent = (int) (value * 100);
+        label.setText(percent + "% complete");
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -192,11 +270,10 @@ public class Scene1Controller implements Initializable {
     private void setupVerticalSlidingHover(Button btn) {
         btn.setOnMouseEntered(e -> {
 
-            // ── Sliding rectangle animation ──────────────────────────────────
             sidebarIndicator.setWidth(sidebarContainer.getWidth());
             sidebarIndicator.setHeight(btn.getHeight());
             sidebarIndicator.setLayoutX(0);
-            sidebarIndicator.setLayoutY(0); // anchor to 0 — TranslateY does movement
+            sidebarIndicator.setLayoutY(0);
 
             double targetY = btn.getBoundsInParent().getMinY();
             verticalSlideTransition.stop();
@@ -207,10 +284,8 @@ public class Scene1Controller implements Initializable {
             verticalFadeTransition.setToValue(1.0);
             verticalFadeTransition.play();
 
-            sidebarIndicator.toBack(); // always behind button text
+            sidebarIndicator.toBack();
 
-            // ── Flyout with small delay for smooth feel ──────────────────────
-            // 80ms delay prevents the flyout flickering when sliding between buttons
             PauseTransition delay = new PauseTransition(Duration.millis(80));
             delay.setOnFinished(ev -> {
                 hideAllFlyouts(departmentsFlyout, examFlyout, referenceFlyout);
@@ -234,7 +309,7 @@ public class Scene1Controller implements Initializable {
         sidebarIndicator.setLayoutY(0);
         sidebarIndicator.setTranslateX(0);
         sidebarIndicator.setTranslateY(btn.getBoundsInParent().getMinY());
-        sidebarIndicator.setOpacity(0.0); // stays hidden until first hover
+        sidebarIndicator.setOpacity(0.0);
         sidebarIndicator.toBack();
     }
 
@@ -243,7 +318,6 @@ public class Scene1Controller implements Initializable {
     // ─────────────────────────────────────────────────────────────────────────
     private void setupCascadingSidebarMenu() {
 
-        // ── Create flyouts and assign to CLASS FIELDS (not local variables) ──
         this.departmentsFlyout = new ContextMenu();
         this.examFlyout = new ContextMenu();
         this.referenceFlyout = new ContextMenu();
@@ -252,7 +326,6 @@ public class Scene1Controller implements Initializable {
         examFlyout.getStyleClass().add("sidebar-flyout");
         referenceFlyout.getStyleClass().add("sidebar-flyout");
 
-        // Auto-hide true by default but being explicit is safe
         departmentsFlyout.setAutoHide(true);
         examFlyout.setAutoHide(true);
         referenceFlyout.setAutoHide(true);
@@ -261,7 +334,6 @@ public class Scene1Controller implements Initializable {
         fadeIndicatorWhenMouseEntersFlyout(examFlyout);
         fadeIndicatorWhenMouseEntersFlyout(referenceFlyout);
 
-        // ── Department menus ─────────────────────────────────────────────────
         Menu csDepartment = new Menu("Computer Science");
         Menu afDepartment = new Menu("Accounting and Finance");
         Menu mDepartment = new Menu("Management");
@@ -269,49 +341,42 @@ public class Scene1Controller implements Initializable {
         Menu thDepartment = new Menu("Tourism and Hospitality Management");
         Menu mmDepartment = new Menu("Marketing Management");
 
-        // CS Year submenus
         Menu csyear1 = new Menu("Year I");
         Menu csyear2 = new Menu("Year II");
         Menu csyear3 = new Menu("Year III");
         Menu csyear4 = new Menu("Year IV");
         csDepartment.getItems().addAll(csyear1, csyear2, csyear3, csyear4);
 
-        // CS Year I courses
         csyear1.getItems().addAll(
                 new MenuItem("Introduction to Computing Science (CoSc 1011)"),
                 new MenuItem("Programming Fundamentals I (CoSc 1012)"),
                 new MenuItem("Introduction to Emerging Technologies (EmTe 1012)")
         );
 
-        // AF Year submenus
         Menu afyear1 = new Menu("Year I");
         Menu afyear2 = new Menu("Year II");
         Menu afyear3 = new Menu("Year III");
         Menu afyear4 = new Menu("Year IV");
         afDepartment.getItems().addAll(afyear1, afyear2, afyear3, afyear4);
 
-        // Management Year submenus
         Menu myear1 = new Menu("Year I");
         Menu myear2 = new Menu("Year II");
         Menu myear3 = new Menu("Year III");
         Menu myear4 = new Menu("Year IV");
         mDepartment.getItems().addAll(myear1, myear2, myear3, myear4);
 
-        // Economics Year submenus
         Menu eyear1 = new Menu("Year I");
         Menu eyear2 = new Menu("Year II");
         Menu eyear3 = new Menu("Year III");
         Menu eyear4 = new Menu("Year IV");
         eDepartment.getItems().addAll(eyear1, eyear2, eyear3, eyear4);
 
-        // Tourism Year submenus
         Menu thyear1 = new Menu("Year I");
         Menu thyear2 = new Menu("Year II");
         Menu thyear3 = new Menu("Year III");
         Menu thyear4 = new Menu("Year IV");
         thDepartment.getItems().addAll(thyear1, thyear2, thyear3, thyear4);
 
-        // Marketing Year submenus
         Menu mmyear1 = new Menu("Year I");
         Menu mmyear2 = new Menu("Year II");
         Menu mmyear3 = new Menu("Year III");
@@ -323,7 +388,6 @@ public class Scene1Controller implements Initializable {
                 eDepartment, thDepartment, mmDepartment
         );
 
-        // ── Exam menus ───────────────────────────────────────────────────────
         examFlyout.getItems().addAll(
                 new Menu("Computer Science"),
                 new Menu("Accounting and Finance"),
@@ -333,7 +397,6 @@ public class Scene1Controller implements Initializable {
                 new Menu("Marketing Management")
         );
 
-        // ── Reference menus ──────────────────────────────────────────────────
         referenceFlyout.getItems().addAll(
                 new Menu("Computer Science"),
                 new Menu("Accounting and Finance"),
@@ -343,9 +406,6 @@ public class Scene1Controller implements Initializable {
                 new Menu("Marketing Management")
         );
 
-        // ── Sidebar background hover — hide flyouts when hovering empty space ─
-        // NOTE: setOnMouseEntered for BUTTONS is handled in setupVerticalSlidingHover
-        //       to avoid the overwrite bug. Only the container background is here.
         sidebarContainer.setOnMouseEntered(e -> {
             if (e.getTarget() == sidebarContainer) {
                 hideAllFlyouts(departmentsFlyout, examFlyout, referenceFlyout);
@@ -362,7 +422,6 @@ public class Scene1Controller implements Initializable {
 
                 javafx.scene.Node content = flyout.getSkin().getNode();
                 if (content != null) {
-                    // Slide up before hiding
                     javafx.animation.Timeline slideUp = new javafx.animation.Timeline(
                             new javafx.animation.KeyFrame(Duration.ZERO,
                                     new javafx.animation.KeyValue(content.scaleYProperty(), 1.0, javafx.animation.Interpolator.EASE_IN),
@@ -375,26 +434,19 @@ public class Scene1Controller implements Initializable {
                                     new javafx.animation.KeyValue(content.opacityProperty(), 0.0, javafx.animation.Interpolator.EASE_IN)
                             )
                     );
-                    // Hide the ContextMenu AFTER the animation finishes
                     slideUp.setOnFinished(ev -> flyout.hide());
                     slideUp.play();
 
                 } else {
-                    // Fallback if skin not ready
                     flyout.hide();
                 }
             }
         }
     }
 
-    /**
-     * Returns true if the cursor screen position is within the bounds of any
-     * currently visible flyout (plus a small buffer for the gap between the
-     * sidebar edge and the flyout window).
-     */
     private boolean isCursorOverFlyout(double screenX, double screenY) {
         ContextMenu[] flyouts = {departmentsFlyout, examFlyout, referenceFlyout};
-        double buffer = 20; // px gap tolerance
+        double buffer = 20;
 
         for (ContextMenu flyout : flyouts) {
             if (flyout != null && flyout.isShowing()) {
@@ -418,12 +470,9 @@ public class Scene1Controller implements Initializable {
         flyout.setOnShown(e -> {
             javafx.scene.Node content = flyout.getSkin().getNode();
             if (content != null) {
-
-                // ── Slide down animation on the flyout itself ────────────────
-                content.setScaleY(0.0);         // start collapsed
+                content.setScaleY(0.0);
                 content.setTranslateY(-content.getBoundsInLocal().getHeight() / 2);
-                // start from top edge
-                content.setOpacity(0.0);        // start invisible
+                content.setOpacity(0.0);
 
                 javafx.animation.Timeline slideDown = new javafx.animation.Timeline(
                         new javafx.animation.KeyFrame(Duration.ZERO,
@@ -439,7 +488,6 @@ public class Scene1Controller implements Initializable {
                 );
                 slideDown.play();
 
-                // ── Fade indicator when mouse enters flyout ──────────────────
                 content.setOnMouseEntered(ev -> {
                     verticalFadeTransition.stop();
                     verticalFadeTransition.setToValue(0.0);
@@ -454,12 +502,9 @@ public class Scene1Controller implements Initializable {
         profileDropdown.getStyleClass().add("sidebar-flyout");
         profileDropdown.setAutoHide(true);
 
-        // ── Slide down animation when shown ──────────────────────────────
         profileDropdown.setOnShown(e -> {
             javafx.scene.Node content = profileDropdown.getSkin().getNode();
             if (content != null) {
-
-                // Slide animation
                 content.setScaleY(0.0);
                 content.setTranslateY(
                         -content.getBoundsInLocal().getHeight() / 2);
@@ -493,7 +538,6 @@ public class Scene1Controller implements Initializable {
                         );
                 slideDown.play();
 
-                // Hide when mouse leaves the dropdown
                 content.setOnMouseExited(ev -> {
                     double mouseX = ev.getScreenX();
                     double mouseY = ev.getScreenY();
@@ -515,7 +559,6 @@ public class Scene1Controller implements Initializable {
             }
         });
 
-        // ── Menu items ────────────────────────────────────────────────────
         MenuItem account = new MenuItem("   👤  Account");
         MenuItem addFile = new MenuItem("   📄  Add File");
         MenuItem settings = new MenuItem("   ⚙   Settings");
@@ -527,12 +570,8 @@ public class Scene1Controller implements Initializable {
         profileDropdown.getItems().addAll(
                 account, addFile, settings);
 
-        // ── COMBINED hover: sliding indicator + dropdown ──────────────────
-        // NOTE: setupSlidingHover(profileButton) must be REMOVED
-        //       from initialize() — this replaces it
         profileButton.setOnMouseEntered(e -> {
 
-            // Sliding indicator — same logic as setupSlidingHover
             double targetX = profileButton.getLayoutX();
             double tightHeight = profileButton.getHeight() - 6;
 
@@ -548,14 +587,12 @@ public class Scene1Controller implements Initializable {
             fadeTransition.setToValue(1.0);
             fadeTransition.play();
 
-            // Show dropdown below the button
             if (!profileDropdown.isShowing()) {
                 profileDropdown.show(profileButton,
                         javafx.geometry.Side.BOTTOM, 0, 4);
             }
         });
 
-        // Hide dropdown when mouse leaves button (if not entering dropdown)
         profileButton.setOnMouseExited(e -> {
             double mouseX = e.getScreenX();
             double mouseY = e.getScreenY();
@@ -585,5 +622,82 @@ public class Scene1Controller implements Initializable {
                     && screenY <= fy + fh + buffer;
         }
         return false;
+    }
+
+    private void setupCardHoverAnimation(javafx.scene.layout.VBox card) {
+
+        javafx.beans.property.DoubleProperty angle
+                = new javafx.beans.property.SimpleDoubleProperty(0);
+
+        javafx.animation.Timeline rotateGradient
+                = new javafx.animation.Timeline(
+                        new javafx.animation.KeyFrame(Duration.millis(16), e -> {
+                            double a = angle.get();
+                            double rad = Math.toRadians(a);
+
+                            // Spotlight position on the border
+                            double x1 = 50 + Math.cos(rad) * 50;
+                            double y1 = 50 + Math.sin(rad) * 50;
+                            double x2 = 50 - Math.cos(rad) * 50;
+                            double y2 = 50 - Math.sin(rad) * 50;
+
+                            card.setStyle(
+                                    "-fx-background-color: "
+                                    + "linear-gradient("
+                                    + "from " + x1 + "% " + y1 + "% "
+                                    + "to " + x2 + "% " + y2 + "%, "
+                                    + "rgba(0,255,255,0.0), "
+                                    + "rgba(0,255,255,0.6), "
+                                    + "rgba(0,255,255,1.0), "
+                                    + "rgba(0,255,255,1.0), "
+                                    + "rgba(0,255,255,0.6), "
+                                    + "rgba(0,255,255,0.0)"
+                                    + "), "
+                                    + "#1e293b;"
+                                    + "-fx-background-insets: 0, 1.5;"
+                                    + "-fx-background-radius: 12, 11;"
+                                    + "-fx-padding: 16;"
+                                    + "-fx-spacing: 6;"
+                                    + "-fx-cursor: hand;"
+                            );
+
+                            angle.set((a + 3) % 360); // speed — increase for faster
+                        })
+                );
+        rotateGradient.setCycleCount(javafx.animation.Animation.INDEFINITE);
+
+        // Lift effect on enter
+        javafx.animation.ScaleTransition liftIn
+                = new javafx.animation.ScaleTransition(Duration.millis(200), card);
+        liftIn.setToX(1.02);
+        liftIn.setToY(1.02);
+
+        // Lower effect on exit
+        javafx.animation.ScaleTransition liftOut
+                = new javafx.animation.ScaleTransition(Duration.millis(200), card);
+        liftOut.setToX(1.0);
+        liftOut.setToY(1.0);
+
+        card.setOnMouseEntered(e -> {
+            rotateGradient.play();
+            liftIn.play();
+        });
+
+        card.setOnMouseExited(e -> {
+            rotateGradient.stop();
+            liftOut.play();
+
+            // Reset to normal static dark border
+            card.setStyle(
+                    "-fx-background-color: #05060A;"
+                    + "-fx-background-radius: 12;"
+                    + "-fx-border-color: #334155;"
+                    + "-fx-border-radius: 12;"
+                    + "-fx-border-width: 1;"
+                    + "-fx-padding: 16;"
+                    + "-fx-spacing: 6;"
+                    + "-fx-cursor: hand;"
+            );
+        });
     }
 }
