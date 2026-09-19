@@ -295,3 +295,34 @@
     -fx-background-radius: 4;
     -fx-background-insets: 0;
 }
+
+/* ── 10. ACCORDION YEAR HEADERS ─────────────────────────────── */
+ 
+/* The button that triggers Year I / Year II collapse */
+.year-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0 6 0 0;
+    -fx-cursor: hand;
+    -fx-min-width: 24px;
+    -fx-max-width: 24px;
+    -fx-min-height: 24px;
+    -fx-max-height: 24px;
+}
+.year-toggle-btn:hover {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 6;
+}
+ 
+/* HBox row that holds button + year label — hover highlight */
+.year-header-row {
+    -fx-padding: 4 0 4 0;
+    -fx-spacing: 8;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 8;
+}
+.year-header-row:hover {
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 8;
+}

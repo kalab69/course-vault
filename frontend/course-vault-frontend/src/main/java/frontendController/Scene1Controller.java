@@ -16,6 +16,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -107,6 +108,28 @@ public class Scene1Controller implements Initializable {
     private VBox csCard10;
     @FXML
     private VBox csCard11;
+    @FXML
+    private VBox csCard12;
+    @FXML
+    private VBox yearOneSection;
+    @FXML
+    private VBox yearTwoSection;
+    @FXML
+    private VBox yearThreeSection;
+    @FXML
+    private VBox yearFourSection;
+    @FXML
+    private Button yearOneHeader;
+    @FXML
+    private Button yearTwoHeader;
+    @FXML
+    private Button yearThreeHeader;
+    @FXML
+    private Button yearFourHeader;
+    @FXML
+    private ImageView yearOneArrow;
+    @FXML
+    private ImageView yearTwoArrow;
 
     private TranslateTransition slideTransition;
     private FadeTransition fadeTransition;
@@ -224,6 +247,53 @@ public class Scene1Controller implements Initializable {
             setupCardHoverAnimation(csCard9);
             setupCardHoverAnimation(csCard10);
             setupCardHoverAnimation(csCard11);
+            setupCardHoverAnimation(csCard12);
+        });
+
+        Platform.runLater(() -> {
+            javafx.animation.PauseTransition wait
+                    = new javafx.animation.PauseTransition(Duration.millis(200));
+
+            wait.setOnFinished(e -> {
+
+                // ── Get Year I content row ────────────────────────────────────
+                // yearOneSection children:
+                //   [0] = Label "Computer Science"
+                //   [1] = HBox (button + "Year I" label)
+                //   [2] = HBox (csCard1, csCard2, csCard3)  ← collapses
+                javafx.scene.layout.HBox yearOneRow
+                        = (javafx.scene.layout.HBox) yearOneSection.getChildren().get(2);
+
+                // ── Get Year II content rows ──────────────────────────────────
+                // yearTwoSection children:
+                //   [0] = HBox (button + "Year II" label)
+                //   [1] = HBox (csCard4, csCard5, csCard6, csCard7) ← collapses
+                //   [2] = HBox (csCard8, csCard9, csCard10)         ← collapses
+                //   [3] = HBox (csCard12, csCard11)                 ← collapses
+                javafx.scene.layout.HBox yearTwoRow1
+                        = (javafx.scene.layout.HBox) yearTwoSection.getChildren().get(1);
+                javafx.scene.layout.HBox yearTwoRow2
+                        = (javafx.scene.layout.HBox) yearTwoSection.getChildren().get(2);
+                javafx.scene.layout.HBox yearTwoRow3
+                        = (javafx.scene.layout.HBox) yearTwoSection.getChildren().get(3);
+
+                // ── Setup accordion for each year ─────────────────────────────
+                setupAccordion(yearOneHeader, yearOneArrow, yearOneRow);
+                setupAccordion(yearTwoHeader, yearTwoArrow,
+                        yearTwoRow1, yearTwoRow2, yearTwoRow3);
+
+                // ── Collapse all rows immediately on startup ───────────────────
+                collapseImmediately(yearOneRow);
+                collapseImmediately(yearTwoRow1);
+                collapseImmediately(yearTwoRow2);
+                collapseImmediately(yearTwoRow3);
+
+                // ── Set both arrows to point right = closed state ─────────────
+                yearOneArrow.setRotate(0);
+                yearTwoArrow.setRotate(0);
+            });
+
+            wait.play();
         });
     }
 
@@ -699,5 +769,144 @@ public class Scene1Controller implements Initializable {
                     + "-fx-cursor: hand;"
             );
         });
+    }
+
+    private boolean yearOneOpen = true;
+    private boolean yearTwoOpen = true;
+//    private boolean yearThreeOpen = true;
+//    private boolean yearFourOpen = true;
+
+    private void setupAccordion(
+            Button headerBtn,
+            ImageView arrowImg,
+            javafx.scene.layout.HBox... contentRows) {
+
+        // ✅ Starts CLOSED — isOpen is false
+        boolean[] isOpen = {false};
+
+        java.util.List<javafx.scene.layout.HBox> rows
+                = java.util.Arrays.asList(contentRows);
+
+        // Clean transparent style on the header button
+        headerBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: transparent;"
+                + "-fx-cursor: hand;"
+                + "-fx-padding: 0;"
+        );
+
+        // ✅ Arrow starts at 0 degrees = pointing right = closed
+        arrowImg.setRotate(0);
+
+        headerBtn.setOnMouseClicked(e -> {
+
+            if (isOpen[0]) {
+                // ── COLLAPSE ──────────────────────────────────────────────
+                for (javafx.scene.layout.HBox row : rows) {
+
+                    double startH = row.getHeight();
+
+                    javafx.animation.Timeline collapse
+                            = new javafx.animation.Timeline(
+                                    new javafx.animation.KeyFrame(Duration.ZERO,
+                                            new javafx.animation.KeyValue(
+                                                    row.maxHeightProperty(),
+                                                    startH,
+                                                    javafx.animation.Interpolator.EASE_IN),
+                                            new javafx.animation.KeyValue(
+                                                    row.opacityProperty(),
+                                                    1.0,
+                                                    javafx.animation.Interpolator.EASE_IN)
+                                    ),
+                                    new javafx.animation.KeyFrame(Duration.millis(300),
+                                            new javafx.animation.KeyValue(
+                                                    row.maxHeightProperty(),
+                                                    0,
+                                                    javafx.animation.Interpolator.EASE_IN),
+                                            new javafx.animation.KeyValue(
+                                                    row.opacityProperty(),
+                                                    0.0,
+                                                    javafx.animation.Interpolator.EASE_IN)
+                                    )
+                            );
+
+                    collapse.setOnFinished(ev -> {
+                        row.setVisible(false);
+                        row.setManaged(false);
+                    });
+                    collapse.play();
+                }
+
+                // Rotate arrow from ▼ back to ▶
+                javafx.animation.RotateTransition rotateClose
+                        = new javafx.animation.RotateTransition(
+                                Duration.millis(300), arrowImg);
+                rotateClose.setFromAngle(90);
+                rotateClose.setToAngle(0);
+                rotateClose.play();
+
+            } else {
+                // ── EXPAND ────────────────────────────────────────────────
+                for (javafx.scene.layout.HBox row : rows) {
+
+                    row.setVisible(true);
+                    row.setManaged(true);
+                    row.setMaxHeight(0);
+                    row.setOpacity(0);
+
+                    row.applyCss();
+                    row.layout();
+                    double targetH = row.prefHeight(-1);
+
+                    javafx.animation.Timeline expand
+                            = new javafx.animation.Timeline(
+                                    new javafx.animation.KeyFrame(Duration.ZERO,
+                                            new javafx.animation.KeyValue(
+                                                    row.maxHeightProperty(),
+                                                    0,
+                                                    javafx.animation.Interpolator.EASE_OUT),
+                                            new javafx.animation.KeyValue(
+                                                    row.opacityProperty(),
+                                                    0.0,
+                                                    javafx.animation.Interpolator.EASE_OUT)
+                                    ),
+                                    new javafx.animation.KeyFrame(Duration.millis(300),
+                                            new javafx.animation.KeyValue(
+                                                    row.maxHeightProperty(),
+                                                    targetH,
+                                                    javafx.animation.Interpolator.EASE_OUT),
+                                            new javafx.animation.KeyValue(
+                                                    row.opacityProperty(),
+                                                    1.0,
+                                                    javafx.animation.Interpolator.EASE_OUT)
+                                    )
+                            );
+
+                    expand.setOnFinished(ev
+                            -> row.setMaxHeight(Double.MAX_VALUE));
+                    expand.play();
+                }
+
+                // Rotate arrow from ▶ to ▼
+                javafx.animation.RotateTransition rotateOpen
+                        = new javafx.animation.RotateTransition(
+                                Duration.millis(300), arrowImg);
+                rotateOpen.setFromAngle(0);
+                rotateOpen.setToAngle(90);
+                rotateOpen.play();
+            }
+
+            // Flip the state
+            isOpen[0] = !isOpen[0];
+        });
+    }
+
+// ─────────────────────────────────────────────────────────────────────────
+// ── STEP 3: Add this helper method anywhere in your controller ────────────
+    private void collapseImmediately(javafx.scene.layout.HBox row) {
+        row.setVisible(false);
+        row.setManaged(false);
+        row.setMaxHeight(0);
+        row.setOpacity(0);
     }
 }
