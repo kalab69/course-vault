@@ -1,6 +1,8 @@
 package com.example.coursevault.service;
 
+import com.example.coursevault.model.Course;
 import com.example.coursevault.model.ExternalLink;
+import com.example.coursevault.repositorie.CourseRepository;
 import com.example.coursevault.repositorie.ExternalLinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,24 @@ import java.util.Optional;
 @Service
 public class ExternalLinkService {
     ExternalLinkRepository externalLinkRepository;
+    CourseRepository courseRepository;
 
     @Autowired
-    ExternalLinkService(ExternalLinkRepository externalLinkRepository){
+    ExternalLinkService(ExternalLinkRepository externalLinkRepository , CourseRepository courseRepository){
         this.externalLinkRepository = externalLinkRepository;
+        this.courseRepository = courseRepository;
     }
 
-    public ExternalLink addLink(ExternalLink link){
-        return externalLinkRepository.save(link);
+    public Optional<ExternalLink> addLink(ExternalLink link , int courseId){
+        Optional<Course> course = courseRepository.findById(courseId);
+        if(course.isPresent()){
+            link.setCourse(course.get());
+            ExternalLink saved = externalLinkRepository.save(link);
+            return Optional.of(saved);
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     public List<ExternalLink> listLinksByCourse(int courseId){
