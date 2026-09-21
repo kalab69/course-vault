@@ -1,6 +1,7 @@
 package com.example.coursevault.service;
 
 import com.example.coursevault.model.Course;
+import com.example.coursevault.model.YearLevel;
 import com.example.coursevault.repositorie.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,8 @@ public class CourseService {
         else{
             return false;
         }
+    }
+    public List<Course> filterCourseByYear(YearLevel year){
+       return courseRepository.findByYearLevel(year);
     }
 }

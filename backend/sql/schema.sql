@@ -1,0 +1,1 @@
+create database COURSE_VAULT;
