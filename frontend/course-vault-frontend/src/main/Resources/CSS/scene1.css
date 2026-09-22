@@ -322,3 +322,76 @@
     -fx-background-color: rgba(255,255,255,0.04);
     -fx-background-radius: 8;
 }
+
+/* Sidebar toggle button */
+#sidebarToggleBtn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-padding: 8 10 0 10;
+    -fx-background-radius: 6;
+}
+#sidebarToggleBtn:hover {
+    -fx-background-color: #000000;
+    -fx-background-radius: 6;
+}
+
+/* ── CUSTOM SCROLLBAR — thin minimal with dot thumb ── */
+
+/* The vertical scrollbar track — nearly invisible */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6px;
+    -fx-padding: 0;
+}
+
+/* The track line — very subtle */
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 3;
+    -fx-border-color: transparent;
+    -fx-pref-width: 2px;
+    -fx-padding: 0 2 0 2;
+}
+
+/* The thumb — small teal/cyan dot */
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #00bcd4;   /* teal cyan — matches the image */
+    -fx-background-radius: 50;       /* makes it a circle */
+    -fx-pref-width: 6px;
+    -fx-min-height: 6px;
+    -fx-max-height: 6px;             /* keeps it as a dot not a bar */
+    -fx-border-color: transparent;
+}
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #26c6da;   /* slightly brighter on hover */
+}
+
+/* Hide increment and decrement arrow buttons completely */
+.scroll-pane .scroll-bar:vertical .increment-button,
+.scroll-pane .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+    -fx-opacity: 0;
+}
+.scroll-pane .scroll-bar:vertical .increment-arrow,
+.scroll-pane .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* Hide horizontal scrollbar completely */
+.scroll-pane .scroll-bar:horizontal {
+    -fx-pref-height: 0;
+    -fx-min-height: 0;
+    -fx-max-height: 0;
+    -fx-opacity: 0;
+}
+
+/* ScrollPane corner box — hide it */
+.scroll-pane .corner {
+    -fx-background-color: transparent;
+}
