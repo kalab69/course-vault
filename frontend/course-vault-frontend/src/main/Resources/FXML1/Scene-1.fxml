@@ -13,12 +13,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
 <BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
    <center>
-      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
             <VBox alignment="CENTER" prefHeight="497.0" prefWidth="440.0" spacing="20.0" styleClass="root">
                <children>
@@ -59,7 +60,7 @@
                                     <Image url="@../Images/back-in-time.png" />
                                  </image>
                               </ImageView>
-                              <Label fx:id="hoursNum" styleClass="stat-number" text="___h" />
+                              <Label fx:id="hoursNum" styleClass="stat-number" text="___hr" />
                               <Label styleClass="stat-label" text="Learning Time" />
                            </children>
                         </VBox>
@@ -243,68 +244,116 @@
          </content>
       </ScrollPane>
    </center>
-   <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
-         <children>
-            <TextField fx:id="appTitle" editable="false" prefHeight="31.0" prefWidth="261.0" styleClass="selectable-title" stylesheets="@../CSS/scene1.css" text="CourseVault" />
-            <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <Rectangle fx:id="navIndicator" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="4.0" layoutY="44.0" stroke="BLACK" strokeType="INSIDE" styleClass="navIndicator" width="60.0" />
-                  <HBox fx:id="navBar" prefHeight="34.0" prefWidth="656.0">
-                     <children>
-                        <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" stylesheets="@../CSS/scene1.css" text="Home ">
-                           <styleClass>
-                              <String fx:value="nav-button" />
-                              <String fx:value="nav-border-both" />
-                           </styleClass>
-                        </Button>
-                        <Button fx:id="myCourseButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" stylesheets="@../CSS/scene1.css" text="My Course">
-                           <styleClass>
-                              <String fx:value="nav-button" />
-                              <String fx:value="nav-border-both" />
-                           </styleClass>
-                        </Button>
-                        <Button fx:id="browseButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" stylesheets="@../CSS/scene1.css" text="Browse">
-                           <styleClass>
-                              <String fx:value="nav-button" />
-                              <String fx:value="nav-border-both" />
-                           </styleClass>
-                        </Button>
-                        <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" stylesheets="@../CSS/scene1.css" text="Profile">
-                           <styleClass>
-                              <String fx:value="nav-button" />
-                              <String fx:value="nav-border-both" />
-                              <String fx:value="profileButton" />
-                           </styleClass>
-                        </Button>
-                     </children>
-                  </HBox>
-               </children>
+<top>
+    <HBox prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
+        <children>
+
+            <!-- ── Sidebar toggle button ── -->
+            <Button fx:id="sidebarToggleBtn" mnemonicParsing="false" onAction="#toggleSidebar" prefHeight="72.0" prefWidth="81.0" styleClass="sidebar-toggle-btn">
+                <graphic>
+                    <StackPane>
+                        <children>
+
+                            <!-- Hamburger icon — visible when sidebar is OPEN -->
+                            <ImageView fx:id="menuOpenIcon" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" visible="true">
+                                <image>
+                                    <Image url="@../Images/side-menu.png" />
+                                </image>
+                            </ImageView>
+
+                            <!-- Close icon — visible when sidebar is CLOSED -->
+                            <ImageView fx:id="menuCloseIcon" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                <image>
+                                    <Image url="@../Images/close.png" />
+                                </image>
+                            </ImageView>
+
+                        </children>
+                    </StackPane>
+                </graphic>
+                <padding>
+                    <Insets left="10.0" right="6.0" />
+                </padding>
+            </Button>
+
+            <!-- ── App title ── -->
+            <TextField fx:id="appTitle" editable="false" prefHeight="31.0" prefWidth="200.0" styleClass="selectable-title" text="CourseVault" />
+
+            <!-- ── Spacer — pushes nav to the right ── -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- ── Nav buttons + sliding indicator ── -->
+            <AnchorPane prefHeight="50.0" prefWidth="560.0">
+                <children>
+
+                    <!-- Sliding underline indicator -->
+                    <Rectangle fx:id="navIndicator" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="4.0" layoutY="44.0" stroke="BLACK" strokeType="INSIDE" styleClass="navIndicator" width="60.0" />
+
+                    <!-- Nav button row -->
+                    <HBox fx:id="navBar" prefHeight="34.0" prefWidth="560.0">
+                        <children>
+
+                            <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Home">
+                                <styleClass>
+                                    <String fx:value="nav-button" />
+                                    <String fx:value="nav-border-both" />
+                                </styleClass>
+                            </Button>
+
+                            <Button fx:id="myCourseButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="My Course">
+                                <styleClass>
+                                    <String fx:value="nav-button" />
+                                    <String fx:value="nav-border-both" />
+                                </styleClass>
+                            </Button>
+
+                            <Button fx:id="browseButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Browse">
+                                <styleClass>
+                                    <String fx:value="nav-button" />
+                                    <String fx:value="nav-border-both" />
+                                </styleClass>
+                            </Button>
+
+                            <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Profile">
+                                <styleClass>
+                                    <String fx:value="nav-button" />
+                                    <String fx:value="nav-border-both" />
+                                    <String fx:value="profileButton" />
+                                </styleClass>
+                            </Button>
+
+                        </children>
+                    </HBox>
+
+                </children>
             </AnchorPane>
-         </children>
-      </HBox>
-   </top>
+
+        </children>
+    </HBox>
+</top>
+
 <left>
-   <AnchorPane prefHeight="200.0" prefWidth="240.0" style="-fx-background-color: #0A0A0A;" BorderPane.alignment="CENTER">
-      <children>
-         
-         <Label layoutX="25.0" layoutY="30.0" styleClass="sidebar-title" text="Dashboard" />
-         
-         <VBox fx:id="sidebarContainer" layoutX="10.0" layoutY="50.0" prefHeight="151.0" prefWidth="247.0" spacing="12" style="-fx-background-color: transparent; -fx-padding: 0;">
-            <children>
-               
-                     <Rectangle fx:id="sidebarIndicator" fill="WHITE" height="3.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="sidebarIndicator" width="247.0" />
-               <Button fx:id="departmentMenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Departments" />
-               <Button fx:id="exammenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Exams" />
-               <Button fx:id="referencemenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Reference Books" />
-            </children>
-         </VBox>
-         
-      </children>
-   </AnchorPane>
+    <!-- ✅ fx:id is on the OUTER AnchorPane directly — this is what gets toggled -->
+    <!-- ✅ minWidth="0" allows the collapse animation to go all the way to 0 -->
+    <AnchorPane fx:id="sidebarPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="240.0" style="-fx-background-color: #0A0A0A;" BorderPane.alignment="CENTER">
+        <children>
+
+            <!-- Dashboard label -->
+            <Label layoutX="25.0" layoutY="30.0" styleClass="sidebar-title" text="Dashboard" />
+
+            <!-- Sidebar buttons container -->
+            <VBox fx:id="sidebarContainer" layoutX="10.0" layoutY="70.0" prefHeight="151.0" prefWidth="220.0" spacing="12" style="-fx-background-color: transparent;                          -fx-padding: 0;">
+                <children>
+                    <!-- Sliding indicator rectangle -->
+                    <Rectangle fx:id="sidebarIndicator" fill="#1e293b" height="3.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="sidebarIndicator" width="220.0" />
+
+                    <Button fx:id="departmentMenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Departments" />
+                    <Button fx:id="exammenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Exams" />
+                    <Button fx:id="referencemenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Reference Books" />
+                </children>
+            </VBox>
+
+        </children>
+    </AnchorPane>
 </left>
-
-
-
 </BorderPane>
