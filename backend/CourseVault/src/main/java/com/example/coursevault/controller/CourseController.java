@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CourseController {
@@ -23,64 +22,48 @@ public class CourseController {
 
     @GetMapping("/api/courses")
     public ResponseEntity<List<CourseResponse>> listCourses(@RequestParam(required = false) YearLevel year) {
-        List<Course> courses = (year == null) ? courseService.listCourses() :
-                courseService.filterCourseByYear(year);
-        List<CourseResponse> courseResponse = courses.stream().map(course -> new CourseResponse(course.getCode()
-                , course.getCourseName(),
-                course.getId())
-        ).toList();
-        return ResponseEntity.ok().body(courseResponse);
+        List<Course> courses = (year == null)
+                ? courseService.listCourses()
+                : courseService.filterCourseByYear(year);
+        List<CourseResponse> courseResponse = courses.stream()
+                .map(this::toResponse)
+                .toList();
+        return ResponseEntity.ok(courseResponse);
     }
 
     @GetMapping("/api/courses/{id}")
     public ResponseEntity<CourseResponse> getCourse(@PathVariable int id) {
-        Optional<Course> course = courseService.findCourse(id);
-        if (course.isPresent()) {
-            CourseResponse courseResponse = new CourseResponse(course.get().getCode(),
-                    course.get().getCourseName(),
-                    course.get().getId());
-            return ResponseEntity.ok(courseResponse);
-        }
-        return ResponseEntity.notFound().build();
+        Course course = courseService.findCourse(id);
+        return ResponseEntity.ok(toResponse(course));
     }
 
     @PutMapping("/api/courses/{id}")
-    public ResponseEntity<CourseResponse> editCourse(@PathVariable int id, @RequestBody CourseRequest courseRequest) {
+    public ResponseEntity<CourseResponse> editCourse(@PathVariable int id, @RequestBody CourseRequest req) {
         Course course = new Course();
-        course.setCourseName(courseRequest.getCourseName());
-        course.setCode(courseRequest.getCode());
-        course.setYearLevel(courseRequest.getYearLevel());
-        Optional<Course> updatedCourse = courseService.editCourse(course, id);
-        if (updatedCourse.isPresent()) {
-            CourseResponse response = new CourseResponse(updatedCourse.get().getCode(),
-                    updatedCourse.get().getCourseName(),
-                    updatedCourse.get().getId());
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
+        course.setCourseName(req.getCourseName());
+        course.setCode(req.getCode());
+        course.setYearLevel(req.getYearLevel());
+        Course updated = courseService.editCourse(course, id);
+        return ResponseEntity.ok(toResponse(updated));
     }
+
     @DeleteMapping("/api/courses/{id}")
-    public ResponseEntity<Void> deleteCourse(@PathVariable int id){
-        if(courseService.deleteCourse(id)){
-            return ResponseEntity.noContent().build();
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteCourse(@PathVariable int id) {
+        courseService.deleteCourse(id);
+        return ResponseEntity.noContent().build();
     }
+
     @PostMapping("/api/courses")
-    public ResponseEntity<CourseResponse> createCourse(@RequestBody CourseRequest courseRequest){
+    public ResponseEntity<CourseResponse> createCourse(@RequestBody CourseRequest req) {
         Course course = new Course();
-        course.setYearLevel(courseRequest.getYearLevel());
-        course.setCourseName(courseRequest.getCourseName());
-        course.setCode(courseRequest.getCode());
+        course.setYearLevel(req.getYearLevel());
+        course.setCourseName(req.getCourseName());
+        course.setCode(req.getCode());
         Course newCourse = courseService.addCourse(course);
-        CourseResponse response = new CourseResponse(newCourse.getCode() , newCourse.getCourseName(),newCourse.getId());
-        return ResponseEntity.status(201).body(response);
+        return ResponseEntity.status(201).body(toResponse(newCourse));
     }
 
-
-
+    private CourseResponse toResponse(Course course) {
+        return new CourseResponse(course.getCode(), course.getCourseName(), course.getId());
+    }
 }

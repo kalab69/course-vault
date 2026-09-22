@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CourseResourceController {
@@ -22,7 +21,7 @@ public class CourseResourceController {
     FileStorageService fileStorageService;
 
     @Autowired
-    CourseResourceController(CourseResourceService courseResourceService, FileStorageService fileStorageService){
+    CourseResourceController(CourseResourceService courseResourceService, FileStorageService fileStorageService) {
         this.courseResourceService = courseResourceService;
         this.fileStorageService = fileStorageService;
     }
@@ -32,20 +31,16 @@ public class CourseResourceController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("title") String title,
             @RequestParam("courseId") int courseId,
-            @RequestParam("type") ResourceType type){
+            @RequestParam("type") ResourceType type) {
 
-        Optional<CourseResource> saved = courseResourceService.addResource(file, title, courseId, type);
-        if(saved.isPresent()){
-            return ResponseEntity.status(201).body(toResponse(saved.get()));
-        } else {
-            return ResponseEntity.notFound().build(); // courseId didn't exist
-        }
+        CourseResource saved = courseResourceService.addResource(file, title, courseId, type);
+        return ResponseEntity.status(201).body(toResponse(saved));
     }
 
     @GetMapping("/api/courses/{courseId}/course-resources")
     public ResponseEntity<List<CourseResourceResponse>> listResources(
             @PathVariable int courseId,
-            @RequestParam(required = false) ResourceType type){
+            @RequestParam(required = false) ResourceType type) {
 
         List<CourseResource> resources = (type == null)
                 ? courseResourceService.listByCourse(courseId)
@@ -59,20 +54,14 @@ public class CourseResourceController {
     }
 
     @GetMapping("/api/course-resources/{id}")
-    public ResponseEntity<CourseResourceResponse> getResource(@PathVariable int id){
-        Optional<CourseResource> resource = courseResourceService.findResource(id);
-        return resource.map(r -> ResponseEntity.ok(toResponse(r)))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CourseResourceResponse> getResource(@PathVariable int id) {
+        CourseResource resource = courseResourceService.findResource(id);
+        return ResponseEntity.ok(toResponse(resource));
     }
 
     @GetMapping("/api/course-resources/{id}/download")
-    public ResponseEntity<Resource> downloadResource(@PathVariable int id){
-        Optional<CourseResource> resourceOpt = courseResourceService.findResource(id);
-        if(resourceOpt.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-
-        CourseResource resource = resourceOpt.get();
+    public ResponseEntity<Resource> downloadResource(@PathVariable int id) {
+        CourseResource resource = courseResourceService.findResource(id);
         Resource file = fileStorageService.loadFileAsResource(resource.getFilePath());
 
         String extension = switch (resource.getContentType()) {
@@ -90,15 +79,12 @@ public class CourseResourceController {
     }
 
     @DeleteMapping("/api/course-resources/{id}")
-    public ResponseEntity<Void> deleteResource(@PathVariable int id){
-        if(courseResourceService.deleteResource(id)){
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteResource(@PathVariable int id) {
+        courseResourceService.deleteResource(id);
+        return ResponseEntity.noContent().build();
     }
 
-    private CourseResourceResponse toResponse(CourseResource resource){
+    private CourseResourceResponse toResponse(CourseResource resource) {
         return new CourseResourceResponse(
                 resource.getId(),
                 resource.getTitle(),
