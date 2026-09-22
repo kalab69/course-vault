@@ -1,42 +1,25 @@
 package com.example.coursevault.dto;
 
-import com.example.coursevault.model.Course;
 import com.example.coursevault.model.ResourceType;
 
 public class CourseResourceResponse {
     private int id;
     private String title;
-    private Course course;
+    private int courseId;
     private ResourceType type;
-    private String filePath;
-    public CourseResourceResponse(int id,Course course, String filePath, String title, ResourceType type) {
-        this.course = course;
-        this.filePath = filePath;
-        this.title = title;
-        this.type = type;
+    private String downloadUrl;
+
+    public CourseResourceResponse(int id, String title, int courseId, ResourceType type, String downloadUrl) {
         this.id = id;
+        this.title = title;
+        this.courseId = courseId;
+        this.type = type;
+        this.downloadUrl = downloadUrl;
     }
 
-    public CourseResourceResponse() {
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public ResourceType getType() {
-        return type;
-    }
+    public int getId() { return id; }
+    public String getTitle() { return title; }
+    public int getCourseId() { return courseId; }
+    public ResourceType getType() { return type; }
+    public String getDownloadUrl() { return downloadUrl; }
 }

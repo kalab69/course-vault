@@ -21,15 +21,15 @@ public class CourseResourceService {
     @Autowired
     CourseResourceService(CourseResourceRepository courseResourceRepository,
                           CourseRepository courseRepository,
-                          FileStorageService fileStorageService){
+                          FileStorageService fileStorageService) {
         this.courseResourceRepository = courseResourceRepository;
         this.courseRepository = courseRepository;
         this.fileStorageService = fileStorageService;
     }
 
-    public Optional<CourseResource> addResource(MultipartFile file, String title, int courseId, ResourceType type){
+    public Optional<CourseResource> addResource(MultipartFile file, String title, int courseId, ResourceType type) {
         Optional<Course> courseOpt = courseRepository.findById(courseId);
-        if(courseOpt.isEmpty()){
+        if (courseOpt.isEmpty()) {
             return Optional.empty(); // will fix when adding custom exceptions
         }
 
@@ -46,17 +46,21 @@ public class CourseResourceService {
         return Optional.of(saved);
     }
 
-    public List<CourseResource> listByCourse(int courseId){
+    public List<CourseResource> listByCourse(int courseId) {
         return courseResourceRepository.findByCourseId(courseId);
     }
 
-    public Optional<CourseResource> findResource(int id){
+    public List<CourseResource> listByCourseAndType(int courseId, ResourceType type) {
+        return courseResourceRepository.findByCourseIdAndType(courseId, type);
+    }
+
+    public Optional<CourseResource> findResource(int id) {
         return courseResourceRepository.findById(id);
     }
 
-    public boolean deleteResource(int id){
+    public boolean deleteResource(int id) {
         Optional<CourseResource> findResource = courseResourceRepository.findById(id);
-        if(findResource.isPresent()){
+        if (findResource.isPresent()) {
             fileStorageService.deleteFile(findResource.get().getFilePath());
             courseResourceRepository.deleteById(id);
             return true;
