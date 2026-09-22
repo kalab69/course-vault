@@ -1,5 +1,6 @@
 package com.example.coursevault.service;
 
+import com.example.coursevault.exception.ResourceNotFoundException;
 import com.example.coursevault.model.Course;
 import com.example.coursevault.model.ExternalLink;
 import com.example.coursevault.repositorie.CourseRepository;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ExternalLinkService {
@@ -16,52 +16,44 @@ public class ExternalLinkService {
     CourseRepository courseRepository;
 
     @Autowired
-    ExternalLinkService(ExternalLinkRepository externalLinkRepository , CourseRepository courseRepository){
+    ExternalLinkService(ExternalLinkRepository externalLinkRepository, CourseRepository courseRepository) {
         this.externalLinkRepository = externalLinkRepository;
         this.courseRepository = courseRepository;
     }
 
-    public Optional<ExternalLink> addLink(ExternalLink link , int courseId){
-        Optional<Course> course = courseRepository.findById(courseId);
-        if(course.isPresent()){
-            link.setCourse(course.get());
-            ExternalLink saved = externalLinkRepository.save(link);
-            return Optional.of(saved);
-        }
-        else {
-            return Optional.empty();
-        }
+    public ExternalLink addLink(ExternalLink link, int courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + courseId));
+        link.setCourse(course);
+        return externalLinkRepository.save(link);
     }
 
-    public List<ExternalLink> listLinksByCourse(int courseId){
+    public List<ExternalLink> listLinksByCourse(int courseId) {
+        if (!courseRepository.existsById(courseId)) {
+            throw new ResourceNotFoundException("Course not found: " + courseId);
+        }
         return externalLinkRepository.findByCourseId(courseId);
     }
 
-    public Optional<ExternalLink> findLink(int id){
-        return externalLinkRepository.findById(id);
+    public ExternalLink findLink(int id) {
+        return externalLinkRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Link not found: " + id));
     }
 
-    public Optional<ExternalLink> editLink(ExternalLink link, int id){
-        Optional<ExternalLink> oldLink = externalLinkRepository.findById(id);
-        if(oldLink.isPresent()){
-            ExternalLink existing = oldLink.get();
-            existing.setTopic(link.getTopic());
-            existing.setTitle(link.getTitle());
-            existing.setUrl(link.getUrl());
-            ExternalLink saved = externalLinkRepository.save(existing);
-            return Optional.of(saved);
-        } else {
-            return Optional.empty();
-        }
+    public ExternalLink editLink(ExternalLink link, int id) {
+        ExternalLink existing = externalLinkRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Link not found: " + id));
+
+        existing.setTopic(link.getTopic());
+        existing.setTitle(link.getTitle());
+        existing.setUrl(link.getUrl());
+        return externalLinkRepository.save(existing);
     }
 
-    public boolean deleteLink(int id){
-        Optional<ExternalLink> findLink = externalLinkRepository.findById(id);
-        if(findLink.isPresent()){
-            externalLinkRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
+    public void deleteLink(int id) {
+        if (!externalLinkRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Link not found: " + id);
         }
+        externalLinkRepository.deleteById(id);
     }
 }
