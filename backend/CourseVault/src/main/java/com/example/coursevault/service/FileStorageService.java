@@ -43,32 +43,32 @@ public class FileStorageService {
         try {
             Path targetPath = storageLocation.resolve(uniqueFilename);
             Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-            return targetPath.toString();
+            return uniqueFilename; // ← changed: just the filename now
         } catch (IOException e) {
             throw new FileStorageException("Failed to store file " + originalFilename, e);
         }
     }
 
-    public Resource loadFileAsResource(String filePath) {
+    public Resource loadFileAsResource(String filename) {
         try {
-            Path path = Paths.get(filePath).normalize();
+            Path path = storageLocation.resolve(filename).normalize();
             Resource resource = new UrlResource(path.toUri());
 
             if (resource.exists() && resource.isReadable()) {
                 return resource;
             } else {
-                throw new FileStorageException("File not found: " + filePath);
+                throw new FileStorageException("File not found: " + filename);
             }
         } catch (MalformedURLException e) {
-            throw new FileStorageException("File not found: " + filePath, e);
+            throw new FileStorageException("File not found: " + filename, e);
         }
     }
 
-    public void deleteFile(String filePath) {
+    public void deleteFile(String filename) {
         try {
-            Files.deleteIfExists(Paths.get(filePath));
+            Files.deleteIfExists(storageLocation.resolve(filename));
         } catch (IOException e) {
-            throw new FileStorageException("Failed to delete file: " + filePath, e);
+            throw new FileStorageException("Failed to delete file: " + filename, e);
         }
     }
 
