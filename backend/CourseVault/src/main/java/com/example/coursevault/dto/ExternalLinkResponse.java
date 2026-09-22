@@ -19,4 +19,24 @@ public class ExternalLinkResponse {
 
     public ExternalLinkResponse() {
     }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

@@ -13,6 +13,8 @@ public class CourseResource {
     @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+    @Column(nullable = false)
+    private String contentType;
 
     @Enumerated(EnumType.STRING)
     private ResourceType type;
@@ -20,12 +22,13 @@ public class CourseResource {
     @Column(nullable = false)
     private String filePath;
 
-    public CourseResource(Course course, String filePath, int id, String title, ResourceType type) {
+    public CourseResource(Course course, String filePath, int id, String title, ResourceType type, String contentType) {
         this.course = course;
         this.filePath = filePath;
         this.id = id;
         this.title = title;
         this.type = type;
+        this.contentType = contentType;
     }
 
     public CourseResource() {
@@ -69,5 +72,13 @@ public class CourseResource {
 
     public void setType(ResourceType type) {
         this.type = type;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 }

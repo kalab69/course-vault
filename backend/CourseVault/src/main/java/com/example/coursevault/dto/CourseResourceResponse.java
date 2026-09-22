@@ -19,4 +19,24 @@ public class CourseResourceResponse {
 
     public CourseResourceResponse() {
     }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public ResourceType getType() {
+        return type;
+    }
 }
