@@ -49,7 +49,7 @@ public class ExternalLinkController {
     private ExternalLinkResponse toResponse(ExternalLink link) {
         return new ExternalLinkResponse(
                 link.getId(),
-                link.getCourse(),
+                link.getCourse().getId(),
                 link.getTitle(),
                 link.getTopic(),
                 link.getUrl()
