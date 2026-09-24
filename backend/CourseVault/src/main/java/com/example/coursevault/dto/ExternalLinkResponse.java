@@ -1,42 +1,25 @@
 package com.example.coursevault.dto;
 
-import com.example.coursevault.model.Course;
-
 public class ExternalLinkResponse {
     private int id;
-    private Course course;
+    private int courseId;
     private String topic;
     private String title;
     private String url;
 
-    public ExternalLinkResponse(int id,Course course, String title, String topic, String url) {
-        this.course = course;
+    public ExternalLinkResponse(int id, int courseId, String title, String topic, String url) {
+        this.id = id;
+        this.courseId = courseId;
         this.title = title;
         this.topic = topic;
         this.url = url;
-        this.id =id;
     }
 
-    public ExternalLinkResponse() {
-    }
+    public ExternalLinkResponse() {}
 
-    public Course getCourse() {
-        return course;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public String getUrl() {
-        return url;
-    }
+    public int getId() { return id; }
+    public int getCourseId() { return courseId; }
+    public String getTitle() { return title; }
+    public String getTopic() { return topic; }
+    public String getUrl() { return url; }
 }
