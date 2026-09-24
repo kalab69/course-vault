@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+
+<BorderPane fx:id="viewerRoot" styleClass="course-page-root" stylesheets="@../CSS/coursepage.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.PdfViewerController">
+
+    <!-- ── TOP: toolbar ── -->
+    <top>
+        <HBox fx:id="toolbar" alignment="CENTER_LEFT" spacing="12.0" styleClass="course-header">
+            <children>
+
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS" />
+
+                <!-- PDF file name -->
+                <Label fx:id="fileNameLabel" styleClass="course-page-title" text="document.pdf" />
+
+                <!-- Spacer -->
+                <Region HBox.hgrow="ALWAYS" />
+
+            </children>
+            <padding>
+                <Insets bottom="10.0" left="16.0" right="16.0" top="10.0" />
+            </padding>
+        </HBox>
+    </top>
+
+    <!-- ── CENTER: PDF pages rendered here ── -->
+    <center>
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="AS_NEEDED" styleClass="course-scroll" vbarPolicy="AS_NEEDED" BorderPane.alignment="CENTER">
+            <content>
+                <VBox fx:id="pagesContainer" alignment="CENTER" style="-fx-background-color: #1a1a2e;" VBox.vgrow="ALWAYS">
+                    <children>
+                        <!-- WebView fills full space — PDF.js renders inside -->
+                        <WebView fx:id="pdfWebView" maxHeight="Infinity" maxWidth="Infinity" prefHeight="800.0" prefWidth="1000.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <!-- ── BOTTOM: loading indicator ── -->
+    <bottom>
+        <HBox fx:id="loadingBar" alignment="CENTER" style="-fx-background-color: #111827;                      -fx-padding: 8;                      -fx-border-color: #1e293b transparent transparent transparent;                      -fx-border-width: 1 0 0 0;" visible="false">
+            <children>
+                <Label fx:id="loadingLabel" style="-fx-text-fill: #64748b; -fx-font-size: 12px;" text="Loading pages..." />
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

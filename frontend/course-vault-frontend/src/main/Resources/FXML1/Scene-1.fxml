@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
    <center>
       <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
@@ -122,24 +122,7 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
                            <children>
-                              <VBox fx:id="csCard1" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-1" text="Into to CS" />
-                                    <Label styleClass="course-title" text="Introduction to Computing Science" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard2" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-2" text="Prog I" />
-                                    <Label styleClass="course-title" text="Programming Fundamentals I" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard3" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-3" text="EmeT" />
-                                    <Label styleClass="course-title" text="Introduction to Emerging Technologies" />
-                                 </children>
-                              </VBox>
+                              <VBox fx:id="courseContainer1" prefHeight="200.0" prefWidth="1000.0" spacing="15.0" styleClass="course-card" />
                            </children>
                         </HBox>
                      </children>
@@ -170,68 +153,69 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
                            <children>
-                              <VBox fx:id="csCard4" prefHeight="55.0" prefWidth="102.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-1" text="Prog II" />
-                                    <Label styleClass="course-title" text="Programming Fundamentals II" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard5" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-2" text="DB" />
-                                    <Label styleClass="course-title" text="Fundamentals of Database Systems" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard6" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-3" text="DLD" />
-                                    <Label styleClass="course-title" text="Digital Electronics and Logic Design" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard7" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-1" text="DC" />
-                                    <Label styleClass="course-title" text="Data Communication and Computer Networks" />
-                                 </children>
-                              </VBox>
+                              <VBox fx:id="courseContainer2" prefHeight="200.0" prefWidth="1000.0" spacing="15.0" styleClass="course-card" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="yearThreeSection" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Button fx:id="yearThreeHeader" mnemonicParsing="false">
+                                 <styleClass>
+                                    <String fx:value="year-header-row" />
+                                    <String fx:value="year-toggle-btn" />
+                                 </styleClass>
+                                 <graphic>
+                                    <ImageView fx:id="yearThreeArrow" fitHeight="20.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Images/right-arrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Label styleClass="section-title" text="Year III">
+                                 <padding>
+                                    <Insets top="2.0" />
+                                 </padding>
+                              </Label>
                            </children>
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
                            <children>
-                              <VBox fx:id="csCard8" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-2" text="DSA" />
-                                    <Label styleClass="course-title" text="Data Structure and Algorithm Analysis" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard9" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-3" text="OOP" />
-                                    <Label styleClass="course-title" text="Object Oriented Programming" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard10" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-1" text="NSA" />
-                                    <Label styleClass="course-title" text="Network and System Administration" />
-                                 </children>
-                              </VBox>
+                              <VBox fx:id="courseContainer3" prefHeight="200.0" prefWidth="1000.0" spacing="15.0" styleClass="course-card" />
                            </children>
                         </HBox>
-                        <HBox prefHeight="83.0" prefWidth="369.0" spacing="16.0">
+                     </children>
+                  </VBox>
+                  <VBox fx:id="yearFourSection" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <VBox fx:id="csCard12" prefHeight="83.0" prefWidth="300.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-3" text="MOA" />
-                                    <Label styleClass="course-title" text="Machine Organization and Assembly Language" />
-                                 </children>
-                              </VBox>
-                              <VBox fx:id="csCard11" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                                 <children>
-                                    <Label styleClass="tag-2" text="CAO" />
-                                    <Label styleClass="course-title" text="Computer Architecture and Organization" />
-                                 </children>
-                              </VBox>
+                              <Button fx:id="yearFourHeader" mnemonicParsing="false">
+                                 <styleClass>
+                                    <String fx:value="year-header-row" />
+                                    <String fx:value="year-toggle-btn" />
+                                 </styleClass>
+                                 <graphic>
+                                    <ImageView fx:id="yearFourArrow" fitHeight="20.0" fitWidth="14.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Images/right-arrow.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Label styleClass="section-title" text="Year IV">
+                                 <padding>
+                                    <Insets top="2.0" />
+                                 </padding>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
+                           <children>
+                              <VBox fx:id="courseContainer4" prefHeight="200.0" prefWidth="1000.0" spacing="15.0" styleClass="course-card" />
                            </children>
                         </HBox>
                      </children>
@@ -277,7 +261,7 @@
             </Button>
 
             <!-- ── App title ── -->
-            <TextField fx:id="appTitle" editable="false" prefHeight="31.0" prefWidth="200.0" styleClass="selectable-title" text="CourseVault" />
+            <TextField fx:id="appTitle" editable="false" prefHeight="31.0" prefWidth="177.0" styleClass="selectable-title" text="CourseVault" />
 
             <!-- ── Spacer — pushes nav to the right ── -->
             <Region HBox.hgrow="ALWAYS" />
@@ -347,9 +331,9 @@
                     <!-- Sliding indicator rectangle -->
                     <Rectangle fx:id="sidebarIndicator" fill="#1e293b" height="3.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="sidebarIndicator" width="220.0" />
 
-                    <Button fx:id="departmentMenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Departments" />
+                    <Button fx:id="departmentMenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Year" />
                     <Button fx:id="exammenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Exams" />
-                    <Button fx:id="referencemenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Reference Books" />
+                    <Button fx:id="referencemenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="External Links" />
                 </children>
             </VBox>
 

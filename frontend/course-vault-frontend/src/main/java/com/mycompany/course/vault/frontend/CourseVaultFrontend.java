@@ -1,4 +1,4 @@
- /*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 package com.mycompany.course.vault.frontend;
@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import com.mycompany.service.courseService;
 
 /**
  *
@@ -25,6 +26,8 @@ public class CourseVaultFrontend extends Application {
             scene.getStylesheets().add(css);
             stage.setScene(scene);
 
+            Image appIcon = new Image(getClass().getResourceAsStream("/Images/Logo.png"));
+            stage.getIcons().add(appIcon);
 //            stage.setMaximized(true);
             stage.show();
         } catch (Exception e) {

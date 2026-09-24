@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="courseRoot" prefHeight="316.0" prefWidth="463.0" styleClass="course-page-root" stylesheets="@../CSS/coursepage.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.CoursePageController">
+
+    <!-- ── TOP header ── -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="course-header" BorderPane.alignment="CENTER">
+            <children>
+
+                <Label fx:id="courseCode" styleClass="course-page-tag" text="CoSc2092" />
+
+                <Label fx:id="courseTitle" styleClass="course-page-title" text="Course Name" />
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Button fx:id="closeBtn" mnemonicParsing="false" onAction="#closeWindow" styleClass="course-close-btn">
+                    <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Images/close.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+            </children>
+            <padding>
+                <Insets bottom="14.0" left="20.0" right="20.0" top="14.0" />
+            </padding>
+        </HBox>
+    </top>
+
+    <!-- ── CENTER content ── -->
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="course-scroll" BorderPane.alignment="CENTER">
+            <content>
+                <VBox spacing="16.0" styleClass="course-body">
+                    <children>
+                  <HBox prefHeight="24.0" prefWidth="412.0">
+                     <children>
+      
+                              <Label styleClass="course-section-title" text="📄  Notes" />
+                        <Label styleClass="course-section-title" text="📝 Midterm Exams" />
+                        <Label styleClass="course-section-title" text="📑 Final Exams" />
+                        <Label text="Label" />
+                     </children>
+                  </HBox>
+
+                              <VBox fx:id="notesContainer" spacing="12.0" styleClass="course-section">
+                     <children>
+                        <Button fx:id="notesBtn" mnemonicParsing="false" text="Open Test Pdf" />
+                     </children>
+                  </VBox>
+                  <VBox fx:id="midtermContainer" prefHeight="0.0" prefWidth="412.0" styleClass="course-section" />
+                  <VBox prefHeight="0.0" prefWidth="406.0" styleClass="course-section" />
+
+                    </children>
+                    <padding>
+                        <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
