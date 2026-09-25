@@ -1,43 +1,30 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.model;
 
-/**
- *
- * @author Abreham
- */
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class courseModel {
 
     public enum YearLevel {
-        FIRST,
-        SECOND,
-        THIRD,
-        FOURTH
+        FIRST, SECOND, THIRD, FOURTH
     }
+
     private int id;
     private String code;
     private String courseName;
-    private YearLevel yearLevel;
+    private YearLevel yearLevel; // set manually after fetch — not from JSON
 
-    public int getId() {
-        return id;
-    }
+    // ✅ No-arg constructor — required by Jackson
+    public courseModel() {}
 
-    public String getCourseName() {
-        return courseName;
-    }
+    public int getId()              { return id; }
+    public String getCode()         { return code; }
+    public String getCourseName()   { return courseName; }
+    public YearLevel getYearLevel() { return yearLevel; }
 
-    public String getCode() {
-        return code;
-    }
-
-    public YearLevel getYearLevel() {
-        return yearLevel;
-    }
-
-    public void setYearLevel(YearLevel yearLevel) {
-        this.yearLevel = yearLevel;
-    }
+    // Setters for Jackson
+    public void setId(int id)                       { this.id = id; }
+    public void setCode(String code)                { this.code = code; }
+    public void setCourseName(String name)          { this.courseName = name; }
+    public void setYearLevel(YearLevel yearLevel)   { this.yearLevel = yearLevel; }
 }

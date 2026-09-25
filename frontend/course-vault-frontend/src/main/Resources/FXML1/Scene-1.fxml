@@ -4,7 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
    <center>
       <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
@@ -51,46 +50,6 @@
                               </ImageView>
                               <Label fx:id="completedNum" styleClass="stat-number" text="___" />
                               <Label styleClass="stat-label" text="Completed" />
-                           </children>
-                        </VBox>
-                        <VBox fx:id="statCard3" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <ImageView fitHeight="149.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Images/back-in-time.png" />
-                                 </image>
-                              </ImageView>
-                              <Label fx:id="hoursNum" styleClass="stat-number" text="___hr" />
-                              <Label styleClass="stat-label" text="Learning Time" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <Label styleClass="section-title" text="Continue Learning" />
-                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0">
-                     <children>
-                        <VBox fx:id="courseCard1" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="tag-1" text="____" />
-                              <Label styleClass="course-title" text="_____" />
-                              <ProgressBar fx:id="prog1" prefHeight="20.0" prefWidth="162.0" progress="0.0" />
-                              <Label fx:id="prog1Label" styleClass="course-sub" text="___ % complete" />
-                           </children>
-                        </VBox>
-                        <VBox fx:id="courseCard2" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="tag-2" text="____" />
-                              <Label styleClass="course-title" text="_____" />
-                              <ProgressBar fx:id="prog2" prefWidth="200.0" progress="0.0" />
-                              <Label fx:id="prog2Label" styleClass="course-sub" text="___% complete" />
-                           </children>
-                        </VBox>
-                        <VBox fx:id="courseCard3" prefHeight="200.0" prefWidth="100.0" styleClass="course-card" HBox.hgrow="ALWAYS">
-                           <children>
-                              <Label styleClass="tag-3" text="____" />
-                              <Label styleClass="course-title" text="_____" />
-                              <ProgressBar fx:id="prog3" prefWidth="200.0" progress="0.0" />
-                              <Label fx:id="prog3Label" styleClass="course-sub" text="___% complete" />
                            </children>
                         </VBox>
                      </children>
@@ -189,9 +148,9 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <VBox fx:id="yearFourSection" prefHeight="200.0" prefWidth="100.0">
+                  <VBox fx:id="yearFourSection" prefHeight="38.0" prefWidth="522.0">
                      <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox prefHeight="17.0" prefWidth="522.0">
                            <children>
                               <Button fx:id="yearFourHeader" mnemonicParsing="false">
                                  <styleClass>
@@ -298,14 +257,6 @@
                                 </styleClass>
                             </Button>
 
-                            <Button fx:id="profileButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Profile">
-                                <styleClass>
-                                    <String fx:value="nav-button" />
-                                    <String fx:value="nav-border-both" />
-                                    <String fx:value="profileButton" />
-                                </styleClass>
-                            </Button>
-
                         </children>
                     </HBox>
 
@@ -332,8 +283,6 @@
                     <Rectangle fx:id="sidebarIndicator" fill="#1e293b" height="3.0" stroke="TRANSPARENT" strokeType="INSIDE" styleClass="sidebarIndicator" width="220.0" />
 
                     <Button fx:id="departmentMenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Year" />
-                    <Button fx:id="exammenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="Browse Exams" />
-                    <Button fx:id="referencemenuTrigger" mnemonicParsing="false" styleClass="sidebar-trigger-btn" text="External Links" />
                 </children>
             </VBox>
 

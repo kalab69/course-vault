@@ -1,49 +1,51 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package com.mycompany.service;
+    package com.mycompany.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mycompany.model.courseModel;
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.util.ArrayList;
-import java.util.List;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.mycompany.model.courseResourceModel;
+    import com.fasterxml.jackson.databind.ObjectMapper;
+    import com.mycompany.model.courseModel;
+    import java.io.IOException;
+    import java.net.URI;
+    import java.net.http.HttpClient;
+    import java.net.http.HttpRequest;
+    import java.net.http.HttpResponse;
+    import java.util.Arrays;
+    import java.util.List;
 
-/**
- *
- * @author Abreham
- */
-public class courseService {
+    public class courseService {
 
-    public List<courseModel> fetchCourses()
-            throws IOException, InterruptedException {
+        private final HttpClient client = HttpClient.newHttpClient();
+        private final ObjectMapper mapper = new ObjectMapper();
 
-        HttpClient client = HttpClient.newHttpClient();
+        public List<courseModel> fetchCoursesByYear(String year)
+                throws IOException, InterruptedException {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/api/courses"))
+            // ✅ Build URL with year filter
+            String url = "http://localhost:8080/api/courses?year=" + year;
+            System.out.println("Fetching: " + url);
+
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
                 .GET()
                 .build();
 
-        HttpResponse<String> response
-                = client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString()
-                );
+            HttpResponse<String> response = client.send(
+                request, HttpResponse.BodyHandlers.ofString());
 
-        ObjectMapper mapper = new ObjectMapper();
+            System.out.println("Status: " + response.statusCode());
+            System.out.println("Body: " + response.body());
 
-        return mapper.readValue(
-                response.body(),
-                new TypeReference<List<courseModel>>() {
+            // Parse JSON array into list
+            courseModel[] courses = mapper.readValue(
+                response.body(), courseModel[].class);
+
+            // ✅ Since backend doesn't return yearLevel in JSON,
+            //    set it manually based on which year we fetched
+            courseModel.YearLevel level =
+                courseModel.YearLevel.valueOf(year); // "FIRST" → YearLevel.FIRST
+
+            for (courseModel course : courses) {
+                course.setYearLevel(level);
+            }
+
+            return Arrays.asList(courses);
         }
-        );
     }
-}

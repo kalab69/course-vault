@@ -47,23 +47,27 @@
             <content>
                 <VBox spacing="16.0" styleClass="course-body">
                     <children>
-                  <HBox prefHeight="24.0" prefWidth="412.0">
-                     <children>
-      
-                              <Label styleClass="course-section-title" text="📄  Notes" />
-                        <Label styleClass="course-section-title" text="📝 Midterm Exams" />
-                        <Label styleClass="course-section-title" text="📑 Final Exams" />
-                        <Label text="Label" />
-                     </children>
-                  </HBox>
+                        <HBox prefHeight="24.0" prefWidth="412.0">
+                            <children>
+                                <Button fx:id="allBtn" mnemonicParsing="false" text="All" />
+                                <Button fx:id="notesBtn" mnemonicParsing="false" text="📄  Notes" />
+                                <Button fx:id="midtermBtn" mnemonicParsing="false" text="📝 Midterm Exams" />
+                                <Button fx:id="finalBtn" mnemonicParsing="false" text="📑 Final Exams" />
+                                <Button fx:id="externalBtn" mnemonicParsing="false" text="External Links">
+                                    <graphic>
+                                        <ImageView fitHeight="16.0" fitWidth="84.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../Images/link.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                </Button>
+                                <Button mnemonicParsing="false" text="AI Summary" />
+                            </children>
+                        </HBox>
 
-                              <VBox fx:id="notesContainer" spacing="12.0" styleClass="course-section">
-                     <children>
-                        <Button fx:id="notesBtn" mnemonicParsing="false" text="Open Test Pdf" />
-                     </children>
-                  </VBox>
-                  <VBox fx:id="midtermContainer" prefHeight="0.0" prefWidth="412.0" styleClass="course-section" />
-                  <VBox prefHeight="0.0" prefWidth="406.0" styleClass="course-section" />
+                        <VBox fx:id="notesContainer" spacing="12.0" styleClass="course-section">
+                        </VBox>
 
                     </children>
                     <padding>

@@ -15,6 +15,7 @@ public class courseResourceModel {
     private int courseId;
     private String type;
     private String downloadUrl;
+    private String fileName;
 
     public courseResourceModel() {
     }
@@ -59,4 +60,11 @@ public class courseResourceModel {
         this.downloadUrl = downloadUrl;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 }

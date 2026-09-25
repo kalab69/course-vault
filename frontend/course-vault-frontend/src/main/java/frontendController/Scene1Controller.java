@@ -51,124 +51,120 @@ import javafx.util.Duration;
 public class Scene1Controller implements Initializable {
 
     // ── FXML fields ───────────────────────────────────────────────────────────
-    @FXML
-    private Button homeButton;
-    @FXML
-    private Button myCourseButton;
+@FXML
+    private TextField appTitle;
+
     @FXML
     private Button browseButton;
-    @FXML
-    private Button profileButton;
-    @FXML
-    private HBox navBar;
-    @FXML
-    private Rectangle navIndicator;
-    @FXML
-    private TextField appTitle;
-    @FXML
-    private BorderPane rootPane;
 
-    // Sidebar
+    @FXML
+    private Label completedNum;
+
+    @FXML
+    private VBox courseContainer1;
+
+    @FXML
+    private VBox courseContainer2;
+
+    @FXML
+    private VBox courseContainer3;
+
+    @FXML
+    private VBox courseContainer4;
+
     @FXML
     private Button departmentMenuTrigger;
+
     @FXML
-    private Button exammenuTrigger;
+    private Label enrolledNum;
+
     @FXML
-    private Button referencemenuTrigger;
+    private Button homeButton;
+
     @FXML
-    private VBox sidebarContainer;
-    @FXML
-    private Rectangle sidebarIndicator;
-    @FXML
-    private AnchorPane sidebarPane;
-    @FXML
-    private Button sidebarToggleBtn;
-    @FXML
-    private ImageView menuOpenIcon;
+    private ScrollPane mainScrollPane;
+
     @FXML
     private ImageView menuCloseIcon;
 
-    // Welcome
+    @FXML
+    private ImageView menuOpenIcon;
+
+    @FXML
+    private Button myCourseButton;
+
+    @FXML
+    private HBox navBar;
+
+    @FXML
+    private Rectangle navIndicator;
+
+    @FXML
+    private BorderPane rootPane;
+
+    @FXML
+    private VBox sidebarContainer;
+
+    @FXML
+    private Rectangle sidebarIndicator;
+
+    @FXML
+    private AnchorPane sidebarPane;
+
+    @FXML
+    private Button sidebarToggleBtn;
+
+    @FXML
+    private VBox statCard1;
+
+    @FXML
+    private VBox statCard2;
+
     @FXML
     private Label welcomeLabel;
+
     @FXML
     private Label welcomeSub;
 
-    // Stat cards
-    @FXML
-    private Label enrolledNum;
-    @FXML
-    private Label completedNum;
-    @FXML
-    private Label hoursNum;
-    @FXML
-    private VBox statCard1;
-    @FXML
-    private VBox statCard2;
-    @FXML
-    private VBox statCard3;
-
-    // Progress bars
-    @FXML
-    private ProgressBar prog1;
-    @FXML
-    private ProgressBar prog2;
-    @FXML
-    private ProgressBar prog3;
-    @FXML
-    private Label prog1Label;
-    @FXML
-    private Label prog2Label;
-    @FXML
-    private Label prog3Label;
-
-    // Continue learning cards
-    @FXML
-    private VBox courseCard1;
-    @FXML
-    private VBox courseCard2;
-    @FXML
-    private VBox courseCard3;
-
-    // CS course cards
-    @FXML
-    private VBox courseContainer1;
-    @FXML
-    private VBox courseContainer2;
-    @FXML
-    private VBox courseContainer3;
-    @FXML
-    private VBox courseContainer4;
-    private final courseService courseService = new courseService();
-
-    // Accordion
-    @FXML
-    private VBox yearOneSection;
-    @FXML
-    private VBox yearTwoSection;
-    @FXML
-    private VBox yearThreeSection;
-    @FXML
-    private VBox yearFourSection;
-    @FXML
-    private Button yearOneHeader;
-    @FXML
-    private Button yearTwoHeader;
-    @FXML
-    private Button yearThreeHeader;
-    @FXML
-    private Button yearFourHeader;
-    @FXML
-    private ImageView yearOneArrow;
-    @FXML
-    private ImageView yearTwoArrow;
-    @FXML
-    private ImageView yearThreeArrow;
     @FXML
     private ImageView yearFourArrow;
 
     @FXML
-    private ScrollPane mainScrollPane;
+    private Button yearFourHeader;
+
+    @FXML
+    private VBox yearFourSection;
+
+    @FXML
+    private ImageView yearOneArrow;
+
+    @FXML
+    private Button yearOneHeader;
+
+    @FXML
+    private VBox yearOneSection;
+
+    @FXML
+    private ImageView yearThreeArrow;
+
+    @FXML
+    private Button yearThreeHeader;
+
+    @FXML
+    private VBox yearThreeSection;
+
+    @FXML
+    private ImageView yearTwoArrow;
+
+    @FXML
+    private Button yearTwoHeader;
+
+    @FXML
+    private VBox yearTwoSection;
+
+
+    private final courseService courseService = new courseService();
+
 
     // ── Animation fields ──────────────────────────────────────────────────────
     private TranslateTransition slideTransition;
@@ -239,9 +235,6 @@ public class Scene1Controller implements Initializable {
         // Build flyout menus FIRST so fields are never null
         setupCascadingSidebarMenu();
 
-        // Profile dropdown
-        setupProfileDropdown();
-
         // Mouse exit — only hide if not moving into a flyout
         sidebarContainer.setOnMouseExited(e -> {
             double mouseX = e.getScreenX();
@@ -266,22 +259,14 @@ public class Scene1Controller implements Initializable {
         });
 
         setupVerticalSlidingHover(departmentMenuTrigger);
-        setupVerticalSlidingHover(exammenuTrigger);
-        setupVerticalSlidingHover(referencemenuTrigger);
-
         // ════════════════════════════════════════════════
         // PART 3 — WELCOME & STATS
         // ════════════════════════════════════════════════
-        welcomeLabel.setText("Welcome back, Abreham 👋");
-        welcomeSub.setText("You have 3 courses in progress");
+        welcomeLabel.setText("Welcome");
+        welcomeSub.setText("You have 52 courses you have enrolled in");
 
-        enrolledNum.setText("12");
+        enrolledNum.setText("52");
         completedNum.setText("5");
-        hoursNum.setText("48h");
-
-        setProgress(prog1, prog1Label, 0.72);
-        setProgress(prog2, prog2Label, 0.38);
-        setProgress(prog3, prog3Label, 0.15);
 
         // ════════════════════════════════════════════════
         // PART 4 — CARD HOVER ANIMATIONS
@@ -289,11 +274,6 @@ public class Scene1Controller implements Initializable {
         Platform.runLater(() -> {
             setupCardHoverAnimation(statCard1);
             setupCardHoverAnimation(statCard2);
-            setupCardHoverAnimation(statCard3);
-            setupCardHoverAnimation(courseCard1);
-            setupCardHoverAnimation(courseCard2);
-            setupCardHoverAnimation(courseCard3);
-
         });
 
         // ════════════════════════════════════════════════
@@ -376,54 +356,63 @@ public class Scene1Controller implements Initializable {
                 }
             });
         });
-        try {
-            loadCourses();
-        } catch (IOException ex) {
-            System.getLogger(Scene1Controller.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+        loadCourses();
+
+        Platform.runLater(() -> {
+            new Thread(() -> {
+                populateDepartmentMenu();
+            }).start();
+        });
     }
 
-    private void loadCourses() throws IOException {
+    private void loadCourses() {
+        // ✅ Load each year on background thread — never block JavaFX thread
+        loadYearAsync("FIRST", courseContainer1);
+        loadYearAsync("SECOND", courseContainer2);
+        loadYearAsync("THIRD", courseContainer3);
+        loadYearAsync("FOURTH", courseContainer4);
+    }
 
-        List<courseModel> courses = null;
-        try {
-            courses = courseService.fetchCourses();
-            populateDepartmentMenu(courses);
-        } catch (InterruptedException ex) {
-            System.getLogger(Scene1Controller.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+    private void loadYearAsync(String year, VBox container) {
+        new Thread(() -> {
+            try {
+                System.out.println("Fetching year: " + year);
+                List<courseModel> courses
+                        = courseService.fetchCoursesByYear(year);
 
-        if (courses == null) {
-            return;
-        }
+                System.out.println("Got " + courses.size()
+                        + " courses for year: " + year);
 
-        for (courseModel course : courses) {
-            if (course.getYearLevel() == null) {
-                System.out.println("Skipping course with null year: "
-                        + course.getCourseName());
-                continue;
+                // ✅ UI updates must be on JavaFX thread
+                Platform.runLater(() -> {
+                    container.getChildren().clear();
+
+                    for (courseModel course : courses) {
+                        VBox card = createCourseCard(course);
+                        card.setOnMouseClicked(e -> openCourse(course));
+                        container.getChildren().add(card);
+
+                        // Apply hover animation after card is in scene
+                        Platform.runLater(()
+                                -> setupCardHoverAnimation(card));
+                    }
+                });
+
+            } catch (IOException | InterruptedException ex) {
+                System.err.println("Failed to fetch year "
+                        + year + ": " + ex.getMessage());
+                ex.printStackTrace();
+
+                // ✅ Show error card in UI
+                Platform.runLater(() -> {
+                    Label errorLabel = new Label(
+                            "Failed to load " + year + " courses");
+                    errorLabel.setStyle(
+                            "-fx-text-fill: #ef4444; -fx-font-size: 12px;");
+                    container.getChildren().add(errorLabel);
+                });
             }
-
-            VBox card = createCourseCard(course);
-            card.setOnMouseClicked(e -> {
-                openCourse(course);
-            });
-
-            switch (course.getYearLevel()) {
-                case FIRST:
-                    courseContainer1.getChildren().add(card);
-                    break;
-                case SECOND:
-                    courseContainer2.getChildren().add(card);
-                    break;
-                case THIRD:
-                    courseContainer3.getChildren().add(card);
-                    break;
-                case FOURTH:
-                    courseContainer4.getChildren().add(card);
-                    break;
-            }
-        }
+        }).start();
     }
 
     private VBox createCourseCard(courseModel course) {
@@ -519,15 +508,6 @@ public class Scene1Controller implements Initializable {
                         + "-fx-background-radius: 6;"
                         + "-fx-padding: 3 10 3 10;";
         }
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PROGRESS BAR HELPER
-    // ─────────────────────────────────────────────────────────────────────────
-    private void setProgress(ProgressBar bar, Label label, double value) {
-        bar.setProgress(value);
-        int percent = (int) (value * 100);
-        label.setText(percent + "% complete");
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -694,11 +674,7 @@ public class Scene1Controller implements Initializable {
 
                 if (btn == departmentMenuTrigger && !departmentsFlyout.isShowing()) {
                     departmentsFlyout.show(btn, Side.RIGHT, 5, 0);
-                } else if (btn == exammenuTrigger && !examFlyout.isShowing()) {
-                    examFlyout.show(btn, Side.RIGHT, 5, 0);
-                } else if (btn == referencemenuTrigger && !externalFlyout.isShowing()) {
-                    externalFlyout.show(btn, Side.RIGHT, 5, 0);
-                }
+                } 
             });
             delay.play();
         });
@@ -766,44 +742,59 @@ public class Scene1Controller implements Initializable {
         });
     }
 
-    private void populateDepartmentMenu(List<courseModel> courses) {
+    private void populateDepartmentMenu() {
 
         Menu year1 = new Menu("Year I");
         Menu year2 = new Menu("Year II");
         Menu year3 = new Menu("Year III");
         Menu year4 = new Menu("Year IV");
 
+        try {
+
+            addCoursesToMenu(
+                    year1,
+                    courseService.fetchCoursesByYear("FIRST"));
+
+            addCoursesToMenu(
+                    year2,
+                    courseService.fetchCoursesByYear("SECOND"));
+
+            addCoursesToMenu(
+                    year3,
+                    courseService.fetchCoursesByYear("THIRD"));
+
+            addCoursesToMenu(
+                    year4,
+                    courseService.fetchCoursesByYear("FOURTH"));
+
+            departmentsFlyout.getItems().setAll(
+                    year1,
+                    year2,
+                    year3,
+                    year4);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+    }
+
+    private void addCoursesToMenu(
+            Menu menu,
+            List<courseModel> courses) {
+
         for (courseModel course : courses) {
 
             MenuItem item
-                    = new MenuItem(course.getCourseName());
+                    = new MenuItem(
+                            course.getCourseName());
 
-            item.setOnAction(e
-                    -> openCourse(course));
+            item.setOnAction(
+                    e -> openCourse(course));
 
-            switch (course.getYearLevel()) {
-
-                case FIRST:
-                    year1.getItems().add(item);
-                    break;
-
-                case SECOND:
-                    year2.getItems().add(item);
-                    break;
-
-                case THIRD:
-                    year3.getItems().add(item);
-                    break;
-
-                case FOURTH:
-                    year4.getItems().add(item);
-                    break;
-            }
+            menu.getItems().add(item);
         }
-
-        departmentsFlyout.getItems().setAll(
-                year1, year2, year3, year4
-        );
     }
 
     private void openCourse(courseModel course) {
@@ -832,24 +823,6 @@ public class Scene1Controller implements Initializable {
             courseStage.show();
         } catch (java.io.IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void openPdfViewer(File pdfFile) {
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/PdfViewer.fxml"));
-            Parent root = loader.load();
-            PdfViewerController controller = loader.getController();
-//            controller.loadPDF(pdfFile);
-            
-            Stage stage = new Stage();
-            stage.setTitle("PDF Viewer");
-            stage.setScene(new Scene(root, 1100, 800));
-            stage.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -1026,135 +999,7 @@ public class Scene1Controller implements Initializable {
         }
         return false;
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PROFILE DROPDOWN
-    // ─────────────────────────────────────────────────────────────────────────
-    private void setupProfileDropdown() {
-        this.profileDropdown = new ContextMenu();
-        profileDropdown.getStyleClass().add("sidebar-flyout");
-        profileDropdown.setAutoHide(true);
-
-        profileDropdown.setOnShown(e -> {
-            javafx.scene.Node content = profileDropdown.getSkin().getNode();
-            if (content != null) {
-
-                content.setScaleY(0.0);
-                content.setTranslateY(-content.getBoundsInLocal().getHeight() / 2);
-                content.setOpacity(0.0);
-
-                javafx.animation.Timeline slideDown = new javafx.animation.Timeline(
-                        new javafx.animation.KeyFrame(Duration.ZERO,
-                                new javafx.animation.KeyValue(
-                                        content.scaleYProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.translateYProperty(),
-                                        -content.getBoundsInLocal().getHeight() / 2,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.opacityProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT)
-                        ),
-                        new javafx.animation.KeyFrame(Duration.millis(200),
-                                new javafx.animation.KeyValue(
-                                        content.scaleYProperty(), 1.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.translateYProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.opacityProperty(), 1.0,
-                                        javafx.animation.Interpolator.EASE_OUT)
-                        )
-                );
-                slideDown.play();
-
-                content.setOnMouseExited(ev -> {
-                    double mouseX = ev.getScreenX();
-                    double mouseY = ev.getScreenY();
-                    PauseTransition delay
-                            = new PauseTransition(Duration.millis(100));
-                    delay.setOnFinished(evv -> {
-                        javafx.geometry.Bounds btnBounds
-                                = profileButton.localToScreen(
-                                        profileButton.getBoundsInLocal());
-                        if (btnBounds == null
-                                || !btnBounds.contains(mouseX, mouseY)) {
-                            profileDropdown.hide();
-                        }
-                    });
-                    delay.play();
-                });
-            }
-        });
-
-        MenuItem account = new MenuItem("   👤  Account");
-        MenuItem addFile = new MenuItem("   📄  Add File");
-        MenuItem settings = new MenuItem("   ⚙   Settings");
-        MenuItem signOut = new MenuItem("   🚪  Sign Out");
-        signOut.setStyle("-fx-text-fill: #f87171;");
-
-        account.setOnAction(e -> System.out.println("Account"));
-        addFile.setOnAction(e -> System.out.println("Add File"));
-        settings.setOnAction(e -> System.out.println("Settings"));
-        signOut.setOnAction(e -> System.out.println("Sign Out"));
-
-        profileDropdown.getItems().addAll(
-                account, addFile, settings,
-                new javafx.scene.control.SeparatorMenuItem(), signOut);
-
-        // Combined hover — sliding indicator + dropdown
-        profileButton.setOnMouseEntered(e -> {
-            double targetX = profileButton.getLayoutX();
-            double tightHeight = profileButton.getHeight() - 6;
-
-            navIndicator.setHeight(tightHeight);
-            navIndicator.setWidth(profileButton.getWidth());
-            navIndicator.setLayoutY(profileButton.getLayoutY() + 3);
-
-            slideTransition.stop();
-            slideTransition.setToX(targetX);
-            slideTransition.play();
-
-            fadeTransition.stop();
-            fadeTransition.setToValue(1.0);
-            fadeTransition.play();
-
-            if (!profileDropdown.isShowing()) {
-                profileDropdown.show(profileButton,
-                        javafx.geometry.Side.BOTTOM, 0, 4);
-            }
-        });
-
-        profileButton.setOnMouseExited(e -> {
-            double mouseX = e.getScreenX();
-            double mouseY = e.getScreenY();
-            PauseTransition delay
-                    = new PauseTransition(Duration.millis(100));
-            delay.setOnFinished(ev -> {
-                if (!isMouseOverDropdown(mouseX, mouseY)) {
-                    profileDropdown.hide();
-                }
-            });
-            delay.play();
-        });
-    }
-
-    private boolean isMouseOverDropdown(double screenX, double screenY) {
-        if (profileDropdown != null && profileDropdown.isShowing()) {
-            double fx = profileDropdown.getX();
-            double fy = profileDropdown.getY();
-            double fw = profileDropdown.getWidth();
-            double fh = profileDropdown.getHeight();
-            double buffer = 10;
-
-            return screenX >= fx - buffer && screenX <= fx + fw + buffer
-                    && screenY >= fy - buffer && screenY <= fy + fh + buffer;
-        }
-        return false;
-    }
-
+    
     // ─────────────────────────────────────────────────────────────────────────
     // CARD HOVER ANIMATION
     // ─────────────────────────────────────────────────────────────────────────
@@ -1257,15 +1102,9 @@ public class Scene1Controller implements Initializable {
                 for (HBox row : rows) {
                     double startH = row.getHeight();
 
-                    javafx.animation.Timeline collapse
-                            = new javafx.animation.Timeline(
-                                    new javafx.animation.KeyFrame(Duration.ZERO,
-                                            new javafx.animation.KeyValue(
-                                                    row.maxHeightProperty(), startH,
-                                                    javafx.animation.Interpolator.EASE_IN),
-                                            new javafx.animation.KeyValue(
-                                                    row.opacityProperty(), 1.0,
-                                                    javafx.animation.Interpolator.EASE_IN)
+                    javafx.animation.Timeline collapse = new javafx.animation.Timeline(new javafx.animation.KeyFrame(Duration.ZERO,
+                                            new javafx.animation.KeyValue(row.maxHeightProperty(), startH,javafx.animation.Interpolator.EASE_IN),
+                                            new javafx.animation.KeyValue(row.opacityProperty(), 1.0, javafx.animation.Interpolator.EASE_IN)
                                     ),
                                     new javafx.animation.KeyFrame(Duration.millis(300),
                                             new javafx.animation.KeyValue(
