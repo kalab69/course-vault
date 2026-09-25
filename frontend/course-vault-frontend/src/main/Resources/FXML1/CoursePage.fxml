@@ -47,7 +47,7 @@
             <content>
                 <VBox spacing="16.0" styleClass="course-body">
                     <children>
-                        <HBox prefHeight="24.0" prefWidth="412.0">
+                        <HBox prefHeight="24.0" prefWidth="412.0" spacing="12.0">
                             <children>
                                 <Button fx:id="allBtn" mnemonicParsing="false" text="All" />
                                 <Button fx:id="notesBtn" mnemonicParsing="false" text="📄  Notes" />
@@ -62,7 +62,7 @@
                                         </ImageView>
                                     </graphic>
                                 </Button>
-                                <Button mnemonicParsing="false" text="AI Summary" />
+                                <Button fx:id="aiBtn" mnemonicParsing="false" text="AI Summary" />
                             </children>
                         </HBox>
 

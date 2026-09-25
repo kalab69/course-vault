@@ -1,0 +1,7 @@
+.scroll-pane .viewport{
+    -fx-background-color:#0f172a;
+}
+ 
+#imageView{
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0.3, 0, 4);
+}

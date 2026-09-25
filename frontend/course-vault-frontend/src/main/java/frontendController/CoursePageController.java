@@ -16,11 +16,15 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -47,6 +51,8 @@ public class CoursePageController implements Initializable {
     private Button midtermBtn;
     @FXML
     private Button allBtn;
+    @FXML
+    private Button aiBtn;
 
     // ── State ─────────────────────────────────────────────────────────
     private courseModel course;
@@ -83,6 +89,10 @@ public class CoursePageController implements Initializable {
             setActiveTab(externalBtn);
             showResources("LINK");
         });
+        aiBtn.setOnAction(e -> {
+            setActiveTab(aiBtn);
+            showResources("AI Summary");
+        });
 
         // Start with "All" tab active
         setActiveTab(allBtn);
@@ -91,7 +101,7 @@ public class CoursePageController implements Initializable {
     // ── Highlight the active tab button ──────────────────────────────
     private void setActiveTab(Button selected) {
         // Reset all tabs to inactive style
-        Button[] tabs = {allBtn, notesBtn, midtermBtn, finalBtn, externalBtn};
+        Button[] tabs = {allBtn, notesBtn, midtermBtn, finalBtn, externalBtn, aiBtn};
         for (Button tab : tabs) {
             if (tab != null) {
                 tab.setStyle(
@@ -372,12 +382,16 @@ public class CoursePageController implements Initializable {
         File existingFile = new File(courseVaultFolder, safeName);
 
         if (existingFile.exists()) {
-            System.out.println("✅ Already downloaded, opening: "
-                    + existingFile.getAbsolutePath());
-            openFile(existingFile);
+            String fileName = existingFile.getName().toLowerCase();
+            if (isImageResource(resource)) {
+                openImageViewer(existingFile);
+            } else {
+                System.out.println("✅ Already downloaded, opening: "
+                        + existingFile.getAbsolutePath());
+                openFile(existingFile);
+            }
             return;
         }
-
         // 2. Check in-memory session cache
         if (downloadedFiles.containsKey(resourceKey)) {
             File cachedFile = downloadedFiles.get(resourceKey);
@@ -392,7 +406,16 @@ public class CoursePageController implements Initializable {
                 baseStyle, downloadedStyle);
     }
 
+    private boolean isImageResource(
+            courseResourceModel resource) {
+        if (resource.getType() == null) {
+            return false;
+        }
+        return resource.getType().equalsIgnoreCase("MIDTERM")
+                || resource.getType().equalsIgnoreCase("FINAL");
+    }
     // ── Save As dialog — like browser save image ──────────────────────
+
     private void downloadWithSaveDialog(
             courseResourceModel resource,
             String resourceKey,
@@ -401,7 +424,12 @@ public class CoursePageController implements Initializable {
             String downloadedStyle) {
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save PDF");
+        if (isImageResource(resource)) {
+            fileChooser.setTitle("Save Image");
+        } else {
+            fileChooser.setTitle("Save PDF");
+        }
+
         fileChooser.setInitialFileName(getSafeFileName(resource));
 
         // Default to Downloads/CourseVault
@@ -410,8 +438,11 @@ public class CoursePageController implements Initializable {
             defaultFolder.mkdirs();
         }
         fileChooser.setInitialDirectory(defaultFolder);
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        if (isImageResource(resource)) {
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+        } else {
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        }
 
         Stage stage = (Stage) courseRoot.getScene().getWindow();
         File destination = fileChooser.showSaveDialog(stage);
@@ -453,11 +484,15 @@ public class CoursePageController implements Initializable {
 
                     Platform.runLater(() -> {
                         card.setDisable(false);
-                        card.setText("✅  " + resource.getTitle());
+                        card.setText("✅ " + resource.getTitle());
                         card.setStyle(downloadedStyle);
-                        openFile(finalDest);
+                        String fileName = finalDest.getName().toLowerCase();
+                        if (isImageResource(resource)) {
+                            openImageViewer(finalDest);
+                        } else {
+                            openFile(finalDest);
+                        }
                     });
-
                 } else {
                     throw new Exception("Server returned: "
                             + response.statusCode());
@@ -507,10 +542,7 @@ public class CoursePageController implements Initializable {
 
     private String getSafeFileName(courseResourceModel resource) {
         String extension = getExtension(resource.getFileName());
-        return resource.getTitle()
-                .replaceAll("[^a-zA-Z0-9\\s\\-_]", "")
-                .replaceAll("\\s+", "_")
-                + extension;
+        return resource.getId() + "_" + resource.getTitle().replaceAll("[^a-zA-Z0-9\\s\\-_]", "").replaceAll("\\s+", "_") + extension;
     }
 
     private String getExtension(String fileName) {
@@ -536,5 +568,24 @@ public class CoursePageController implements Initializable {
     public void closeWindow() {
         Stage stage = (Stage) courseRoot.getScene().getWindow();
         stage.close();
+    }
+
+    private void openImageViewer(File imageFile) {
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/ImageViewer.fxml"));
+            Parent root = loader.load();
+            ImageViewerController controller = loader.getController();
+            controller.loadImage(imageFile);
+            Stage stage = new Stage();
+            stage.setTitle(imageFile.getName());
+            stage.setScene(new Scene(root, 1000, 700));
+
+            Image appIcon = new Image(getClass().getResourceAsStream("/Images/Logo.png"));
+            stage.getIcons().add(appIcon);
+            stage.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -49,7 +49,7 @@
                                  </image>
                               </ImageView>
                               <Label fx:id="completedNum" styleClass="stat-number" text="___" />
-                              <Label styleClass="stat-label" text="Downloaded" />
+                              <Label styleClass="stat-label" text="Resources Downloaded" />
                            </children>
                         </VBox>
                      </children>
