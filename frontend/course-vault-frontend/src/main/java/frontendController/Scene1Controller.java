@@ -51,7 +51,7 @@ import javafx.util.Duration;
 public class Scene1Controller implements Initializable {
 
     // ── FXML fields ───────────────────────────────────────────────────────────
-@FXML
+    @FXML
     private TextField appTitle;
 
     @FXML
@@ -162,9 +162,7 @@ public class Scene1Controller implements Initializable {
     @FXML
     private VBox yearTwoSection;
 
-
     private final courseService courseService = new courseService();
-
 
     // ── Animation fields ──────────────────────────────────────────────────────
     private TranslateTransition slideTransition;
@@ -224,6 +222,21 @@ public class Scene1Controller implements Initializable {
 
         Platform.runLater(() -> rootPane.requestFocus());
 
+        Platform.runLater(() -> {
+            snapToButton(homeButton);
+            setActiveNavButton(homeButton);
+        });
+
+        homeButton.setOnAction(e -> {
+            setActiveNavButton(homeButton);
+        });
+        myCourseButton.setOnAction(e -> {
+            setActiveNavButton(myCourseButton);
+        });
+        browseButton.setOnAction(e -> {
+            setActiveNavButton(browseButton);
+        });
+        
         // ════════════════════════════════════════════════
         // PART 2 — SIDEBAR VERTICAL SLIDING INDICATOR
         // ════════════════════════════════════════════════
@@ -263,10 +276,10 @@ public class Scene1Controller implements Initializable {
         // PART 3 — WELCOME & STATS
         // ════════════════════════════════════════════════
         welcomeLabel.setText("Welcome");
-        welcomeSub.setText("You have 52 courses you have enrolled in");
+        welcomeSub.setText("52 courses you have enrolled in");
 
         enrolledNum.setText("52");
-        completedNum.setText("5");
+        completedNum.setText(String.valueOf(countDownloadedFiles()));
 
         // ════════════════════════════════════════════════
         // PART 4 — CARD HOVER ANIMATIONS
@@ -307,17 +320,11 @@ public class Scene1Controller implements Initializable {
                 setupAccordion(yearThreeHeader, yearThreeArrow, yearThreeRow);
                 setupAccordion(yearFourHeader, yearFourArrow, yearFourRow);
 
-                // Collapse all on startup
-                collapseImmediately(yearOneRow);
-                collapseImmediately(yearTwoRow);
-                collapseImmediately(yearThreeRow);
-                collapseImmediately(yearFourRow);
-
-                // Arrows point right = closed
-                yearOneArrow.setRotate(0);
-                yearTwoArrow.setRotate(0);
-                yearThreeArrow.setRotate(0);
-                yearFourArrow.setRotate(0);
+                // Arrows point right = opened
+                yearOneArrow.setRotate(90);
+                yearTwoArrow.setRotate(90);
+                yearThreeArrow.setRotate(90);
+                yearFourArrow.setRotate(90);
             });
             wait.play();
         });
@@ -453,6 +460,19 @@ public class Scene1Controller implements Initializable {
         return card;
     }
 
+    private int countDownloadedFiles() {
+        File courseVaultFolder = new File(System.getProperty("user.home") + File.separator + "Downloads" + File.separator + "CourseVault");
+        if (!courseVaultFolder.exists()) {
+            return 0;
+        }
+        File[] files
+                = courseVaultFolder.listFiles();
+        if (files == null) {
+            return 0;
+        }
+        return files.length;
+    }
+
     private String getYearTagStyle(String yearLevel) {
         if (yearLevel == null) {
             return "-fx-background-color: #1e293b;"
@@ -539,6 +559,13 @@ public class Scene1Controller implements Initializable {
         navIndicator.setLayoutY(btn.getLayoutY() + 3);
         navIndicator.setTranslateX(btn.getLayoutX());
         navIndicator.setOpacity(0.0);
+    }
+
+    private void setActiveNavButton(Button activeButton) {
+        homeButton.getStyleClass().remove("nav-active");
+        myCourseButton.getStyleClass().remove("nav-active");
+        browseButton.getStyleClass().remove("nav-active");
+        activeButton.getStyleClass().add("nav-active");
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -674,7 +701,7 @@ public class Scene1Controller implements Initializable {
 
                 if (btn == departmentMenuTrigger && !departmentsFlyout.isShowing()) {
                     departmentsFlyout.show(btn, Side.RIGHT, 5, 0);
-                } 
+                }
             });
             delay.play();
         });
@@ -999,7 +1026,7 @@ public class Scene1Controller implements Initializable {
         }
         return false;
     }
-    
+
     // ─────────────────────────────────────────────────────────────────────────
     // CARD HOVER ANIMATION
     // ─────────────────────────────────────────────────────────────────────────
@@ -1082,7 +1109,7 @@ public class Scene1Controller implements Initializable {
             ImageView arrowImg,
             HBox... contentRows) {
 
-        boolean[] isOpen = {false}; // starts CLOSED
+        boolean[] isOpen = {true};
 
         java.util.List<HBox> rows = java.util.Arrays.asList(contentRows);
 
@@ -1093,7 +1120,7 @@ public class Scene1Controller implements Initializable {
                 + "-fx-padding: 0;"
         );
 
-        arrowImg.setRotate(0); // pointing right = closed
+        arrowImg.setRotate(90);
 
         headerBtn.setOnMouseClicked(e -> {
 
@@ -1103,18 +1130,18 @@ public class Scene1Controller implements Initializable {
                     double startH = row.getHeight();
 
                     javafx.animation.Timeline collapse = new javafx.animation.Timeline(new javafx.animation.KeyFrame(Duration.ZERO,
-                                            new javafx.animation.KeyValue(row.maxHeightProperty(), startH,javafx.animation.Interpolator.EASE_IN),
-                                            new javafx.animation.KeyValue(row.opacityProperty(), 1.0, javafx.animation.Interpolator.EASE_IN)
-                                    ),
-                                    new javafx.animation.KeyFrame(Duration.millis(300),
-                                            new javafx.animation.KeyValue(
-                                                    row.maxHeightProperty(), 0,
-                                                    javafx.animation.Interpolator.EASE_IN),
-                                            new javafx.animation.KeyValue(
-                                                    row.opacityProperty(), 0.0,
-                                                    javafx.animation.Interpolator.EASE_IN)
-                                    )
-                            );
+                            new javafx.animation.KeyValue(row.maxHeightProperty(), startH, javafx.animation.Interpolator.EASE_IN),
+                            new javafx.animation.KeyValue(row.opacityProperty(), 1.0, javafx.animation.Interpolator.EASE_IN)
+                    ),
+                            new javafx.animation.KeyFrame(Duration.millis(300),
+                                    new javafx.animation.KeyValue(
+                                            row.maxHeightProperty(), 0,
+                                            javafx.animation.Interpolator.EASE_IN),
+                                    new javafx.animation.KeyValue(
+                                            row.opacityProperty(), 0.0,
+                                            javafx.animation.Interpolator.EASE_IN)
+                            )
+                    );
                     collapse.setOnFinished(ev -> {
                         row.setVisible(false);
                         row.setManaged(false);
@@ -1134,8 +1161,8 @@ public class Scene1Controller implements Initializable {
                 for (HBox row : rows) {
                     row.setVisible(true);
                     row.setManaged(true);
-                    row.setMaxHeight(0);
-                    row.setOpacity(0);
+                    row.setMaxHeight(Double.MAX_VALUE);
+                    row.setOpacity(1.0);
 
                     row.applyCss();
                     row.layout();

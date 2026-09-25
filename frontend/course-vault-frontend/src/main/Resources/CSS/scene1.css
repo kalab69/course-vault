@@ -73,6 +73,10 @@
 .nav-button:hover {
     -fx-text-fill: #000000;
 }
+.nav-active{
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
 
 .selectable-title {
     -fx-background-color: transparent;
@@ -310,7 +314,7 @@
     -fx-background-color: #1e293b;
     -fx-background-radius: 6;
 }
- 
+
 .year-header-row {
     -fx-padding: 4 0 4 0;
     -fx-spacing: 8;
