@@ -24,6 +24,7 @@ public class CourseVaultFrontend extends Application {
             Scene scene = new Scene(root);
             String css = getClass().getResource("/CSS/scene1.css").toExternalForm();
             scene.getStylesheets().add(css);
+            scene.getProperties().put("hostServices", getHostServices());
             stage.setScene(scene);
 
             Image appIcon = new Image(getClass().getResourceAsStream("/Images/Logo.png"));

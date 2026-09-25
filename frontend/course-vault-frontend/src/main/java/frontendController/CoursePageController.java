@@ -2,7 +2,9 @@ package frontendController;
 
 import com.mycompany.model.courseModel;
 import com.mycompany.model.courseResourceModel;
+import com.mycompany.model.externalLinkModel;
 import com.mycompany.service.courseResourceService;
+import com.mycompany.service.externalLinkService;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -90,6 +93,7 @@ public class CoursePageController implements Initializable {
         externalBtn.setOnAction(e -> {
             setActiveTab(externalBtn);
             showResources("LINK");
+            loadExternalLinksSection(currentCourseId);
         });
         aiBtn.setOnAction(e -> {
             setActiveTab(aiBtn);
@@ -139,6 +143,9 @@ public class CoursePageController implements Initializable {
     public void setCourse(courseModel course) {
         this.course = course;
 
+        if (course != null) {
+            this.currentCourseId = course.getId();
+        }
         // Set title and code
         courseTitle.setText(course.getCourseName());
         courseCode.setText(course.getCode());
@@ -628,6 +635,68 @@ public class CoursePageController implements Initializable {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    private final externalLinkService externalService = new externalLinkService();
+    private int currentCourseId;
+
+    public void loadExternalLinksSection(int courseId) {
+        notesContainer.getChildren().clear();
+
+        List<externalLinkModel> links = externalService.fetchCourseLinks(courseId);
+
+        if (links.isEmpty()) {
+            javafx.scene.control.Label noLinksLabel = new javafx.scene.control.Label("No external links available.");
+            noLinksLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-style: italic;");
+            notesContainer.getChildren().add(noLinksLabel);
+            return;
+        }
+
+        Map<String, List<externalLinkModel>> groupedLinks = links.stream()
+                .collect(Collectors.groupingBy(
+                        link -> link.getTopic() != null ? link.getTopic() : "General Resources"
+                ));
+
+        for (Map.Entry<String, List<externalLinkModel>> entry : groupedLinks.entrySet()) {
+            String topicName = entry.getKey();
+            List<externalLinkModel> topicLinks = entry.getValue();
+
+            Label topicHeader = new Label(topicName.toUpperCase());
+            topicHeader.getStyleClass().add("course-section-title");
+
+            if (!notesContainer.getChildren().isEmpty()) {
+                VBox.setMargin(topicHeader, new javafx.geometry.Insets(14, 0, 4, 0));
+            } else {
+                VBox.setMargin(topicHeader, new javafx.geometry.Insets(0, 0, 4, 0));
+            }
+            notesContainer.getChildren().add(topicHeader);
+
+            for (externalLinkModel link : topicLinks) {
+                Button linkBtn = new Button(link.getTitle());
+                linkBtn.getStyleClass().add("filter-tab");
+                linkBtn.setMaxWidth(Double.MAX_VALUE);
+                linkBtn.setCursor(javafx.scene.Cursor.HAND);
+
+                linkBtn.setOnAction(e -> {
+                    try {
+                        javafx.application.HostServices hostServices
+                                = (javafx.application.HostServices) linkBtn.getScene().getWindow().getProperties().get("hostServices");
+
+                        if (hostServices != null) {
+                            hostServices.showDocument(link.getUrl());
+                        } else {
+                            if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
+                                java.awt.Desktop.getDesktop().browse(new java.net.URI(link.getUrl()));
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                notesContainer.getChildren().add(linkBtn);
+            }
         }
     }
 
