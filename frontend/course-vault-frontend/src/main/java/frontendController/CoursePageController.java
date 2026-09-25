@@ -27,8 +27,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class CoursePageController implements Initializable {
 
@@ -571,21 +573,62 @@ public class CoursePageController implements Initializable {
     }
 
     private void openImageViewer(File imageFile) {
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/ImageViewer.fxml"));
             Parent root = loader.load();
             ImageViewerController controller = loader.getController();
-            controller.loadImage(imageFile);
+
+            // 1. Get the folder containing the clicked image
+            File parentDir = imageFile.getParentFile();
+            List<File> downloadedImages = new java.util.ArrayList<>();
+            int selectedIndex = 0;
+
+            if (parentDir != null && parentDir.isDirectory()) {
+                // 2. Filter out only image files (.png, .jpg, .jpeg) in that folder
+                File[] files = parentDir.listFiles((dir, name) -> {
+                    String lower = name.toLowerCase();
+                    return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".pdf");
+                });
+
+                if (files != null) {
+                    // Sort files alphabetically so page 1, page 2, etc., match the sequential order
+                    java.util.Arrays.sort(files);
+
+                    for (File file : files) {
+                        downloadedImages.add(file);
+                    }
+
+                    // 3. Find the index of the clicked file in the list
+                    selectedIndex = downloadedImages.indexOf(imageFile);
+                    if (selectedIndex == -1) {
+                        selectedIndex = 0; // Fallback if not found
+                    }
+                }
+            }
+
+            // If no companion files were found, at least pass the single clicked image
+            if (downloadedImages.isEmpty()) {
+                downloadedImages.add(imageFile);
+                selectedIndex = 0;
+            }
+
+            // 4. Pass the list and correct index to the viewer controller
+            controller.setImagesContext(downloadedImages, selectedIndex);
+
             Stage stage = new Stage();
             stage.setTitle(imageFile.getName());
-            stage.setScene(new Scene(root, 1000, 700));
-
+            Scene scene = new Scene(root, 1000, 700);
+            stage.setScene(scene);
             Image appIcon = new Image(getClass().getResourceAsStream("/Images/Logo.png"));
             stage.getIcons().add(appIcon);
+            stage.initModality(javafx.stage.Modality.NONE);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
             stage.show();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
 }

@@ -1,7 +1,83 @@
-.scroll-pane .viewport{
-    -fx-background-color:#0f172a;
+/* ── Root Layout (Frosted Glass Effect) ── */
+.image-viewer-root {
+    -fx-background-color: rgba(15, 23, 42, 0.85); /* dark + transparent */
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 30, 0, 0, 8);
 }
- 
-#imageView{
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0.3, 0, 4);
+
+/* ── Header Bar ── */
+.image-viewer-header {
+    -fx-background-color: rgba(17, 24, 39, 0.90);
+    -fx-background-radius: 16 16 0 0;
+    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 56px;
+    -fx-max-height: 56px;
+    -fx-padding: 0 16 0 16;
+}
+
+/* ── Toolbar/Navigation Buttons (+, -, <, >) ── */
+.image-nav-btn {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #334155;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 14px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.image-nav-btn:hover {
+    -fx-background-color: #6366f1;
+    -fx-border-color: #6366f1;
+}
+
+.image-nav-btn:disabled {
+    -fx-opacity: 0.3;
+    -fx-cursor: default;
+}
+
+/* ── Close Button (X) ── */
+.image-close-btn {
+    -fx-background-color: rgba(30, 41, 59, 0.8);
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-max-width: 32px;
+    -fx-max-height: 32px;
+    -fx-text-fill: #94a3b8;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.image-close-btn:hover {
+    -fx-background-color: #ef4444;
+    -fx-border-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+/* ── Document Canvas Scroll Area ── */
+.image-scroll, .image-scroll .viewport {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+/* ── Scrollbar Styling ── */
+.image-scroll .scroll-bar:vertical, .image-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.image-scroll .scroll-bar:vertical .thumb, .image-scroll .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-radius: 4;
 }

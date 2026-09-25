@@ -60,6 +60,7 @@ public class ImageViewerController implements Initializable {
             zoomFactor += 0.1;
             imageView.setScaleX(zoomFactor);
             imageView.setScaleY(zoomFactor);
+            updateZoom();
         });
         zoomOutBtn.setOnAction(e -> {
             zoomFactor -= 0.1;
@@ -68,6 +69,7 @@ public class ImageViewerController implements Initializable {
             }
             imageView.setScaleX(zoomFactor);
             imageView.setScaleY(zoomFactor);
+            updateZoom();
         });
         backBtn.setOnAction(e -> {
             Stage stage = (Stage) backBtn.getScene().getWindow();
@@ -83,6 +85,8 @@ public class ImageViewerController implements Initializable {
             }
             imageView.setScaleX(zoomFactor);
             imageView.setScaleY(zoomFactor);
+
+            updateZoom();
         });
 
         imageView.setOnMousePressed(e -> {
@@ -93,10 +97,74 @@ public class ImageViewerController implements Initializable {
             imageView.setTranslateX(e.getSceneX() - startX);
             imageView.setTranslateY(e.getSceneY() - startY);
         });
+
+        nextBtn.setOnAction(e -> {
+            if (images != null && currentIndex < images.size() - 1) {
+                currentIndex++;
+                displayCurrentImage();
+            }
+        });
+        prevBtn.setOnAction(e -> {
+            if (images != null && currentIndex > 0) {
+                currentIndex--;
+                displayCurrentImage();
+            }
+        });
+
+        scrollPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, event -> {
+                    switch (event.getCode()) {
+                        case RIGHT:
+                            nextBtn.fire();
+                            event.consume();
+                            break;
+                        case LEFT:
+                            prevBtn.fire();
+                            event.consume();
+                            break;
+                        case PLUS:
+                        case EQUALS:
+                            zoomInBtn.fire();
+                            event.consume();
+                            break;
+                        case MINUS:
+                        case SUBTRACT:
+                            zoomOutBtn.fire();
+                            event.consume();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        });
     }
 
-    public void loadImage(File imageFile) {
-        Image image = new Image(imageFile.toURI().toString());
-        imageView.setImage(image);
+    private void updateZoom() {
+        imageView.setScaleX(zoomFactor);
+        imageView.setScaleY(zoomFactor);
+    }
+
+    public void setImagesContext(List<File> imageList, int initialIndex) {
+        this.images = imageList;
+        this.currentIndex = initialIndex;
+        displayCurrentImage();
+    }
+
+    private void displayCurrentImage() {
+        if (images != null && !images.isEmpty() && currentIndex >= 0 && currentIndex < images.size()) {
+            File currentFile = images.get(currentIndex);
+            Image image = new Image(currentFile.toURI().toString());
+            imageView.setImage(image);
+
+            zoomFactor = 1.0;
+            updateZoom();
+            imageView.setTranslateX(0);
+            imageView.setTranslateY(0);
+
+            prevBtn.setDisable(currentIndex == 0);
+            nextBtn.setDisable(currentIndex == images.size() - 1);
+        }
     }
 }

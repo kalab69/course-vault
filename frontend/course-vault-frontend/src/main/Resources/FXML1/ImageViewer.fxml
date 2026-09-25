@@ -6,13 +6,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/imageviewer.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.ImageViewerController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="image-viewer-root" stylesheets="@../CSS/imageviewer.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.ImageViewerController">
    <top>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="12.0" styleClass="toolbar" BorderPane.alignment="CENTER">
+      <HBox prefHeight="100.0" prefWidth="200.0" spacing="12.0" styleClass="image-viewer-header" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="backBtn" mnemonicParsing="false">
+            <Button fx:id="backBtn" mnemonicParsing="false" styleClass="image-close-btn">
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -21,7 +22,8 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="zoomInBtn" mnemonicParsing="false">
+            <Region prefHeight="55.0" prefWidth="310.0" />
+            <Button fx:id="zoomInBtn" mnemonicParsing="false" styleClass="image-nav-btn">
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -30,7 +32,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="zoomOutBtn" mnemonicParsing="false">
+            <Button fx:id="zoomOutBtn" mnemonicParsing="false" styleClass="image-nav-btn">
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -39,7 +41,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="prevBtn" mnemonicParsing="false">
+            <Button fx:id="prevBtn" mnemonicParsing="false" styleClass="image-nav-btn">
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -48,7 +50,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="nextBtn" mnemonicParsing="false">
+            <Button fx:id="nextBtn" mnemonicParsing="false" styleClass="image-nav-btn">
                <graphic>
                   <ImageView fitHeight="21.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -61,7 +63,7 @@
       </HBox>
    </top>
    <center>
-      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="image-scroll" BorderPane.alignment="CENTER">
          <content>
             <StackPane prefHeight="150.0" prefWidth="200.0">
                <children>
