@@ -25,7 +25,6 @@ public class externalLinkService {
 
     public List<externalLinkModel> fetchCourseLinks(int courseId) {
         try {
-            // በቤክኤንድ ከተቀረጸው የኤፒአይ አድራሻ ጋር ማዛመድ
             String targetUrl = "http://localhost:8080/api/courses/" + courseId + "/links";
 
             HttpRequest request = HttpRequest.newBuilder()

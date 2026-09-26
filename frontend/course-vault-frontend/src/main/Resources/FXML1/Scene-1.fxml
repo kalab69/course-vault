@@ -18,7 +18,7 @@
 
 <BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="1100.0" prefWidth="812.0" stylesheets="@../CSS/scene1.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.Scene1Controller">
    <center>
-      <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="mainScrollPane" fitToWidth="true" hbarPolicy="NEVER" prefHeight="1042.0" prefWidth="530.0" BorderPane.alignment="CENTER">
          <content>
             <VBox alignment="CENTER" prefHeight="497.0" prefWidth="440.0" spacing="20.0" styleClass="root">
                <children>
@@ -270,7 +270,7 @@
 <left>
     <!-- ✅ fx:id is on the OUTER AnchorPane directly — this is what gets toggled -->
     <!-- ✅ minWidth="0" allows the collapse animation to go all the way to 0 -->
-    <AnchorPane fx:id="sidebarPane" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="240.0" style="-fx-background-color: #0A0A0A;" BorderPane.alignment="CENTER">
+    <AnchorPane fx:id="sidebarPane" minHeight="0.0" minWidth="0.0" prefHeight="1042.0" prefWidth="266.0" style="-fx-background-color: #0A0A0A;" BorderPane.alignment="CENTER">
         <children>
 
             <!-- Dashboard label -->

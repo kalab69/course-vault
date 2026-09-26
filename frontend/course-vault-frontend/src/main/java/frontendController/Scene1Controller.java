@@ -18,10 +18,12 @@ import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -39,6 +41,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -47,6 +51,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import frontendController.ImageViewerController;
+import java.awt.Desktop;
 
 public class Scene1Controller implements Initializable {
 
@@ -180,6 +186,8 @@ public class Scene1Controller implements Initializable {
     private boolean sidebarOpen = true;
     private static final double SIDEBAR_WIDTH = 240.0;
 
+    Node homeContent = null;
+
     // ─────────────────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -236,7 +244,10 @@ public class Scene1Controller implements Initializable {
         browseButton.setOnAction(e -> {
             setActiveNavButton(browseButton);
         });
-        
+
+        myCourseButton.setOnAction(e -> showMyCourses());
+        homeButton.setOnAction(e -> showHome());
+
         // ════════════════════════════════════════════════
         // PART 2 — SIDEBAR VERTICAL SLIDING INDICATOR
         // ════════════════════════════════════════════════
@@ -1210,4 +1221,340 @@ public class Scene1Controller implements Initializable {
         row.setMaxHeight(0);
         row.setOpacity(0);
     }
+
+    private void showHome() {
+        if (homeContent != null) {
+            rootPane.setLeft(sidebarPane);
+            sidebarPane.setVisible(true);
+            sidebarPane.setManaged(true);
+
+            rootPane.setCenter(homeContent);
+        }
+        setNavActive(homeButton);
+    }
+
+    private void showMyCourses() {
+        if (homeContent == null) {
+            homeContent = rootPane.getCenter();
+        }
+
+        rootPane.setLeft(null);
+
+        setNavActive(myCourseButton);
+
+        VBox myCoursesContent = buildMyCoursesView();
+
+        ScrollPane sp = new ScrollPane(myCoursesContent);
+        sp.setFitToWidth(true);
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-background: transparent;");
+
+        rootPane.setCenter(sp);
+    }
+
+    // Highlight active nav button
+    private void setNavActive(Button active) {
+        Button[] navBtns = {homeButton, myCourseButton, browseButton};
+
+        for (Button btn : navBtns) {
+            if (btn != null) {
+                btn.getStyleClass().remove("nav-active");
+            }
+        }
+
+        if (active != null) {
+            active.getStyleClass().add("nav-active");
+            Platform.runLater(() -> snapToButton(active));
+        }
+    }
+
+    private VBox buildMyCoursesView() {
+        VBox root = new VBox(20);
+        root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
+
+        // ── Header ───────────────────────────────────────────────────────
+        Label title = new Label("My Resources");
+        title.setStyle(
+                "-fx-text-fill: #f1f5f9;"
+                + "-fx-font-size: 22px;"
+                + "-fx-font-weight: bold;");
+
+        Label sub = new Label("Files you have downloaded");
+        sub.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
+
+        VBox header = new VBox(4, title, sub);
+        root.getChildren().add(header);
+
+        File courseVaultFolder = new File(
+                System.getProperty("user.home")
+                + File.separator + "Downloads"
+                + File.separator + "CourseVault");
+
+        if (!courseVaultFolder.exists() || courseVaultFolder.listFiles() == null) {
+            Label empty = new Label("No downloaded resources yet.\nOpen a course and download files to see them here.");
+            empty.setWrapText(true);
+            empty.setStyle("-fx-text-fill: #475569; -fx-font-size: 13px;");
+            root.getChildren().add(empty);
+            return root;
+        }
+
+        File[] files = courseVaultFolder.listFiles();
+        if (files == null || files.length == 0) {
+            Label empty = new Label("No downloaded resources yet.");
+            empty.setStyle("-fx-text-fill: #475569; -fx-font-size: 13px;");
+            root.getChildren().add(empty);
+            return root;
+        }
+
+        Label countLabel = new Label(files.length + " file"
+                + (files.length != 1 ? "s" : "") + " downloaded");
+        countLabel.setStyle(
+                "-fx-text-fill: #6366f1;"
+                + "-fx-font-size: 12px;"
+                + "-fx-font-weight: bold;");
+        root.getChildren().add(countLabel);
+
+        for (File file : files) {
+            if (!file.isFile()) {
+                continue;
+            }
+
+            HBox card = buildFileCard(file);
+            root.getChildren().add(card);
+        }
+
+        return root;
+    }
+
+    private HBox buildFileCard(File file) {
+        HBox card = new javafx.scene.layout.HBox(14);
+        card.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        // Choose icon based on extension
+        String name = file.getName().toLowerCase();
+        String icon = name.endsWith(".pdf") ? "📄"
+                : name.endsWith(".jpg")
+                || name.endsWith(".jpeg")
+                || name.endsWith(".png") ? "🖼" : "📁";
+
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 22px;");
+
+        // File info
+        VBox info = new VBox(4);
+        Label nameLabel = new Label(file.getName());
+        nameLabel.setStyle(
+                "-fx-text-fill: #f1f5f9;"
+                + "-fx-font-size: 13px;"
+                + "-fx-font-weight: bold;");
+
+        long sizeKb = file.length() / 1024;
+        String sizeStr = sizeKb > 1024
+                ? String.format("%.1f MB", sizeKb / 1024.0)
+                : sizeKb + " KB";
+
+        java.text.SimpleDateFormat sdf
+                = new java.text.SimpleDateFormat("MMM dd, yyyy");
+        String dateStr = sdf.format(
+                new java.util.Date(file.lastModified()));
+
+        Label meta = new Label(sizeStr + "  ·  " + dateStr);
+        meta.setStyle("-fx-text-fill: #475569; -fx-font-size: 11px;");
+
+        info.getChildren().addAll(nameLabel, meta);
+
+        Region spacer = new javafx.scene.layout.Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        Button openBtn = new Button("Open");
+        openBtn.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #94a3b8;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 6 14 6 14;"
+                + "-fx-cursor: hand;");
+        openBtn.setOnMouseEntered(e -> openBtn.setStyle(
+                "-fx-background-color: #6366f1;"
+                + "-fx-border-color: #6366f1;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 6 14 6 14;"
+                + "-fx-cursor: hand;"));
+        openBtn.setOnMouseExited(e -> openBtn.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #94a3b8;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 6 14 6 14;"
+                + "-fx-cursor: hand;"));
+        openBtn.setOnAction(e -> openDownloadedFile(file));
+
+        Button deleteBtn = new Button("🗑");
+        deleteBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: transparent;"
+                + "-fx-text-fill: #475569;"
+                + "-fx-font-size: 14px;"
+                + "-fx-cursor: hand;"
+                + "-fx-padding: 4 8 4 8;");
+        deleteBtn.setOnMouseEntered(e -> deleteBtn.setStyle(
+                "-fx-background-color: #7f1d1d;"
+                + "-fx-border-color: transparent;"
+                + "-fx-background-radius: 6;"
+                + "-fx-text-fill: #fca5a5;"
+                + "-fx-font-size: 14px;"
+                + "-fx-cursor: hand;"
+                + "-fx-padding: 4 8 4 8;"));
+        deleteBtn.setOnMouseExited(e -> deleteBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: transparent;"
+                + "-fx-text-fill: #475569;"
+                + "-fx-font-size: 14px;"
+                + "-fx-cursor: hand;"
+                + "-fx-padding: 4 8 4 8;"));
+        deleteBtn.setOnAction(e -> {
+            file.delete();
+
+            showMyCourses();
+        });
+
+        card.getChildren().addAll(iconLabel, info, spacer, openBtn, deleteBtn);
+        card.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 14 16 14 16;");
+
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: #1a2540;"
+                + "-fx-border-color: #6366f1;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 14 16 14 16;"));
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 14 16 14 16;"));
+
+        return card;
+    }
+
+    private boolean isActualImageFile(File file) {
+        if (file == null || !file.exists()) {
+            return false;
+        }
+
+        String name = file.getName().toLowerCase();
+
+        if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".webp")) {
+            return true;
+        }
+
+        if (name.endsWith(".pdf")) {
+            try (java.io.FileInputStream fis = new java.io.FileInputStream(file)) {
+                byte[] header = new byte[4];
+                int bytesRead = fis.read(header);
+
+                if (bytesRead >= 2) {
+                    if ((header[0] & 0xFF) == 0xFF && (header[1] & 0xFF) == 0xD8) {
+                        return true;
+                    }
+                    if (bytesRead >= 4 && (header[0] & 0xFF) == 0x89 && (header[1] & 0xFF) == 0x50
+                            && (header[2] & 0xFF) == 0x4E && (header[3] & 0xFF) == 0x47) {
+                        return true;
+                    }
+                }
+            } catch (Exception e) {
+                return name.contains("mid") || name.contains("final");
+            }
+        }
+        return false;
+    }
+
+    private void openDownloadedFile(File file) {
+        if (isActualImageFile(file)) {
+            Platform.runLater(() -> openImageViewer(file));
+        } else {
+            new Thread(() -> {
+                try {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(file);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+    private void openImageViewer(File imageFile) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/ImageViewer.fxml"));
+            Parent root = loader.load();
+            ImageViewerController controller = loader.getController();
+
+            File parentDir = imageFile.getParentFile();
+            List<File> downloadedImages = new java.util.ArrayList<>();
+            int selectedIndex = 0;
+
+            if (parentDir != null && parentDir.isDirectory()) {
+                File[] files = parentDir.listFiles((dir, name) -> {
+                    String lower = name.toLowerCase();
+                    return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".webp");
+                });
+
+                if (files != null) {
+                    java.util.Arrays.sort(files);
+                    for (File file : files) {
+                        downloadedImages.add(file);
+                    }
+                    selectedIndex = downloadedImages.indexOf(imageFile);
+                    if (selectedIndex == -1) {
+                        selectedIndex = 0;
+                    }
+                }
+            }
+
+            if (downloadedImages.isEmpty()) {
+                downloadedImages.add(imageFile);
+                selectedIndex = 0;
+            }
+
+            controller.setImagesContext(downloadedImages, selectedIndex);
+
+            Stage stage = new Stage();
+            stage.setTitle(imageFile.getName());
+            Scene scene = new Scene(root, 1000, 700);
+            stage.setScene(scene);
+
+            try {
+                Image appIcon = new Image(getClass().getResourceAsStream("/Images/Logo.png"));
+                stage.getIcons().add(appIcon);
+            } catch (Exception e) {
+                System.out.println("Logo missing: " + e.getMessage());
+            }
+
+            stage.initModality(javafx.stage.Modality.NONE);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            scene.setFill(Color.TRANSPARENT);
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
