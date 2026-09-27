@@ -75,12 +75,17 @@ function CoursesPage() {
         {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
       </select>
 
-      <ul>
+      <ul className="ledger">
         {courses.map(c => (
-          <li key={c.id} style={{ marginTop: 8 }}>
-            <Link to={`/courses/${c.id}`}>{c.courseName} ({c.code})</Link> — {c.yearLevel}
-            <button onClick={() => startEdit(c)} style={{ marginLeft: 10 }}>Edit</button>
-            <button onClick={() => handleDelete(c.id)} style={{ marginLeft: 6 }}>Delete</button>
+          <li key={c.id} className="ledger-row">
+            <div className="ledger-main">
+              <Link to={`/courses/${c.id}`} className="ledger-title">{c.courseName}</Link>
+              <span className="ledger-meta"><span className="code">{c.code}</span> · {c.yearLevel}</span>
+            </div>
+            <div className="ledger-actions">
+              <button className="secondary" onClick={() => startEdit(c)}>Edit</button>
+              <button className="danger" onClick={() => handleDelete(c.id)}>Delete</button>
+            </div>
           </li>
         ))}
       </ul>
