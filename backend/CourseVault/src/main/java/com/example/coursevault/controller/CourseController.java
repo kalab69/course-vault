@@ -36,6 +36,16 @@ public class CourseController {
         Course course = courseService.findCourse(id);
         return ResponseEntity.ok(toResponse(course));
     }
+    @GetMapping("/api/courses/search")
+    public ResponseEntity<List<CourseResponse>> searchCourses(@RequestParam String name) {
+        List<Course> courses = courseService.searchCourses(name);
+
+        List<CourseResponse> courseResponse = courses.stream()
+                .map(this::toResponse)
+                .toList();
+
+        return ResponseEntity.ok(courseResponse);
+    }
 
     @PutMapping("/api/courses/{id}")
     public ResponseEntity<CourseResponse> editCourse(@PathVariable int id, @RequestBody CourseRequest req) {

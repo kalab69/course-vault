@@ -37,6 +37,9 @@ public class CourseService {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + id));
     }
+    public List<Course> searchCourses(String name) {
+        return courseRepository.findByCourseNameContainingIgnoreCase(name);
+    }
 
     public Course editCourse(Course course, int id) {
         Course existing = courseRepository.findById(id)
