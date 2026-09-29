@@ -18,7 +18,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,13 +25,11 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -43,16 +40,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import frontendController.ImageViewerController;
 import java.awt.Desktop;
+import static java.net.URLEncoder.encode;
+import java.nio.charset.StandardCharsets;
 
 public class Scene1Controller implements Initializable {
 
@@ -247,6 +243,7 @@ public class Scene1Controller implements Initializable {
 
         myCourseButton.setOnAction(e -> showMyCourses());
         homeButton.setOnAction(e -> showHome());
+        browseButton.setOnAction(e -> showBrowse());
 
         // ════════════════════════════════════════════════
         // PART 2 — SIDEBAR VERTICAL SLIDING INDICATOR
@@ -1225,9 +1222,6 @@ public class Scene1Controller implements Initializable {
     private void showHome() {
         if (homeContent != null) {
             rootPane.setLeft(sidebarPane);
-            sidebarPane.setVisible(true);
-            sidebarPane.setManaged(true);
-
             rootPane.setCenter(homeContent);
         }
         setNavActive(homeButton);
@@ -1237,8 +1231,6 @@ public class Scene1Controller implements Initializable {
         if (homeContent == null) {
             homeContent = rootPane.getCenter();
         }
-
-        rootPane.setLeft(null);
 
         setNavActive(myCourseButton);
 
@@ -1555,6 +1547,579 @@ public class Scene1Controller implements Initializable {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private TextField browseSearchField;
+    private VBox browseResultsContainer;
+
+    private void showBrowse() {
+        // Save home content first time
+        if (homeContent == null) {
+            homeContent = rootPane.getCenter();
+        }
+
+        setNavActive(browseButton);
+
+        // Build browse view
+        VBox browseContent = buildBrowseView();
+
+        ScrollPane sp = new ScrollPane(browseContent);
+        sp.setFitToWidth(true);
+        sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        sp.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-background: transparent;");
+
+        rootPane.setCenter(sp);
+    }
+
+    private VBox buildBrowseView() {
+        VBox root = new VBox(20);
+        root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
+
+        // ── Page title ────────────────────────────────────────────────────
+        Label title = new Label("Browse Resources");
+        title.setStyle(
+                "-fx-text-fill: #f1f5f9;"
+                + "-fx-font-size: 22px;"
+                + "-fx-font-weight: bold;");
+
+        Label sub = new Label("Search for courses and download their PDFs");
+        sub.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
+
+        VBox header = new VBox(4, title, sub);
+
+        // ── Search bar ────────────────────────────────────────────────────
+        browseSearchField = new javafx.scene.control.TextField();
+        browseSearchField.setPromptText("🔍  Search courses e.g. \"data\", \"network\"...");
+        browseSearchField.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 10;"
+                + "-fx-background-radius: 10;"
+                + "-fx-text-fill: #f1f5f9;"
+                + "-fx-prompt-text-fill: #475569;"
+                + "-fx-font-size: 14px;"
+                + "-fx-padding: 12 16 12 16;");
+        browseSearchField.setPrefHeight(46);
+
+        // Focus style
+        browseSearchField.focusedProperty().addListener((obs, old, focused) -> {
+            if (focused) {
+                browseSearchField.setStyle(
+                        "-fx-background-color: #1e293b;"
+                        + "-fx-border-color: #6366f1;"
+                        + "-fx-border-width: 1.5;"
+                        + "-fx-border-radius: 10;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-text-fill: #f1f5f9;"
+                        + "-fx-prompt-text-fill: #475569;"
+                        + "-fx-font-size: 14px;"
+                        + "-fx-padding: 12 16 12 16;");
+            } else {
+                browseSearchField.setStyle(
+                        "-fx-background-color: #1e293b;"
+                        + "-fx-border-color: #334155;"
+                        + "-fx-border-radius: 10;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-text-fill: #f1f5f9;"
+                        + "-fx-prompt-text-fill: #475569;"
+                        + "-fx-font-size: 14px;"
+                        + "-fx-padding: 12 16 12 16;");
+            }
+        });
+
+        // Search on Enter key
+        browseSearchField.setOnKeyPressed(e -> {
+            if (e.getCode() == javafx.scene.input.KeyCode.ENTER) {
+                performBrowseSearch(browseSearchField.getText().trim());
+            }
+        });
+
+        // Search button
+        Button searchBtn = new Button("Search");
+        searchBtn.setStyle(
+                "-fx-background-color: #6366f1;"
+                + "-fx-border-radius: 10;"
+                + "-fx-background-radius: 10;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-size: 14px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-padding: 12 24 12 24;"
+                + "-fx-cursor: hand;");
+        searchBtn.setOnMouseEntered(e -> searchBtn.setStyle(
+                        "-fx-background-color: #4f46e5;"
+                        + "-fx-border-radius: 10;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-font-size: 14px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 12 24 12 24;"
+                        + "-fx-cursor: hand;"));
+        searchBtn.setOnMouseExited(e -> searchBtn.setStyle(
+                        "-fx-background-color: #6366f1;"
+                        + "-fx-border-radius: 10;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-font-size: 14px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 12 24 12 24;"
+                        + "-fx-cursor: hand;"));
+        searchBtn.setOnAction(e -> performBrowseSearch(browseSearchField.getText().trim()));
+
+        HBox searchRow = new HBox(10, browseSearchField, searchBtn);
+        searchRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox.setHgrow(browseSearchField, javafx.scene.layout.Priority.ALWAYS);
+
+        // ── Results container ─────────────────────────────────────────────
+        browseResultsContainer = new VBox(12);
+        browseResultsContainer.setStyle("-fx-padding: 4 0 0 0;");
+
+        // Initial hint
+        Label hint = new Label("Type a course name above and press Search or Enter");
+        hint.setStyle("-fx-text-fill: #334155; -fx-font-size: 13px;");
+        browseResultsContainer.getChildren().add(hint);
+
+        root.getChildren().addAll(
+                header, searchRow, browseResultsContainer);
+
+        return root;
+    }
+
+    private void performBrowseSearch(String query) {
+        if (query == null || query.isEmpty()) {
+            return;
+        }
+
+        browseResultsContainer.getChildren().clear();
+
+        // Loading indicator
+        Label loading = new Label("⏳ Searching for \"" + query + "\"...");
+        loading.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
+        browseResultsContainer.getChildren().add(loading);
+
+        new Thread(() -> {
+            try {
+                // ✅ Fetch from search API
+                String url = "http://localhost:8080/api/courses/search?name=" + encode(query, StandardCharsets.UTF_8);
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
+
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                System.out.println("Browse search response: " + response.body());
+
+                ObjectMapper mapper = new ObjectMapper();
+                courseModel[] courses = mapper.readValue(response.body(), courseModel[].class);
+
+                Platform.runLater(() -> {
+                    browseResultsContainer.getChildren().clear();
+
+                    if (courses == null || courses.length == 0) {
+                        Label none = new Label(
+                                "No courses found for \"" + query + "\"");
+                        none.setStyle(
+                                "-fx-text-fill: #475569; -fx-font-size: 13px;");
+                        browseResultsContainer.getChildren().add(none);
+                        return;
+                    }
+
+                    // Results header
+                    Label resultCount = new Label(
+                            courses.length + " course"
+                            + (courses.length != 1 ? "s" : "")
+                            + " found for \"" + query + "\"");
+                    resultCount.setStyle(
+                            "-fx-text-fill: #6366f1;"
+                            + "-fx-font-size: 12px;"
+                            + "-fx-font-weight: bold;"
+                            + "-fx-padding: 0 0 4 0;");
+                    browseResultsContainer.getChildren().add(resultCount);
+
+                    // Build a card for each course
+                    for (courseModel course : courses) {
+                        VBox card = buildBrowseCourseCard(course);
+                        browseResultsContainer.getChildren().add(card);
+                    }
+                });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    browseResultsContainer.getChildren().clear();
+                    Label err = new Label("Search failed: " + ex.getMessage());
+                    err.setStyle(
+                            "-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                    browseResultsContainer.getChildren().add(err);
+                });
+            }
+        }).start();
+    }
+
+    private VBox buildBrowseCourseCard(courseModel course) {
+        VBox card = new VBox(10);
+        card.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 16;");
+
+        // ── Course header ─────────────────────────────────────────────────
+        Label codeLabel = new Label(course.getCode());
+        codeLabel.setStyle(
+                "-fx-background-color: #312e81;"
+                + "-fx-text-fill: #a5b4fc;"
+                + "-fx-font-size: 11px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-background-radius: 6;"
+                + "-fx-padding: 3 10 3 10;");
+
+        Label nameLabel = new Label(course.getCourseName());
+        nameLabel.setStyle(
+                "-fx-text-fill: #f1f5f9;"
+                + "-fx-font-size: 14px;"
+                + "-fx-font-weight: bold;");
+        nameLabel.setWrapText(true);
+
+        HBox courseHeader = new HBox(10, codeLabel, nameLabel);
+        courseHeader.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        // ── Resources section ─────────────────────────────────────────────
+        Label resourcesTitle = new Label("📄 Resources");
+        resourcesTitle.setStyle(
+                "-fx-text-fill: #64748b;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 4 0 0 0;");
+
+        VBox resourcesList = new VBox(8);
+        resourcesList.setStyle("-fx-padding: 4 0 0 0;");
+
+        // Loading indicator for resources
+        Label loadingRes = new Label("Loading resources...");
+        loadingRes.setStyle("-fx-text-fill: #475569; -fx-font-size: 12px;");
+        resourcesList.getChildren().add(loadingRes);
+
+        // Expand/collapse toggle
+        Button toggleBtn = new Button("▼ View Resources");
+        toggleBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #6366f1;"
+                + "-fx-font-size: 12px;"
+                + "-fx-cursor: hand;"
+                + "-fx-padding: 6 12 6 12;");
+
+        // Resources start hidden
+        resourcesList.setVisible(false);
+        resourcesList.setManaged(false);
+
+        final boolean[] expanded = {false};
+
+        toggleBtn.setOnAction(e -> {
+            if (!expanded[0]) {
+                // Expand and load resources
+                resourcesList.setVisible(true);
+                resourcesList.setManaged(true);
+                toggleBtn.setText("▲  Hide Resources");
+                expanded[0] = true;
+
+                // Load resources from API
+                loadBrowseResources(course, resourcesList);
+            } else {
+                // Collapse
+                resourcesList.setVisible(false);
+                resourcesList.setManaged(false);
+                toggleBtn.setText("▼  View Resources");
+                expanded[0] = false;
+            }
+        });
+
+        card.getChildren().addAll(
+                courseHeader, toggleBtn, resourcesList);
+
+        // Card hover
+        card.setOnMouseEntered(ev -> card.setStyle(
+                "-fx-background-color: #1a2540;"
+                + "-fx-border-color: #6366f1;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 16;"));
+        card.setOnMouseExited(ev -> card.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 12;"
+                + "-fx-background-radius: 12;"
+                + "-fx-padding: 16;"));
+
+        return card;
+    }
+
+    private void loadBrowseResources(courseModel course, VBox resourcesList) {
+        new Thread(() -> {
+            try {
+                courseResourceService serviceInstance = new courseResourceService();
+
+                List<courseResourceModel> fetched = serviceInstance.fetchCourseResources(course.getId());
+
+                Platform.runLater(() -> {
+                    resourcesList.getChildren().clear();
+
+                    if (fetched == null || fetched.isEmpty()) {
+                        Label none = new Label("No resources available.");
+                        none.setStyle(
+                                "-fx-text-fill: #475569; -fx-font-size: 12px;");
+                        resourcesList.getChildren().add(none);
+                        return;
+                    }
+
+                    for (courseResourceModel resource : fetched) {
+                        HBox resRow = buildBrowseResourceRow(
+                                course, resource);
+                        resourcesList.getChildren().add(resRow);
+                    }
+                });
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    resourcesList.getChildren().clear();
+                    Label err = new Label(
+                            "Failed to load resources.");
+                    err.setStyle(
+                            "-fx-text-fill: #ef4444; -fx-font-size: 12px;");
+                    resourcesList.getChildren().add(err);
+                });
+            }
+        }).start();
+    }
+
+    private HBox buildBrowseResourceRow(courseModel course, courseResourceModel resource) {
+        HBox row = new HBox(10);
+        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.setStyle(
+                "-fx-background-color: #111827;"
+                + "-fx-border-color: #1e293b;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-padding: 10 14 10 14;");
+
+        // ✅ Choose icon based on type or file extension
+        String typeStr = resource.getType() != null
+                ? resource.getType().toUpperCase() : "";
+        String fileStr = resource.getFileName() != null
+                ? resource.getFileName().toLowerCase() : "";
+
+        String icon
+                = typeStr.equals("MIDTERM") ? "📝"
+                : typeStr.equals("FINAL") ? "📑"
+                : typeStr.equals("LINK") ? "🔗"
+                : fileStr.endsWith(".pdf") ? "📄"
+                : fileStr.endsWith(".jpg") || fileStr.endsWith(".png") ? "🖼"
+                : "📄";
+
+        Label iconLabel = new Label(icon);
+        iconLabel.setStyle("-fx-font-size: 16px;");
+
+        // Resource title
+        Label titleLabel = new Label(resource.getTitle());
+        titleLabel.setStyle(
+                "-fx-text-fill: #94a3b8;"
+                + "-fx-font-size: 12px;");
+        titleLabel.setWrapText(true);
+        HBox.setHgrow(titleLabel, javafx.scene.layout.Priority.ALWAYS);
+
+        // ✅ Use fileName from model for existing file check
+        File courseVaultFolder = new File(
+                System.getProperty("user.home")
+                + File.separator + "Downloads"
+                + File.separator + "CourseVault");
+
+        String safeName = getSafeFileName(resource);
+        File existingFile = new File(courseVaultFolder, safeName);
+
+        Button actionBtn;
+        if (existingFile.exists()) {
+            actionBtn = new Button("📂  Open");
+            actionBtn.setStyle(
+                    "-fx-background-color: #14532d;"
+                    + "-fx-border-color: #22c55e;"
+                    + "-fx-border-radius: 8;"
+                    + "-fx-background-radius: 8;"
+                    + "-fx-text-fill: #86efac;"
+                    + "-fx-font-size: 11px;"
+                    + "-fx-padding: 5 12 5 12;"
+                    + "-fx-cursor: hand;");
+            actionBtn.setOnAction(e -> openBrowseFile(existingFile));
+
+        } else {
+            actionBtn = new Button("⬇ Download");
+            actionBtn.setStyle(
+                    "-fx-background-color: #1e293b;"
+                    + "-fx-border-color: #6366f1;"
+                    + "-fx-border-radius: 8;"
+                    + "-fx-background-radius: 8;"
+                    + "-fx-text-fill: #818cf8;"
+                    + "-fx-font-size: 11px;"
+                    + "-fx-padding: 5 12 5 12;"
+                    + "-fx-cursor: hand;");
+
+            final Button finalBtn = actionBtn;
+            final String finalFileName = safeName;
+            actionBtn.setOnAction(e
+                    -> downloadBrowseResource(resource, finalBtn,
+                            courseVaultFolder, finalFileName));
+        }
+
+        row.getChildren().addAll(iconLabel, titleLabel, actionBtn);
+
+        row.setOnMouseEntered(e -> row.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-padding: 10 14 10 14;"));
+        row.setOnMouseExited(e -> row.setStyle(
+                "-fx-background-color: #111827;"
+                + "-fx-border-color: #1e293b;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-padding: 10 14 10 14;"));
+
+        return row;
+    }
+
+    private void downloadBrowseResource(courseResourceModel resource, Button btn, File folder, String fileName) {
+        btn.setDisable(true);
+        btn.setText("⬇ Downloading...");
+
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        // ✅ Use fileName from model if available, otherwise use title
+        String actualFileName = (resource.getFileName() != null
+                && !resource.getFileName().isEmpty())
+                ? resource.getFileName()
+                : fileName;
+
+        File destination = new File(folder, actualFileName);
+
+        new Thread(() -> {
+            try {
+                // ✅ Use downloadUrl directly from the model
+                String downloadUrl = resource.getDownloadUrl();
+
+                if (downloadUrl == null || downloadUrl.isEmpty()) {
+                    throw new Exception(
+                            "No download URL available for: "
+                            + resource.getTitle());
+                }
+
+                // Add base URL if relative path
+                if (!downloadUrl.startsWith("http")) {
+                    downloadUrl = "http://localhost:8080" + downloadUrl;
+                }
+
+                System.out.println("Downloading from: " + downloadUrl);
+                System.out.println("Saving to: " + destination.getAbsolutePath());
+
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(downloadUrl)).GET().build();
+
+                HttpResponse<java.io.InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
+
+                System.out.println("Status: " + response.statusCode());
+
+                if (response.statusCode() == 200) {
+                    java.nio.file.Files.copy(
+                            response.body(),
+                            destination.toPath(),
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                    System.out.println("✅ Saved: "
+                            + destination.length() + " bytes");
+
+                    Platform.runLater(() -> {
+                        btn.setDisable(false);
+                        btn.setText("📂  Open");
+                        btn.setStyle(
+                                "-fx-background-color: #14532d;"
+                                + "-fx-border-color: #22c55e;"
+                                + "-fx-border-radius: 8;"
+                                + "-fx-background-radius: 8;"
+                                + "-fx-text-fill: #86efac;"
+                                + "-fx-font-size: 11px;"
+                                + "-fx-padding: 5 12 5 12;"
+                                + "-fx-cursor: hand;");
+                        btn.setOnAction(e -> openBrowseFile(destination));
+                        openBrowseFile(destination);
+                    });
+
+                } else {
+                    byte[] errBytes = response.body().readAllBytes();
+                    String errBody = new String(errBytes,
+                            java.nio.charset.StandardCharsets.UTF_8);
+                    System.err.println("❌ Failed: "
+                            + response.statusCode() + " — " + errBody);
+                    throw new Exception("Server returned "
+                            + response.statusCode());
+                }
+
+            } catch (Exception ex) {
+                System.err.println("Download error: " + ex.getMessage());
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    btn.setDisable(false);
+                    btn.setText("⬇  Retry");
+                    btn.setStyle(
+                            "-fx-background-color: #7f1d1d;"
+                            + "-fx-border-color: #ef4444;"
+                            + "-fx-border-radius: 8;"
+                            + "-fx-background-radius: 8;"
+                            + "-fx-text-fill: #fca5a5;"
+                            + "-fx-font-size: 11px;"
+                            + "-fx-padding: 5 12 5 12;"
+                            + "-fx-cursor: hand;");
+                });
+            }
+        }).start();
+    }
+
+    private void openBrowseFile(File file) {
+        if (isActualImageFile(file)) {
+            Platform.runLater(() -> openImageViewer(file));
+        } else {
+            new Thread(() -> {
+                try {
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().open(file);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+    private String getSafeFileName(courseResourceModel resource) {
+        String extension = getExtension(resource.getFileName());
+        return resource.getId() + "_" + resource.getTitle().replaceAll("[^a-zA-Z0-9\\s\\-_]", "").replaceAll("\\s+", "_") + extension;
+    }
+
+    private String getExtension(String fileName) {
+        if (fileName == null || fileName.isBlank()) {
+            return ".pdf";
+        }
+        int dot = fileName.lastIndexOf('.');
+        if (dot == -1) {
+            return ".pdf";
+        }
+        return fileName.substring(dot);
     }
 
 }
