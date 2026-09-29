@@ -8,7 +8,11 @@ import com.mycompany.service.externalLinkService;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -37,7 +42,7 @@ import javafx.stage.StageStyle;
 
 public class CoursePageController implements Initializable {
 
-    // ── FXML fields ───────────────────────────────────────────────────
+    // ── FXML fields 
     @FXML
     private Label courseCode;
     @FXML
@@ -59,16 +64,16 @@ public class CoursePageController implements Initializable {
     @FXML
     private Button aiBtn;
 
-    // ── State ─────────────────────────────────────────────────────────
+    // ── State 
     private courseModel course;
 
-    // ✅ Single list — populated once from API, filtered by tab clicks
+    //Single list that are populated once from API, filtered by tab clicks
     private List<courseResourceModel> allResources = new ArrayList<>();
 
-    // ✅ Track downloaded files — key = courseId_resourceId
+    //Track downloaded files which is key = courseId_resourceId
     private final Map<String, File> downloadedFiles = new HashMap<>();
 
-    // ── Active filter tab tracking ────────────────────────────────────
+    // ── Active filter tab tracking 
     private Button activeTab;
 
     @Override
@@ -104,7 +109,7 @@ public class CoursePageController implements Initializable {
         setActiveTab(allBtn);
     }
 
-    // ── Highlight the active tab button ──────────────────────────────
+    // ── Highlight the active tab button 
     private void setActiveTab(Button selected) {
         // Reset all tabs to inactive style
         Button[] tabs = {allBtn, notesBtn, midtermBtn, finalBtn, externalBtn, aiBtn};
@@ -205,7 +210,7 @@ public class CoursePageController implements Initializable {
         loadResources();
     }
 
-    // ── Load ALL resources once from API ─────────────────────────────
+    // ── Load ALL resources once from API 
     private void loadResources() {
         notesContainer.getChildren().clear();
 
@@ -217,7 +222,7 @@ public class CoursePageController implements Initializable {
         new Thread(() -> {
             try {
                 courseResourceService serviceInstance = new courseResourceService();
-                // ✅ Fetch all resources for this course
+                // Fetch all resources for this course
                 List<courseResourceModel> fetched = serviceInstance.fetchCourseResources(course.getId());
                 Platform.runLater(() -> {
                     notesContainer.getChildren().clear();
@@ -250,7 +255,7 @@ public class CoursePageController implements Initializable {
         }).start();
     }
 
-    // ── Filter and display resources by type ─────────────────────────
+    // ── Filter and display resources by type 
     // filter = null → show all
     // filter = "NOTES", "MIDTERM", "FINAL", "LINK" → show matching
     private void showResources(String filter) {
@@ -287,7 +292,7 @@ public class CoursePageController implements Initializable {
         }
     }
 
-    // ── Create a clickable resource card button ───────────────────────
+    // ── Create a clickable resource card button 
     private Button createResourceCard(courseResourceModel resource) {
         // Choose icon based on type
         String icon = "📄";
@@ -376,7 +381,7 @@ public class CoursePageController implements Initializable {
         return card;
     }
 
-    // ── Smart click: open if downloaded, Save As if not ──────────────
+    // ── Smart click: open if downloaded, Save As if not 
     private void handleResourceClick(
             courseResourceModel resource,
             Button card,
@@ -423,7 +428,7 @@ public class CoursePageController implements Initializable {
         return resource.getType().equalsIgnoreCase("MIDTERM")
                 || resource.getType().equalsIgnoreCase("FINAL");
     }
-    // ── Save As dialog — like browser save image ──────────────────────
+    // ── Save As dialog — like browser save image 
 
     private void downloadWithSaveDialog(
             courseResourceModel resource,
@@ -468,21 +473,12 @@ public class CoursePageController implements Initializable {
         new Thread(() -> {
             try {
                 // Fetch from API
-                String apiUrl = "http://localhost:8080/api/course-resources/"
-                        + resource.getId() + "/download";
+                String apiUrl = "http://localhost:8080/api/course-resources/" + resource.getId() + "/download";
 
-                java.net.http.HttpClient client
-                        = java.net.http.HttpClient.newHttpClient();
-                java.net.http.HttpRequest request
-                        = java.net.http.HttpRequest.newBuilder()
-                                .uri(java.net.URI.create(apiUrl))
-                                .GET()
-                                .build();
+                HttpClient client = HttpClient.newHttpClient();
+                HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(apiUrl)).GET().build();
 
-                java.net.http.HttpResponse<InputStream> response
-                        = client.send(request,
-                                java.net.http.HttpResponse.BodyHandlers
-                                        .ofInputStream());
+                HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
                 if (response.statusCode() == 200) {
                     Files.copy(response.body(), finalDest.toPath(),
@@ -520,7 +516,7 @@ public class CoursePageController implements Initializable {
         }).start();
     }
 
-    // ── Open with system default app ─────────────────────────────────
+    // ── Open with system default app
     private void openFile(File file) {
         new Thread(() -> {
             try {
@@ -540,7 +536,7 @@ public class CoursePageController implements Initializable {
         }).start();
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────
+    // ── Helpers 
     private File getCourseVaultFolder() {
         return new File(
                 System.getProperty("user.home")
@@ -647,7 +643,7 @@ public class CoursePageController implements Initializable {
         List<externalLinkModel> links = externalService.fetchCourseLinks(courseId);
 
         if (links.isEmpty()) {
-            javafx.scene.control.Label noLinksLabel = new javafx.scene.control.Label("No external links available.");
+            Label noLinksLabel = new Label("No external links available.");
             noLinksLabel.setStyle("-fx-text-fill: #94a3b8; -fx-font-style: italic;");
             notesContainer.getChildren().add(noLinksLabel);
             return;
@@ -680,14 +676,13 @@ public class CoursePageController implements Initializable {
 
                 linkBtn.setOnAction(e -> {
                     try {
-                        javafx.application.HostServices hostServices
-                                = (javafx.application.HostServices) linkBtn.getScene().getWindow().getProperties().get("hostServices");
+                        HostServices hostServices = (HostServices) linkBtn.getScene().getWindow().getProperties().get("hostServices");
 
                         if (hostServices != null) {
                             hostServices.showDocument(link.getUrl());
                         } else {
-                            if (java.awt.Desktop.isDesktopSupported() && java.awt.Desktop.getDesktop().isSupported(java.awt.Desktop.Action.BROWSE)) {
-                                java.awt.Desktop.getDesktop().browse(new java.net.URI(link.getUrl()));
+                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                                Desktop.getDesktop().browse(new URI(link.getUrl()));
                             }
                         }
                     } catch (Exception ex) {

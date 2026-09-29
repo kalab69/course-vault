@@ -49,10 +49,19 @@ import javafx.util.Duration;
 import java.awt.Desktop;
 import static java.net.URLEncoder.encode;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 
 public class Scene1Controller implements Initializable {
 
-    // ── FXML fields ───────────────────────────────────────────────────────────
+    // ── FXML fields 
     @FXML
     private TextField appTitle;
 
@@ -166,31 +175,30 @@ public class Scene1Controller implements Initializable {
 
     private final courseService courseService = new courseService();
 
-    // ── Animation fields ──────────────────────────────────────────────────────
+    // ── Animation fields 
     private TranslateTransition slideTransition;
     private FadeTransition fadeTransition;
     private TranslateTransition verticalSlideTransition;
     private FadeTransition verticalFadeTransition;
 
-    // ── Flyout / dropdown fields ───────────────────────────────────────────────
+    // ── Flyout / dropdown fields 
     private ContextMenu departmentsFlyout;
     private ContextMenu examFlyout;
     private ContextMenu externalFlyout;
     private ContextMenu profileDropdown;
 
-    // ── Sidebar toggle state ───────────────────────────────────────────────────
+    // ── Sidebar toggle state 
     private boolean sidebarOpen = true;
     private static final double SIDEBAR_WIDTH = 240.0;
 
     Node homeContent = null;
 
-    // ─────────────────────────────────────────────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        // ════════════════════════════════════════════════
+        // --------------------------------------
         // PART 1 — NAVBAR HORIZONTAL SLIDING INDICATOR
-        // ════════════════════════════════════════════════
+        // --------------------------------------
         slideTransition = new TranslateTransition(Duration.millis(300), navIndicator);
         fadeTransition = new FadeTransition(Duration.millis(200), navIndicator);
         navIndicator.setOpacity(0.0);
@@ -198,7 +206,6 @@ public class Scene1Controller implements Initializable {
         setupSlidingHover(homeButton);
         setupSlidingHover(myCourseButton);
         setupSlidingHover(browseButton);
-        // profileButton handled in setupProfileDropdown()
 
         navBar.setOnMouseExited(e -> {
             fadeTransition.stop();
@@ -245,9 +252,9 @@ public class Scene1Controller implements Initializable {
         homeButton.setOnAction(e -> showHome());
         browseButton.setOnAction(e -> showBrowse());
 
-        // ════════════════════════════════════════════════
+        // --------------------------------------
         // PART 2 — SIDEBAR VERTICAL SLIDING INDICATOR
-        // ════════════════════════════════════════════════
+        // --------------------------------------
         verticalSlideTransition = new TranslateTransition(Duration.millis(300), sidebarIndicator);
         verticalFadeTransition = new FadeTransition(Duration.millis(200), sidebarIndicator);
         sidebarIndicator.setOpacity(0.0);
@@ -280,48 +287,34 @@ public class Scene1Controller implements Initializable {
         });
 
         setupVerticalSlidingHover(departmentMenuTrigger);
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         // PART 3 — WELCOME & STATS
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         welcomeLabel.setText("Welcome");
         welcomeSub.setText("52 courses you have enrolled in");
 
         enrolledNum.setText("52");
         completedNum.setText(String.valueOf(countDownloadedFiles()));
 
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         // PART 4 — CARD HOVER ANIMATIONS
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         Platform.runLater(() -> {
             setupCardHoverAnimation(statCard1);
             setupCardHoverAnimation(statCard2);
         });
 
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         // PART 5 — ACCORDION (starts collapsed)
-        // ════════════════════════════════════════════════
+        // ---------------------------------------
         Platform.runLater(() -> {
             PauseTransition wait = new PauseTransition(Duration.millis(200));
             wait.setOnFinished(e -> {
 
-                // yearOneSection children:
-                //   [0] = Label "Computer Science"
-                //   [1] = HBox (button + "Year I" label)
-                //   [2] = HBox (csCard1, csCard2, csCard3)
-                HBox yearOneRow
-                        = (HBox) yearOneSection.getChildren().get(2);
-
-                // yearTwoSection children:
-                //   [0] = HBox (button + "Year II" label)
-                //   [1] = HBox (csCard4-7)
-                //   [2] = HBox (csCard8-10)
-                //   [3] = HBox (csCard11-12)
-                HBox yearTwoRow
-                        = (HBox) yearTwoSection.getChildren().get(1);
-                HBox yearThreeRow
-                        = (HBox) yearThreeSection.getChildren().get(1);
-                HBox yearFourRow
-                        = (HBox) yearFourSection.getChildren().get(1);
+                HBox yearOneRow = (HBox) yearOneSection.getChildren().get(2);
+                HBox yearTwoRow = (HBox) yearTwoSection.getChildren().get(1);
+                HBox yearThreeRow = (HBox) yearThreeSection.getChildren().get(1);
+                HBox yearFourRow = (HBox) yearFourSection.getChildren().get(1);
 
                 setupAccordion(yearOneHeader, yearOneArrow, yearOneRow);
                 setupAccordion(yearTwoHeader, yearTwoArrow, yearTwoRow);
@@ -339,28 +332,21 @@ public class Scene1Controller implements Initializable {
 
         // Find the ScrollPane and make scrollbar fade in/out
         Platform.runLater(() -> {
-            // Get the scroll pane — add fx:id="mainScrollPane" to it in FXML
-            // then inject it: @FXML private ScrollPane mainScrollPane;
-            javafx.scene.control.ScrollPane sp = mainScrollPane;
+            ScrollPane sp = mainScrollPane;
 
             // Get the scrollbar node
             sp.skinProperty().addListener((obs, oldSkin, newSkin) -> {
                 if (newSkin != null) {
-                    javafx.scene.Node vbar
-                            = sp.lookup(".scroll-bar:vertical");
+                    Node vbar = sp.lookup(".scroll-bar:vertical");
                     if (vbar != null) {
-                        vbar.setOpacity(0); // start hidden
-
+                        vbar.setOpacity(0);
                         // Show on scroll
                         sp.setOnScroll(e -> {
                             vbar.setOpacity(1.0);
-
                             // Fade out after 1.5 seconds of no scrolling
-                            PauseTransition hide
-                                    = new PauseTransition(Duration.millis(1500));
+                            PauseTransition hide = new PauseTransition(Duration.millis(1500));
                             hide.setOnFinished(ev -> {
-                                FadeTransition fade
-                                        = new FadeTransition(Duration.millis(400), vbar);
+                                FadeTransition fade = new FadeTransition(Duration.millis(400), vbar);
                                 fade.setFromValue(1.0);
                                 fade.setToValue(0.0);
                                 fade.play();
@@ -381,7 +367,7 @@ public class Scene1Controller implements Initializable {
     }
 
     private void loadCourses() {
-        // ✅ Load each year on background thread — never block JavaFX thread
+        // Load each year on background thread — never block JavaFX thread
         loadYearAsync("FIRST", courseContainer1);
         loadYearAsync("SECOND", courseContainer2);
         loadYearAsync("THIRD", courseContainer3);
@@ -398,7 +384,7 @@ public class Scene1Controller implements Initializable {
                 System.out.println("Got " + courses.size()
                         + " courses for year: " + year);
 
-                // ✅ UI updates must be on JavaFX thread
+                // UI updates must be on JavaFX thread
                 Platform.runLater(() -> {
                     container.getChildren().clear();
 
@@ -418,7 +404,7 @@ public class Scene1Controller implements Initializable {
                         + year + ": " + ex.getMessage());
                 ex.printStackTrace();
 
-                // ✅ Show error card in UI
+                // Show error card in UI
                 Platform.runLater(() -> {
                     Label errorLabel = new Label(
                             "Failed to load " + year + " courses");
@@ -538,9 +524,9 @@ public class Scene1Controller implements Initializable {
         }
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     // NAVBAR METHODS
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     private void setupSlidingHover(Button btn) {
         btn.setOnMouseEntered(e -> {
             double targetX = btn.getLayoutX();
@@ -576,34 +562,22 @@ public class Scene1Controller implements Initializable {
         activeButton.getStyleClass().add("nav-active");
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     // SIDEBAR TOGGLE
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     @FXML
     public void toggleSidebar() {
 
         if (sidebarOpen) {
-            // ── COLLAPSE ─────────────────────────────────────────────────
-            javafx.animation.Timeline collapse = new javafx.animation.Timeline(
-                    new javafx.animation.KeyFrame(Duration.ZERO,
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.prefWidthProperty(),
-                                    SIDEBAR_WIDTH,
-                                    javafx.animation.Interpolator.EASE_IN),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.opacityProperty(),
-                                    1.0,
-                                    javafx.animation.Interpolator.EASE_IN)
+            // ── COLLAPSE 
+            Timeline collapse = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(sidebarPane.prefWidthProperty(), SIDEBAR_WIDTH, Interpolator.EASE_IN),
+                            new KeyValue(sidebarPane.opacityProperty(), 1.0, Interpolator.EASE_IN)
                     ),
-                    new javafx.animation.KeyFrame(Duration.millis(300),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.prefWidthProperty(),
-                                    0,
-                                    javafx.animation.Interpolator.EASE_IN),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.opacityProperty(),
-                                    0.0,
-                                    javafx.animation.Interpolator.EASE_IN)
+                    new KeyFrame(Duration.millis(300),
+                            new KeyValue(sidebarPane.prefWidthProperty(), 0, Interpolator.EASE_IN),
+                            new KeyValue(sidebarPane.opacityProperty(), 0.0, Interpolator.EASE_IN)
                     )
             );
 
@@ -617,7 +591,7 @@ public class Scene1Controller implements Initializable {
             collapse.play();
 
         } else {
-            // ── EXPAND ───────────────────────────────────────────────────
+            // ── EXPAND 
             sidebarPane.setVisible(true);
             sidebarPane.setManaged(true);
             sidebarPane.setPrefWidth(0);
@@ -626,26 +600,14 @@ public class Scene1Controller implements Initializable {
             // Show menu icon before sidebar expands
             swapIcon(true);
 
-            javafx.animation.Timeline expand = new javafx.animation.Timeline(
-                    new javafx.animation.KeyFrame(Duration.ZERO,
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.prefWidthProperty(),
-                                    0,
-                                    javafx.animation.Interpolator.EASE_OUT),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.opacityProperty(),
-                                    0.0,
-                                    javafx.animation.Interpolator.EASE_OUT)
+            Timeline expand = new Timeline(
+                    new KeyFrame(Duration.ZERO,
+                            new KeyValue(sidebarPane.prefWidthProperty(), 0, Interpolator.EASE_OUT),
+                            new KeyValue(sidebarPane.opacityProperty(), 0.0, Interpolator.EASE_OUT)
                     ),
-                    new javafx.animation.KeyFrame(Duration.millis(300),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.prefWidthProperty(),
-                                    SIDEBAR_WIDTH,
-                                    javafx.animation.Interpolator.EASE_OUT),
-                            new javafx.animation.KeyValue(
-                                    sidebarPane.opacityProperty(),
-                                    1.0,
-                                    javafx.animation.Interpolator.EASE_OUT)
+                    new KeyFrame(Duration.millis(300),
+                            new KeyValue(sidebarPane.prefWidthProperty(), SIDEBAR_WIDTH, Interpolator.EASE_OUT),
+                            new KeyValue(sidebarPane.opacityProperty(), 1.0, Interpolator.EASE_OUT)
                     )
             );
 
@@ -680,9 +642,9 @@ public class Scene1Controller implements Initializable {
         out.play();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // ----------------------------------------------------------
     // SIDEBAR INDICATOR METHODS
-    // ─────────────────────────────────────────────────────────────────────────
+    // ----------------------------------------------------------
     private void setupVerticalSlidingHover(Button btn) {
         btn.setOnMouseEntered(e -> {
 
@@ -726,9 +688,9 @@ public class Scene1Controller implements Initializable {
         sidebarIndicator.toBack();
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     // FLYOUT / CONTEXT MENU METHODS
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     private void setupCascadingSidebarMenu() {
 
         this.departmentsFlyout = new ContextMenu();
@@ -747,28 +709,13 @@ public class Scene1Controller implements Initializable {
         fadeIndicatorWhenMouseEntersFlyout(examFlyout);
         fadeIndicatorWhenMouseEntersFlyout(externalFlyout);
 
-        // ── Year menus ─────────────────────────────────────────────────
+        // ── Year menus 
         Menu csyear1 = new Menu("Year I");
         Menu csyear2 = new Menu("Year II");
         Menu csyear3 = new Menu("Year III");
         Menu csyear4 = new Menu("Year IV");
 
         departmentsFlyout.getItems().addAll(csyear1, csyear2, csyear3, csyear4);
-
-        examFlyout.getItems().addAll(
-                new Menu("Year I"),
-                new Menu("Year II"),
-                new Menu("Year III"),
-                new Menu("Year IV")
-        );
-
-        externalFlyout.getItems().addAll(
-                new Menu("Year I"),
-                new Menu("Year II"),
-                new Menu("Year III"),
-                new Menu("Year IV")
-        );
-
         // Hide flyouts when hovering empty sidebar space
         sidebarContainer.setOnMouseEntered(e -> {
             if (e.getTarget() == sidebarContainer) {
@@ -785,28 +732,15 @@ public class Scene1Controller implements Initializable {
         Menu year4 = new Menu("Year IV");
 
         try {
+            addCoursesToMenu(year1, courseService.fetchCoursesByYear("FIRST"));
 
-            addCoursesToMenu(
-                    year1,
-                    courseService.fetchCoursesByYear("FIRST"));
+            addCoursesToMenu(year2, courseService.fetchCoursesByYear("SECOND"));
 
-            addCoursesToMenu(
-                    year2,
-                    courseService.fetchCoursesByYear("SECOND"));
+            addCoursesToMenu(year3, courseService.fetchCoursesByYear("THIRD"));
 
-            addCoursesToMenu(
-                    year3,
-                    courseService.fetchCoursesByYear("THIRD"));
+            addCoursesToMenu(year4, courseService.fetchCoursesByYear("FOURTH"));
 
-            addCoursesToMenu(
-                    year4,
-                    courseService.fetchCoursesByYear("FOURTH"));
-
-            departmentsFlyout.getItems().setAll(
-                    year1,
-                    year2,
-                    year3,
-                    year4);
+            departmentsFlyout.getItems().setAll(year1, year2, year3, year4);
 
         } catch (Exception e) {
 
@@ -821,21 +755,16 @@ public class Scene1Controller implements Initializable {
 
         for (courseModel course : courses) {
 
-            MenuItem item
-                    = new MenuItem(
-                            course.getCourseName());
+            MenuItem item = new MenuItem(course.getCourseName());
 
-            item.setOnAction(
-                    e -> openCourse(course));
-
+            item.setOnAction(e -> openCourse(course));
             menu.getItems().add(item);
         }
     }
 
     private void openCourse(courseModel course) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/FXML1/CoursePage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/CoursePage.fxml"));
             Parent root = loader.load();
 
             CoursePageController controller = loader.getController();
@@ -861,72 +790,14 @@ public class Scene1Controller implements Initializable {
         }
     }
 
-    public courseResourceModel getNotesPdf(
-            int courseId) throws Exception {
+    public courseResourceModel getNotesPdf(int courseId) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/api/resources/"
                 + courseId + "/notes")).GET().build();
-        HttpResponse<String> response
-                = client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString()
-                );
-        ObjectMapper mapper
-                = new ObjectMapper();
-        return mapper.readValue(
-                response.body(),
-                courseResourceModel.class
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(response.body(), courseResourceModel.class
         );
-    }
-
-    private void animateSubMenu(Menu menu) {
-        // Only animate THIS menu's popup — do NOT recurse into children
-        menu.setOnShowing(e -> {
-            Platform.runLater(() -> {
-                if (menu.getStyleableNode() != null) {
-                    javafx.scene.Node node = menu.getStyleableNode();
-                    javafx.scene.Parent parent = node.getParent();
-                    while (parent != null
-                            && !(parent instanceof javafx.scene.layout.Region)) {
-                        parent = parent.getParent();
-                    }
-                    if (parent != null) {
-                        final javafx.scene.Parent content = parent;
-                        content.setScaleY(0.0);
-                        content.setOpacity(0.0);
-                        content.setTranslateX(-10);
-
-                        javafx.animation.Timeline slideIn
-                                = new javafx.animation.Timeline(
-                                        new javafx.animation.KeyFrame(Duration.ZERO,
-                                                new javafx.animation.KeyValue(
-                                                        content.scaleYProperty(), 0.0,
-                                                        javafx.animation.Interpolator.EASE_OUT),
-                                                new javafx.animation.KeyValue(
-                                                        content.opacityProperty(), 0.0,
-                                                        javafx.animation.Interpolator.EASE_OUT),
-                                                new javafx.animation.KeyValue(
-                                                        content.translateXProperty(), -10.0,
-                                                        javafx.animation.Interpolator.EASE_OUT)
-                                        ),
-                                        new javafx.animation.KeyFrame(Duration.millis(180),
-                                                new javafx.animation.KeyValue(
-                                                        content.scaleYProperty(), 1.0,
-                                                        javafx.animation.Interpolator.EASE_OUT),
-                                                new javafx.animation.KeyValue(
-                                                        content.opacityProperty(), 1.0,
-                                                        javafx.animation.Interpolator.EASE_OUT),
-                                                new javafx.animation.KeyValue(
-                                                        content.translateXProperty(), 0.0,
-                                                        javafx.animation.Interpolator.EASE_OUT)
-                                        )
-                                );
-                        slideIn.play();
-                    }
-                }
-            });
-        });
-
     }
 
     private void fadeIndicatorWhenMouseEntersFlyout(ContextMenu flyout) {
@@ -939,29 +810,21 @@ public class Scene1Controller implements Initializable {
                 content.setTranslateY(-content.getBoundsInLocal().getHeight() / 2);
                 content.setOpacity(0.0);
 
-                javafx.animation.Timeline slideDown = new javafx.animation.Timeline(
-                        new javafx.animation.KeyFrame(Duration.ZERO,
-                                new javafx.animation.KeyValue(
-                                        content.scaleYProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.translateYProperty(),
-                                        -content.getBoundsInLocal().getHeight() / 2,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.opacityProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT)
+                Timeline slideDown = new Timeline(
+                        new KeyFrame(Duration.ZERO,
+                                new KeyValue(content.scaleYProperty(), 0.0, Interpolator.EASE_OUT),
+                                new KeyValue(content.translateYProperty(), -content.getBoundsInLocal().getHeight() / 2, Interpolator.EASE_OUT),
+                                new KeyValue(content.opacityProperty(), 0.0, Interpolator.EASE_OUT)
                         ),
                         new javafx.animation.KeyFrame(Duration.millis(200),
                                 new javafx.animation.KeyValue(
                                         content.scaleYProperty(), 1.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
+                                        Interpolator.EASE_OUT),
+                                new KeyValue(
                                         content.translateYProperty(), 0.0,
-                                        javafx.animation.Interpolator.EASE_OUT),
-                                new javafx.animation.KeyValue(
-                                        content.opacityProperty(), 1.0,
-                                        javafx.animation.Interpolator.EASE_OUT)
+                                        Interpolator.EASE_OUT),
+                                new KeyValue(
+                                        content.opacityProperty(), 1.0, Interpolator.EASE_OUT)
                         )
                 );
                 slideDown.play();
@@ -981,11 +844,9 @@ public class Scene1Controller implements Initializable {
             if (flyout != null && flyout.isShowing()) {
                 javafx.scene.Node content = flyout.getSkin().getNode();
                 if (content != null) {
-                    javafx.animation.Timeline slideUp = new javafx.animation.Timeline(
-                            new javafx.animation.KeyFrame(Duration.ZERO,
-                                    new javafx.animation.KeyValue(
-                                            content.scaleYProperty(), 1.0,
-                                            javafx.animation.Interpolator.EASE_IN),
+                    Timeline slideUp = new javafx.animation.Timeline(
+                            new KeyFrame(Duration.ZERO,
+                                    new KeyValue(content.scaleYProperty(), 1.0, Interpolator.EASE_IN),
                                     new javafx.animation.KeyValue(
                                             content.translateYProperty(), 0.0,
                                             javafx.animation.Interpolator.EASE_IN),
@@ -994,16 +855,9 @@ public class Scene1Controller implements Initializable {
                                             javafx.animation.Interpolator.EASE_IN)
                             ),
                             new javafx.animation.KeyFrame(Duration.millis(150),
-                                    new javafx.animation.KeyValue(
-                                            content.scaleYProperty(), 0.0,
-                                            javafx.animation.Interpolator.EASE_IN),
-                                    new javafx.animation.KeyValue(
-                                            content.translateYProperty(),
-                                            -content.getBoundsInLocal().getHeight() / 2,
-                                            javafx.animation.Interpolator.EASE_IN),
-                                    new javafx.animation.KeyValue(
-                                            content.opacityProperty(), 0.0,
-                                            javafx.animation.Interpolator.EASE_IN)
+                                    new javafx.animation.KeyValue(content.scaleYProperty(), 0.0, Interpolator.EASE_IN),
+                                    new KeyValue(content.translateYProperty(), -content.getBoundsInLocal().getHeight() / 2, Interpolator.EASE_IN),
+                                    new KeyValue(content.opacityProperty(), 0.0, Interpolator.EASE_IN)
                             )
                     );
                     slideUp.setOnFinished(ev -> flyout.hide());
@@ -1035,16 +889,15 @@ public class Scene1Controller implements Initializable {
         return false;
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     // CARD HOVER ANIMATION
-    // ─────────────────────────────────────────────────────────────────────────
+    // -----------------------------------------------------------
     private void setupCardHoverAnimation(VBox card) {
 
-        javafx.beans.property.DoubleProperty angle
-                = new javafx.beans.property.SimpleDoubleProperty(0);
+        DoubleProperty angle = new SimpleDoubleProperty(0);
 
-        javafx.animation.Timeline rotateGradient = new javafx.animation.Timeline(
-                new javafx.animation.KeyFrame(Duration.millis(16), e -> {
+        Timeline rotateGradient = new Timeline(
+                new KeyFrame(Duration.millis(16), e -> {
                     double a = angle.get();
                     double rad = Math.toRadians(a);
 
@@ -1078,13 +931,11 @@ public class Scene1Controller implements Initializable {
         );
         rotateGradient.setCycleCount(javafx.animation.Animation.INDEFINITE);
 
-        javafx.animation.ScaleTransition liftIn
-                = new javafx.animation.ScaleTransition(Duration.millis(200), card);
+        ScaleTransition liftIn = new ScaleTransition(Duration.millis(200), card);
         liftIn.setToX(1.02);
         liftIn.setToY(1.02);
 
-        javafx.animation.ScaleTransition liftOut
-                = new javafx.animation.ScaleTransition(Duration.millis(200), card);
+        ScaleTransition liftOut = new ScaleTransition(Duration.millis(200), card);
         liftOut.setToX(1.0);
         liftOut.setToY(1.0);
 
@@ -1109,17 +960,12 @@ public class Scene1Controller implements Initializable {
         });
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
+    // ----------------------------------------------------------
     // ACCORDION METHODS
-    // ─────────────────────────────────────────────────────────────────────────
-    private void setupAccordion(
-            Button headerBtn,
-            ImageView arrowImg,
-            HBox... contentRows) {
-
+    // ----------------------------------------------------------
+    private void setupAccordion(Button headerBtn, ImageView arrowImg, HBox... contentRows) {
         boolean[] isOpen = {true};
-
-        java.util.List<HBox> rows = java.util.Arrays.asList(contentRows);
+        List<HBox> rows = Arrays.asList(contentRows);
 
         headerBtn.setStyle(
                 "-fx-background-color: transparent;"
@@ -1133,21 +979,17 @@ public class Scene1Controller implements Initializable {
         headerBtn.setOnMouseClicked(e -> {
 
             if (isOpen[0]) {
-                // ── COLLAPSE ──────────────────────────────────────────────
+                // ── COLLAPSE 
                 for (HBox row : rows) {
                     double startH = row.getHeight();
 
-                    javafx.animation.Timeline collapse = new javafx.animation.Timeline(new javafx.animation.KeyFrame(Duration.ZERO,
-                            new javafx.animation.KeyValue(row.maxHeightProperty(), startH, javafx.animation.Interpolator.EASE_IN),
-                            new javafx.animation.KeyValue(row.opacityProperty(), 1.0, javafx.animation.Interpolator.EASE_IN)
+                    Timeline collapse = new Timeline(new KeyFrame(Duration.ZERO,
+                            new KeyValue(row.maxHeightProperty(), startH, Interpolator.EASE_IN),
+                            new KeyValue(row.opacityProperty(), 1.0, Interpolator.EASE_IN)
                     ),
-                            new javafx.animation.KeyFrame(Duration.millis(300),
-                                    new javafx.animation.KeyValue(
-                                            row.maxHeightProperty(), 0,
-                                            javafx.animation.Interpolator.EASE_IN),
-                                    new javafx.animation.KeyValue(
-                                            row.opacityProperty(), 0.0,
-                                            javafx.animation.Interpolator.EASE_IN)
+                            new KeyFrame(Duration.millis(300),
+                                    new KeyValue(row.maxHeightProperty(), 0, Interpolator.EASE_IN),
+                                    new KeyValue(row.opacityProperty(), 0.0, Interpolator.EASE_IN)
                             )
                     );
                     collapse.setOnFinished(ev -> {
@@ -1157,15 +999,13 @@ public class Scene1Controller implements Initializable {
                     collapse.play();
                 }
 
-                javafx.animation.RotateTransition rotateClose
-                        = new javafx.animation.RotateTransition(
-                                Duration.millis(300), arrowImg);
+                RotateTransition rotateClose = new RotateTransition(Duration.millis(300), arrowImg);
                 rotateClose.setFromAngle(90);
                 rotateClose.setToAngle(0);
                 rotateClose.play();
 
             } else {
-                // ── EXPAND ────────────────────────────────────────────────
+                // ── EXPAND 
                 for (HBox row : rows) {
                     row.setVisible(true);
                     row.setManaged(true);
@@ -1176,33 +1016,22 @@ public class Scene1Controller implements Initializable {
                     row.layout();
                     double targetH = row.prefHeight(-1);
 
-                    javafx.animation.Timeline expand
-                            = new javafx.animation.Timeline(
-                                    new javafx.animation.KeyFrame(Duration.ZERO,
-                                            new javafx.animation.KeyValue(
-                                                    row.maxHeightProperty(), 0,
-                                                    javafx.animation.Interpolator.EASE_OUT),
-                                            new javafx.animation.KeyValue(
-                                                    row.opacityProperty(), 0.0,
-                                                    javafx.animation.Interpolator.EASE_OUT)
-                                    ),
-                                    new javafx.animation.KeyFrame(Duration.millis(300),
-                                            new javafx.animation.KeyValue(
-                                                    row.maxHeightProperty(), targetH,
-                                                    javafx.animation.Interpolator.EASE_OUT),
-                                            new javafx.animation.KeyValue(
-                                                    row.opacityProperty(), 1.0,
-                                                    javafx.animation.Interpolator.EASE_OUT)
-                                    )
-                            );
+                    Timeline expand = new Timeline(
+                            new KeyFrame(Duration.ZERO,
+                                    new KeyValue(row.maxHeightProperty(), 0, Interpolator.EASE_OUT),
+                                    new KeyValue(row.opacityProperty(), 0.0, Interpolator.EASE_OUT)
+                            ),
+                            new KeyFrame(Duration.millis(300),
+                                    new KeyValue(row.maxHeightProperty(), targetH, Interpolator.EASE_OUT),
+                                    new KeyValue(row.opacityProperty(), 1.0, Interpolator.EASE_OUT)
+                            )
+                    );
                     expand.setOnFinished(ev
                             -> row.setMaxHeight(Double.MAX_VALUE));
                     expand.play();
                 }
 
-                javafx.animation.RotateTransition rotateOpen
-                        = new javafx.animation.RotateTransition(
-                                Duration.millis(300), arrowImg);
+                RotateTransition rotateOpen = new RotateTransition(Duration.millis(300), arrowImg);
                 rotateOpen.setFromAngle(0);
                 rotateOpen.setToAngle(90);
                 rotateOpen.play();
@@ -1210,13 +1039,6 @@ public class Scene1Controller implements Initializable {
 
             isOpen[0] = !isOpen[0];
         });
-    }
-
-    private void collapseImmediately(HBox row) {
-        row.setVisible(false);
-        row.setManaged(false);
-        row.setMaxHeight(0);
-        row.setOpacity(0);
     }
 
     private void showHome() {
@@ -1267,7 +1089,7 @@ public class Scene1Controller implements Initializable {
         VBox root = new VBox(20);
         root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
 
-        // ── Header ───────────────────────────────────────────────────────
+        // ── Header 
         Label title = new Label("My Resources");
         title.setStyle(
                 "-fx-text-fill: #f1f5f9;"
@@ -1578,7 +1400,7 @@ public class Scene1Controller implements Initializable {
         VBox root = new VBox(20);
         root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
 
-        // ── Page title ────────────────────────────────────────────────────
+        // ── Page title 
         Label title = new Label("Browse Resources");
         title.setStyle(
                 "-fx-text-fill: #f1f5f9;"
@@ -1590,7 +1412,7 @@ public class Scene1Controller implements Initializable {
 
         VBox header = new VBox(4, title, sub);
 
-        // ── Search bar ────────────────────────────────────────────────────
+        // ── Search bar 
         browseSearchField = new javafx.scene.control.TextField();
         browseSearchField.setPromptText("🔍  Search courses e.g. \"data\", \"network\"...");
         browseSearchField.setStyle(
@@ -1649,30 +1471,30 @@ public class Scene1Controller implements Initializable {
                 + "-fx-padding: 12 24 12 24;"
                 + "-fx-cursor: hand;");
         searchBtn.setOnMouseEntered(e -> searchBtn.setStyle(
-                        "-fx-background-color: #4f46e5;"
-                        + "-fx-border-radius: 10;"
-                        + "-fx-background-radius: 10;"
-                        + "-fx-text-fill: white;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-padding: 12 24 12 24;"
-                        + "-fx-cursor: hand;"));
+                "-fx-background-color: #4f46e5;"
+                + "-fx-border-radius: 10;"
+                + "-fx-background-radius: 10;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-size: 14px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-padding: 12 24 12 24;"
+                + "-fx-cursor: hand;"));
         searchBtn.setOnMouseExited(e -> searchBtn.setStyle(
-                        "-fx-background-color: #6366f1;"
-                        + "-fx-border-radius: 10;"
-                        + "-fx-background-radius: 10;"
-                        + "-fx-text-fill: white;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-font-weight: bold;"
-                        + "-fx-padding: 12 24 12 24;"
-                        + "-fx-cursor: hand;"));
+                "-fx-background-color: #6366f1;"
+                + "-fx-border-radius: 10;"
+                + "-fx-background-radius: 10;"
+                + "-fx-text-fill: white;"
+                + "-fx-font-size: 14px;"
+                + "-fx-font-weight: bold;"
+                + "-fx-padding: 12 24 12 24;"
+                + "-fx-cursor: hand;"));
         searchBtn.setOnAction(e -> performBrowseSearch(browseSearchField.getText().trim()));
 
         HBox searchRow = new HBox(10, browseSearchField, searchBtn);
         searchRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         HBox.setHgrow(browseSearchField, javafx.scene.layout.Priority.ALWAYS);
 
-        // ── Results container ─────────────────────────────────────────────
+        // ── Results container 
         browseResultsContainer = new VBox(12);
         browseResultsContainer.setStyle("-fx-padding: 4 0 0 0;");
 
@@ -1701,7 +1523,6 @@ public class Scene1Controller implements Initializable {
 
         new Thread(() -> {
             try {
-                // ✅ Fetch from search API
                 String url = "http://localhost:8080/api/courses/search?name=" + encode(query, StandardCharsets.UTF_8);
 
                 HttpClient client = HttpClient.newHttpClient();
@@ -1767,7 +1588,7 @@ public class Scene1Controller implements Initializable {
                 + "-fx-background-radius: 12;"
                 + "-fx-padding: 16;");
 
-        // ── Course header ─────────────────────────────────────────────────
+        // ── Course header 
         Label codeLabel = new Label(course.getCode());
         codeLabel.setStyle(
                 "-fx-background-color: #312e81;"
@@ -1787,7 +1608,7 @@ public class Scene1Controller implements Initializable {
         HBox courseHeader = new HBox(10, codeLabel, nameLabel);
         courseHeader.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        // ── Resources section ─────────────────────────────────────────────
+        // ── Resources section 
         Label resourcesTitle = new Label("📄 Resources");
         resourcesTitle.setStyle(
                 "-fx-text-fill: #64748b;"
@@ -1933,7 +1754,7 @@ public class Scene1Controller implements Initializable {
         titleLabel.setWrapText(true);
         HBox.setHgrow(titleLabel, javafx.scene.layout.Priority.ALWAYS);
 
-        // ✅ Use fileName from model for existing file check
+        // Use fileName from model for existing file check
         File courseVaultFolder = new File(
                 System.getProperty("user.home")
                 + File.separator + "Downloads"
@@ -2001,7 +1822,7 @@ public class Scene1Controller implements Initializable {
             folder.mkdirs();
         }
 
-        // ✅ Use fileName from model if available, otherwise use title
+        // Use fileName from model if available, otherwise use title
         String actualFileName = (resource.getFileName() != null
                 && !resource.getFileName().isEmpty())
                 ? resource.getFileName()
@@ -2011,7 +1832,7 @@ public class Scene1Controller implements Initializable {
 
         new Thread(() -> {
             try {
-                // ✅ Use downloadUrl directly from the model
+                // Use downloadUrl directly from the model
                 String downloadUrl = resource.getDownloadUrl();
 
                 if (downloadUrl == null || downloadUrl.isEmpty()) {

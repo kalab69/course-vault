@@ -18,27 +18,18 @@
         public List<courseModel> fetchCoursesByYear(String year)
                 throws IOException, InterruptedException {
 
-            // ✅ Build URL with year filter
             String url = "http://localhost:8080/api/courses?year=" + year;
             System.out.println("Fetching: " + url);
 
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET()
-                .build();
-
-            HttpResponse<String> response = client.send(
-                request, HttpResponse.BodyHandlers.ofString());
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             System.out.println("Status: " + response.statusCode());
             System.out.println("Body: " + response.body());
 
-            // Parse JSON array into list
             courseModel[] courses = mapper.readValue(
                 response.body(), courseModel[].class);
 
-            // ✅ Since backend doesn't return yearLevel in JSON,
-            //    set it manually based on which year we fetched
             courseModel.YearLevel level =
                 courseModel.YearLevel.valueOf(year); // "FIRST" → YearLevel.FIRST
 

@@ -27,10 +27,7 @@ public class externalLinkService {
         try {
             String targetUrl = "http://localhost:8080/api/courses/" + courseId + "/links";
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(targetUrl))
-                    .GET()
-                    .build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(targetUrl)).GET().build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
