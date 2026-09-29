@@ -12,9 +12,8 @@ public class courseModel {
     private int id;
     private String code;
     private String courseName;
-    private YearLevel yearLevel; // set manually after fetch — not from JSON
+    private YearLevel yearLevel; 
 
-    // ✅ No-arg constructor — required by Jackson
     public courseModel() {}
 
     public int getId()              { return id; }

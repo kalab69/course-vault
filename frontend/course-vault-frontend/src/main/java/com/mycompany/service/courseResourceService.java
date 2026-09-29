@@ -22,34 +22,12 @@ public class courseResourceService {
             fetchCourseResources(int courseId)
             throws Exception {
 
-        HttpClient client
-                = HttpClient.newHttpClient();
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/api/courses/" + courseId + "/course-resources")).GET().build();
 
-        HttpRequest request
-                = HttpRequest.newBuilder()
-                        .uri(
-                                URI.create(
-                                        "http://localhost:8080/api/courses/"
-                                        + courseId
-                                        + "/course-resources"
-                                )
-                        )
-                        .GET()
-                        .build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        ObjectMapper mapper = new ObjectMapper();
 
-        HttpResponse<String> response
-                = client.send(
-                        request,
-                        HttpResponse.BodyHandlers.ofString()
-                );
-
-        ObjectMapper mapper
-                = new ObjectMapper();
-
-        return mapper.readValue(
-                response.body(),
-                new TypeReference<List<courseResourceModel>>() {
-        }
-        );
+        return mapper.readValue(response.body(), new TypeReference<List<courseResourceModel>>() {});
     }
 }
