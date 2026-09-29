@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { ai } from '../voxide/client.js';
  
 const TYPES = ['NOTES', 'MIDTERM', 'FINAL'];
  
@@ -20,6 +21,45 @@ function CourseDetailPage() {
   }
  
   useEffect(() => { loadAll(); }, [id]);
+  useEffect(() => {
+  ai.register({
+    setResourceTitle: {
+      description: "Set the title field for the resource about to be uploaded.",
+      params: {
+        title: { type: "string", required: true }
+      },
+      handler: async ({ title }) => {
+        setResourceForm(f => ({ ...f, title }));
+        return { status: "ok" };
+      }
+    },
+
+    setResourceType: {
+      description: "Set the resource type to NOTES, MIDTERM, or FINAL.",
+      params: {
+        type: { type: "string", required: true }
+      },
+      handler: async ({ type }) => {
+        setResourceForm(f => ({ ...f, type: type.toUpperCase() }));
+        return { status: "ok" };
+      }
+    },
+
+    addExternalLink: {
+      description: "Add an external tutorial link with a topic, title, and URL for this course.",
+      params: {
+        topic: { type: "string", required: true },
+        title: { type: "string", required: true },
+        url: { type: "string", required: true }
+      },
+      handler: async ({ topic, title, url }) => {
+        await api.addLink(id, { topic, title, url });
+        loadAll();
+        return { status: "ok" };
+      }
+    }
+  });
+}, [id]);
  
   async function handleUpload(e) {
     e.preventDefault();

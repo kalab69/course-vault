@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api/client.js';
+import { ai } from '../voxide/client.js';
 
 const YEARS = ['FIRST', 'SECOND', 'THIRD', 'FOURTH'];
 
@@ -16,6 +17,34 @@ function CoursesPage() {
   }
 
   useEffect(() => { loadCourses(); }, [yearFilter]);
+  useEffect(() => {
+  ai.register({
+    createCourse: {
+      description: "Create a new course with a name, code, and year level.",
+      params: {
+        courseName: { type: "string", required: true },
+        code: { type: "string", required: true },
+        yearLevel: { type: "string", required: true }
+      },
+      dangerous: true,
+      handler: async ({ courseName, code, yearLevel }) => {
+        await api.createCourse({ courseName, code, yearLevel });
+        loadCourses();
+        return { status: "ok" };
+      }
+    },
+    filterCoursesByYear: {
+      description: "Filter the visible course list by year level.",
+      params: {
+        yearLevel: { type: "string", required: true }
+      },
+      handler: async ({ yearLevel }) => {
+        setYearFilter(yearLevel);
+        return { status: "ok" };
+      }
+    }
+  });
+}, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
