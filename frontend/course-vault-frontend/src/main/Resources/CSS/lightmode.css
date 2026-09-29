@@ -1,125 +1,104 @@
-/* ═══ FORCE DARK MODE ALWAYS ═══ */
+/* ═══ LIGHT MODE ═══ */
 .root {
-    -fx-background-color: #000000;
+    -fx-background-color: #FFFFFF;
     -fx-font-family: "Segoe UI", "System";
     -fx-font-size: 13px;
 }
 
-/* Fix black center area */
+/* Fix light center area */
 .scroll-pane {
-    -fx-background-color: #000000;
-    -fx-background: #000000;
+    -fx-background-color: #FFFFFF;
+    -fx-background: #FFFFFF;
 }
 .scroll-pane .viewport {
-    -fx-background-color: #000000;
+    -fx-background-color: #FFFFFF;
 }
 .scroll-pane > .viewport > .vbox {
-    -fx-background-color: #000000;
+    -fx-background-color: #FFFFFF;
 }
 
 .nav-button {
     -fx-background-color: transparent;
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
     -fx-font-size: 14px;
     -fx-font-weight: 500;
     -fx-cursor: hand;
     -fx-padding: 8 20 8 20;
 }
 
-/* 
-   This replaces your old layout separators! 
-   It draws a crisp, solid vertical line exactly on the right edge of the button bounding box.
-*/
+/* Vertical Separator Line */
 .nav-border-right {
     -fx-border-style: solid;
-    /* 
-       We use a linear gradient running from top to bottom (to y).
-       - Top 25% is transparent
-       - Middle (from 25% to 75%) is solid white
-       - Bottom 25% is transparent
-       This makes a perfectly centered vertical separator line that takes up exactly 50% of the height!
-    */
-    -fx-border-color: transparent linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%) transparent transparent;
-
-    /* Sets the exact thickness of your separator line (1px wide on the right side) */
+    -fx-border-color: transparent linear-gradient(to bottom, transparent 15%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.15) 85%, transparent 85%) transparent transparent;
     -fx-border-width: 0 1 0 0;
 }
 
 /* ═══ COMBINATION CLASS FOR HOME BUTTON ═══ */
 .nav-border-both {
-    /* 1. Tell JavaFX the border stroke style is solid */
     -fx-border-style: solid;
-
-    /* 2. Set the gradient on BOTH the Right (2nd) and Left (4th) slots
-          Sequence Order: [Top] [Right] [Bottom] [Left] */
     -fx-border-color: transparent
-        linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%)
+        linear-gradient(to bottom, transparent 15%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.15) 85%, transparent 85%)
         transparent
-        linear-gradient(to bottom, transparent 15%, #FFFFFF 15%, #FFFFFF 85%, transparent 85%);
-
-    /* 3. Set a 1px thickness on both the left and right sides 
-          Sequence Order: [Top: 0] [Right: 1] [Bottom: 0] [Left: 1] */
+        linear-gradient(to bottom, transparent 15%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.15) 85%, transparent 85%);
     -fx-border-width: 0 1 0 1;
 }
 
-
 /* Keep your existing smooth tracking shape settings */
 .navIndicator {
-    -fx-fill: #FFFFFF;
+    -fx-fill: #1A1A1A;
     -fx-arc-width: 0;
     -fx-arc-height: 0;
 }
-
 .nav-button:hover {
-    -fx-text-fill: #000000;
-}
-
-#themeToggleBtn:hover{
-    -fx-background-color: #E3E1E1;
+    -fx-text-fill: #FFFFFF; 
+    -fx-background-color: #1A1A1A; 
 }
 .nav-active {
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: #000000;
     -fx-font-weight: bold;
+}
+
+#themeToggleBtn{
+    -fx-background-color: #E3E1E1;
 }
 
 .selectable-title {
     -fx-background-color: transparent;
-    -fx-text-fill: #FFFFFF;
+    -fx-text-fill: #1A1A1A;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-padding: 30 0 0 40;
     -fx-background-insets: 0;
 }
-
 .selectable-title:focused {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
 }
-
 .selectable-title:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(30, 130, 120, 1.0), 30, 0.7, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(30, 130, 120, 0.3), 30, 0.7, 0, 0); 
 }
 
 .context-menu {
-    -fx-background-color: #1A1A1A;
-    -fx-border-color: #333333;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
     -fx-border-width: 1px;
     -fx-padding: 5px;
 }
-
 .context-menu .menu-item .label {
     -fx-font-size: 12px !important;
     -fx-font-weight: normal !important;
-    -fx-text-fill: #FFFFFF !important;
+    -fx-text-fill: #1A1A1A !important;
 }
-
 .context-menu .menu-item:focused {
     -fx-background-color: #1E8278;
 }
+.context-menu .menu-item:focused .label {
+    -fx-text-fill: #FFFFFF !important;
+}
 
 .sidebar-title {
-    -fx-text-fill: #666666;
+    -fx-text-fill: #757575;
     -fx-font-family: "Segoe UI", "Inter", sans-serif;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -131,13 +110,10 @@
     -fx-background-color: transparent;
     -fx-padding: 0;
 }
-
 .sidebar-trigger-btn {
     -fx-background-color: transparent;
-    -fx-text-fill: #FFFFFF;
-
+    -fx-text-fill: #1A1A1A;
     -fx-padding: 10px 15px 10px 15px;
-
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 13px;
     -fx-font-weight: 600;
@@ -145,66 +121,60 @@
     -fx-cursor: hand;
     -fx-max-width: 210px;
 }
-
 .sidebar-trigger-btn:hover {
-    -fx-text-fill: #000000;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #1A1A1A;
 }
-
 .sidebarIndicator {
-    -fx-fill: #FFFFFF;
+    -fx-fill: #1A1A1A;
     -fx-arc-width: 0;
     -fx-arc-height: 0;
 }
-
 .sidebar-flyout {
-    -fx-background-color: #0A0A0A;
-    -fx-border-color: #1A1A1A;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
     -fx-border-width: 1px;
     -fx-padding: 5px 0px 5px 0px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.7), 15, 0, 0, 5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 15, 0, 0, 5);
 }
-
 .sidebar-flyout .menu-item {
     -fx-padding: 8px 25px 8px 15px;
     -fx-background-color: transparent;
 }
-
 .sidebar-flyout .menu-item .label {
-    -fx-text-fill: #CCCCCC;
+    -fx-text-fill: #424242;
     -fx-font-family: "Segoe UI", sans-serif;
     -fx-font-size: 13px;
     -fx-font-weight: 500;
 }
-
 .sidebar-flyout .menu-item:focused,
 .sidebar-flyout .menu-item:hover {
     -fx-background-color: #1E8278;
 }
-
 .sidebar-flyout .menu-item:focused .label,
 .sidebar-flyout .menu-item:hover .label {
     -fx-text-fill: #FFFFFF;
 }
 
 #sidebarPane {
-    -fx-background-color: #0A0A0A;
+    -fx-background-color: #E3E1E1;
 }
 /* ── Welcome section ── */
 #welcomeLabel {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #1E293B;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
 #welcomeSub {
-    -fx-text-fill: #64748b;
+    -fx-text-fill: #64748B;
     -fx-font-size: 13px;
 }
 
 /* ── Stat cards ── */
 .stat-card {
-    -fx-background-color: #05060A;
+    -fx-background-color: #F8FAFC;
     -fx-background-radius: 12;
-    -fx-border-color: #334155;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 12;
     -fx-border-width: 1;
     -fx-padding: 16;
@@ -213,27 +183,27 @@
     -fx-cursor: hand;
 }
 .stat-number {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #1E293B;
     -fx-font-size: 26px;
     -fx-font-weight: bold;
 }
 .stat-label {
-    -fx-text-fill: #A7B4CC;
+    -fx-text-fill: #64748B;
     -fx-font-size: 12px;
 }
 
 /* ── Section title ── */
 .section-title {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #1E293B;
     -fx-font-size: 15px;
     -fx-font-weight: bold;
 }
 
 /* ── Course cards ── */
 .course-card {
-    -fx-background-color: #05060A;
+    -fx-background-color: #F8FAFC;
     -fx-background-radius: 12;
-    -fx-border-color: #334155;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 12;
     -fx-border-width: 1;
     -fx-padding: 16;
@@ -241,113 +211,90 @@
     -fx-cursor: hand;
 }
 .course-title {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #1E293B;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 .course-sub {
-    -fx-text-fill: #A7B4CC;
+    -fx-text-fill: #64748B;
     -fx-font-size: 11px;
 }
 
 /* ── Course tag chips ── */
 .tag-1 {
-    -fx-background-color: #312e81;
-    -fx-text-fill: #a5b4fc;
+    -fx-background-color: #E0E7FF;
+    -fx-text-fill: #4338CA;
     -fx-background-radius: 6;
     -fx-padding: 3 10 3 10;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 .tag-2 {
-    -fx-background-color: #14532d;
-    -fx-text-fill: #86efac;
+    -fx-background-color: #DCFCE7;
+    -fx-text-fill: #15803D;
     -fx-background-radius: 6;
     -fx-padding: 3 10 3 10;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 .tag-3 {
-    -fx-background-color: #7c2d12;
-    -fx-text-fill: #fdba74;
+    -fx-background-color: #FFEDD5;
+    -fx-text-fill: #C2410C;
     -fx-background-radius: 6;
     -fx-padding: 3 10 3 10;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
 }
 
-.year-toggle-btn {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 0 6 0 0;
-    -fx-cursor: hand;
-    -fx-min-width: 24px;
-    -fx-max-width: 24px;
-    -fx-min-height: 24px;
-    -fx-max-height: 24px;
+#year1Hbox {
+    -fx-background-color: #E3E1E1;
 }
-.year-toggle-btn:hover {
-    -fx-background-color: #1e293b;
-    -fx-background-radius: 6;
+#year2Hbox {
+    -fx-background-color: #E3E1E1;
 }
-
-.year-header-row {
-    -fx-padding: 4 0 4 0;
-    -fx-spacing: 8;
-    -fx-alignment: CENTER_LEFT;
-    -fx-cursor: hand;
-    -fx-background-radius: 8;
+#year3Hbox {
+    -fx-background-color: #E3E1E1;
 }
-.year-header-row:hover {
-    -fx-background-color: rgba(255,255,255,0.04);
-    -fx-background-radius: 8;
+#year4Hbox {
+    -fx-background-color: #E3E1E1;
 }
-
 /* Sidebar toggle button */
 #sidebarToggleBtn {
-    -fx-background-color: transparent;
+    -fx-background-color: #E3E1E1;
     -fx-border-color: transparent;
     -fx-cursor: hand;
-    -fx-padding: 8 10 0 10;
-    -fx-background-radius: 6;
+    -fx-padding: 2 10 0 10;
+    -fx-background-radius: 10;
 }
 #sidebarToggleBtn:hover {
-    -fx-background-color: #000000;
+    -fx-background-color: #E2E8F0;
     -fx-background-radius: 6;
 }
 
-/* ── CUSTOM SCROLLBAR — thin minimal with dot thumb ── */
-
-/* The vertical scrollbar track — nearly invisible */
+/* ── CUSTOM SCROLLBAR ── */
 .scroll-pane .scroll-bar:vertical {
     -fx-background-color: transparent;
     -fx-pref-width: 6px;
     -fx-padding: 0;
 }
-
-/* The track line — very subtle */
 .scroll-pane .scroll-bar:vertical .track {
-    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-color: rgba(0, 0, 0, 0.05);
     -fx-background-radius: 3;
     -fx-border-color: transparent;
     -fx-pref-width: 2px;
     -fx-padding: 0 2 0 2;
 }
-
-/* The thumb — small teal/cyan dot */
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: #00bcd4;   /* teal cyan — matches the image */
-    -fx-background-radius: 50;       /* makes it a circle */
+    -fx-background-color: #00838F; 
+    -fx-background-radius: 50;
     -fx-pref-width: 6px;
     -fx-min-height: 6px;
-    -fx-max-height: 6px;             /* keeps it as a dot not a bar */
+    -fx-max-height: 6px;
     -fx-border-color: transparent;
 }
 .scroll-pane .scroll-bar:vertical .thumb:hover {
-    -fx-background-color: #26c6da;   /* slightly brighter on hover */
+    -fx-background-color: #006064;
 }
-
-/* Hide increment and decrement arrow buttons completely */
 .scroll-pane .scroll-bar:vertical .increment-button,
 .scroll-pane .scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
@@ -362,64 +309,59 @@
     -fx-shape: "";
     -fx-padding: 0;
 }
-
-/* Hide horizontal scrollbar completely */
 .scroll-pane .scroll-bar:horizontal {
     -fx-pref-height: 0;
     -fx-min-height: 0;
     -fx-max-height: 0;
     -fx-opacity: 0;
 }
-
-/* ScrollPane corner box — hide it */
 .scroll-pane .corner {
     -fx-background-color: transparent;
 }
 
 .course-label {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #1E293B;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
     -fx-wrap-text: true;
 }
 
 .card {
-    -fx-background-color: #030202;
-    -fx-border-color: #334155;
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 14;
     -fx-cursor: hand;
 }
 
-.my-course{
-    -fx-padding: 28; 
-    -fx-background-color: #0a0a0a;
+.my-course {
+    -fx-padding: 28;
+    -fx-background-color: #E8E8E8;
 }
-.my-course-label{
-    -fx-text-fill: #f1f5f9; 
+.my-course-label {
+    -fx-text-fill: #0F172A;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
-.my-course-sub-label{
-    -fx-text-fill: #64748b; 
+.my-course-sub-label {
+    -fx-text-fill: #475569;
     -fx-font-size: 13px;
 }
 
 .my-course-btn{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
-
 .my-course-btn-entered:hover{
-    -fx-background-color: #6366f1;
-    -fx-border-color: #6366f1;
+    -fx-background-color: #4F46E5;
+    -fx-border-color: #4F46E5;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-text-fill: white;
@@ -427,142 +369,143 @@
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
-
 .my-course-btn-exited{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
 
-.my-course-card{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.my-course-card {
+    -fx-background-color: #E8E6E6; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 14 16 14 16;
 }
-.my-course-card-entered:hover{
-    -fx-background-color: #1a2540;
-    -fx-border-color: #6366f1;
+
+.my-course-card-entered:hover {
+    -fx-background-color: #F1F5F9; 
+    -fx-border-color: #4F46E5;     
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 14 16 14 16;
 }
-.my-course-card-exited{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+
+.my-course-card-exited {
+    -fx-background-color: #E8E6E6; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 14 16 14 16;
 }
-.my-course-name-label{
-    -fx-text-fill: #f1f5f9;
+.my-course-name-label {
+    -fx-text-fill: #1E293B; 
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
 .browse{
     -fx-padding: 28; 
-    -fx-background-color: #0a0a0a;
+    -fx-background-color: #E8E8E8;
 }
 .browse-label{
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #0F172A;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
-.browse-search-field{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.browse-search-field {
+    -fx-background-color: #F8FAFC; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-text-fill: #f1f5f9;
-    -fx-prompt-text-fill: #475569;
+    -fx-text-fill: #1E293B;        
+    -fx-prompt-text-fill: #94A3B8; 
     -fx-font-size: 14px;
     -fx-padding: 12 16 12 16;
 }
-.browse-search-field-focused{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #6366f1;
+.browse-search-field-focused {
+    -fx-background-color: #FFFFFF; 
+    -fx-border-color: #4F46E5;     
     -fx-border-width: 1.5;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-text-fill: #f1f5f9;
-    -fx-prompt-text-fill: #475569;
+    -fx-text-fill: #1E293B;       
+    -fx-prompt-text-fill: #94A3B8; 
     -fx-font-size: 14px;
     -fx-padding: 12 16 12 16;
 }
-.browse-search-field-focused-else{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.browse-search-field-focused-else {
+    -fx-background-color: #F8FAFC; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-    -fx-text-fill: #f1f5f9;
-    -fx-prompt-text-fill: #475569;
+    -fx-text-fill: #1E293B;        
+    -fx-prompt-text-fill: #94A3B8; 
     -fx-font-size: 14px;
     -fx-padding: 12 16 12 16;
 }
-.browse-card{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.browse-card {
+    -fx-background-color: #F8FAFC; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 16;
 }
-.browse-card-entered:hover{
-    -fx-background-color: #1a2540;
-    -fx-border-color: #6366f1;
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-padding: 16
-}
-.browse-card-exited{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.browse-card-entered:hover {
+    -fx-background-color: #F1F5F9; 
+    -fx-border-color: #4F46E5;     
     -fx-border-radius: 12;
     -fx-background-radius: 12;
     -fx-padding: 16;
 }
-.browse-card-label{
-    -fx-text-fill: #f1f5f9;
+.browse-card-exited {
+    -fx-background-color: #F8FAFC; 
+    -fx-border-color: #CBD5E1;     
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 16;
+}
+.browse-card-label {
+    -fx-text-fill: #1E293B; 
     -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
-.browse-row{
-    -fx-background-color: #111827;
-    -fx-border-color: #1e293b;
+.browse-row {
+    -fx-background-color: #E8E8E8; 
+    -fx-border-color: #E2E8F0;     
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10 14 10 14;
 }
-.browse-row-entered:hover{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.browse-row-entered:hover {
+    -fx-background-color: #E1E2E3; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10 14 10 14;
 }
-.browse-row-exited{
-    -fx-background-color: #111827;
-    -fx-border-color: #1e293b;
+.browse-row-exited {
+    -fx-background-color: #E8E8E8; 
+    -fx-border-color: #E2E8F0;     
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-padding: 10 14 10 14;
 }
-.browse-row-title{
-    -fx-text-fill: #94a3b8;
+.browse-row-title {
+    -fx-text-fill: #475569; 
     -fx-font-size: 12px;
 }
-.browse-row-download-btn{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #6366f1;
+.browse-row-download-btn {
+    -fx-background-color: #F1F5F9; 
+    -fx-border-color: #A5B4FC;     
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-text-fill: #818cf8;
+    -fx-text-fill: #4F46E5;        
     -fx-font-size: 11px;
     -fx-padding: 5 12 5 12;
     -fx-cursor: hand;

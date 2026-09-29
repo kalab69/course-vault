@@ -5,6 +5,7 @@ import com.mycompany.model.courseModel;
 import com.mycompany.model.courseResourceModel;
 import com.mycompany.service.courseResourceService;
 import com.mycompany.service.courseService;
+import com.mycompany.theme.themeManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -58,6 +59,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
 
 public class Scene1Controller implements Initializable {
 
@@ -103,6 +105,9 @@ public class Scene1Controller implements Initializable {
 
     @FXML
     private Button myCourseButton;
+
+    @FXML
+    private Button themeToggleBtn;
 
     @FXML
     private HBox navBar;
@@ -252,6 +257,9 @@ public class Scene1Controller implements Initializable {
         homeButton.setOnAction(e -> showHome());
         browseButton.setOnAction(e -> showBrowse());
 
+        Platform.runLater(() -> {
+            rootPane.getScene().getStylesheets().add(getClass().getResource("/CSS/scene1.css").toExternalForm());
+        });
         // --------------------------------------
         // PART 2 — SIDEBAR VERTICAL SLIDING INDICATOR
         // --------------------------------------
@@ -378,16 +386,13 @@ public class Scene1Controller implements Initializable {
         new Thread(() -> {
             try {
                 System.out.println("Fetching year: " + year);
-                List<courseModel> courses
-                        = courseService.fetchCoursesByYear(year);
+                List<courseModel> courses = courseService.fetchCoursesByYear(year);
 
-                System.out.println("Got " + courses.size()
-                        + " courses for year: " + year);
+                System.out.println("Got " + courses.size() + " courses for year: " + year);
 
                 // UI updates must be on JavaFX thread
                 Platform.runLater(() -> {
                     container.getChildren().clear();
-
                     for (courseModel course : courses) {
                         VBox card = createCourseCard(course);
                         card.setOnMouseClicked(e -> openCourse(course));
@@ -428,25 +433,13 @@ public class Scene1Controller implements Initializable {
 
         // Course name
         Label nameLabel = new Label(course.getCourseName());
-        nameLabel.setStyle(
-                "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 13px;"
-                + "-fx-font-weight: bold;"
-                + "-fx-wrap-text: true;"
-        );
+        nameLabel.getStyleClass().add("course-label");
         nameLabel.setWrapText(true);
 
         card.getChildren().addAll(codeLabel, nameLabel);
 
         // Base card style
-        card.setStyle(
-                "-fx-background-color: #030202;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 14;"
-                + "-fx-cursor: hand;"
-        );
+        card.getStyleClass().add("card");
 
         // ── Add the same spinning white border hover animation ────────────
         setupCardHoverAnimation(card);
@@ -769,6 +762,7 @@ public class Scene1Controller implements Initializable {
 
             CoursePageController controller = loader.getController();
             controller.setCourse(course);
+            controller.applyCurrentTheme();
 
             Stage courseStage = new Stage();
             courseStage.setTitle(course.getCourseName());
@@ -802,7 +796,7 @@ public class Scene1Controller implements Initializable {
 
     private void fadeIndicatorWhenMouseEntersFlyout(ContextMenu flyout) {
         flyout.setOnShown(e -> {
-            javafx.scene.Node content = flyout.getSkin().getNode();
+            Node content = flyout.getSkin().getNode();
             if (content != null) {
 
                 // Slide down animation on flyout open
@@ -906,19 +900,30 @@ public class Scene1Controller implements Initializable {
                     double x2 = 50 - Math.cos(rad) * 50;
                     double y2 = 50 - Math.sin(rad) * 50;
 
+                    String borderColor1;
+                    String borderColor2;
+
+                    if (themeManager.isDarkMode()) {
+                        borderColor1 = "rgba(255,255,255,0.6)";
+                        borderColor2 = "rgba(255,255,255,1.0)";
+                    } else {
+                        borderColor1 = "rgba(0,0,0,0.6)";
+                        borderColor2 = "rgba(0,0,0,1.0)";
+                    }
+                    String cardBackground = themeManager.isDarkMode() ? "#1e293b" : "#D5DAE3";
                     card.setStyle(
                             "-fx-background-color: "
                             + "linear-gradient("
                             + "from " + x1 + "% " + y1 + "% "
                             + "to " + x2 + "% " + y2 + "%, "
                             + "rgba(255,255,255,0.0), "
-                            + "rgba(255,255,255,0.6), "
-                            + "rgba(255,255,255,1.0), "
-                            + "rgba(255,255,255,1.0), "
-                            + "rgba(255,255,255,0.6), "
+                            + borderColor1 + ", "
+                            + borderColor2 + ", "
+                            + borderColor2 + ", "
+                            + borderColor1 + ", "
                             + "rgba(255,255,255,0.0)"
                             + "), "
-                            + "#1e293b;"
+                            + cardBackground + ";"
                             + "-fx-background-insets: 0, 2.5;"
                             + "-fx-background-radius: 12, 10;"
                             + "-fx-padding: 16;"
@@ -944,13 +949,15 @@ public class Scene1Controller implements Initializable {
             liftIn.play();
         });
 
+        String cardBackground = themeManager.isDarkMode() ? "#030202" : "#F8FAFC";
+        String cardBorder = themeManager.isDarkMode() ? "#334155" : "#CBD5E1";
         card.setOnMouseExited(e -> {
             rotateGradient.stop();
             liftOut.play();
             card.setStyle(
-                    "-fx-background-color: #030202;"
+                    cardBackground + ";"
                     + "-fx-background-radius: 12;"
-                    + "-fx-border-color: #334155;"
+                    + cardBorder + ";"
                     + "-fx-border-radius: 12;"
                     + "-fx-border-width: 1;"
                     + "-fx-padding: 16;"
@@ -1072,32 +1079,22 @@ public class Scene1Controller implements Initializable {
     // Highlight active nav button
     private void setNavActive(Button active) {
         Button[] navBtns = {homeButton, myCourseButton, browseButton};
-
         for (Button btn : navBtns) {
-            if (btn != null) {
-                btn.getStyleClass().remove("nav-active");
-            }
+            btn.getStyleClass().remove("nav-active");
         }
-
-        if (active != null) {
-            active.getStyleClass().add("nav-active");
-            Platform.runLater(() -> snapToButton(active));
-        }
+        active.getStyleClass().add("nav-active");
     }
 
     private VBox buildMyCoursesView() {
         VBox root = new VBox(20);
-        root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
+        root.getStyleClass().add("my-course");
 
         // ── Header 
         Label title = new Label("My Resources");
-        title.setStyle(
-                "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 22px;"
-                + "-fx-font-weight: bold;");
+        title.getStyleClass().add("my-course-label");
 
         Label sub = new Label("Files you have downloaded");
-        sub.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
+        sub.getStyleClass().add("my-course-sub-label");
 
         VBox header = new VBox(4, title, sub);
         root.getChildren().add(header);
@@ -1160,10 +1157,7 @@ public class Scene1Controller implements Initializable {
         // File info
         VBox info = new VBox(4);
         Label nameLabel = new Label(file.getName());
-        nameLabel.setStyle(
-                "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 13px;"
-                + "-fx-font-weight: bold;");
+        nameLabel.getStyleClass().add("my-course-name-label");
 
         long sizeKb = file.length() / 1024;
         String sizeStr = sizeKb > 1024
@@ -1184,33 +1178,9 @@ public class Scene1Controller implements Initializable {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button openBtn = new Button("Open");
-        openBtn.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #94a3b8;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 6 14 6 14;"
-                + "-fx-cursor: hand;");
-        openBtn.setOnMouseEntered(e -> openBtn.setStyle(
-                "-fx-background-color: #6366f1;"
-                + "-fx-border-color: #6366f1;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: white;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 6 14 6 14;"
-                + "-fx-cursor: hand;"));
-        openBtn.setOnMouseExited(e -> openBtn.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #94a3b8;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 6 14 6 14;"
-                + "-fx-cursor: hand;"));
+        openBtn.getStyleClass().add("my-course-btn");
+        openBtn.setOnMouseEntered(e -> openBtn.getStyleClass().add("my-course-btn-entered"));
+        openBtn.setOnMouseExited(e -> openBtn.getStyleClass().add("my-course-btn-exited"));
         openBtn.setOnAction(e -> openDownloadedFile(file));
 
         Button deleteBtn = new Button("🗑");
@@ -1243,25 +1213,10 @@ public class Scene1Controller implements Initializable {
         });
 
         card.getChildren().addAll(iconLabel, info, spacer, openBtn, deleteBtn);
-        card.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 14 16 14 16;");
+        card.getStyleClass().add("my-course-card");
 
-        card.setOnMouseEntered(e -> card.setStyle(
-                "-fx-background-color: #1a2540;"
-                + "-fx-border-color: #6366f1;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 14 16 14 16;"));
-        card.setOnMouseExited(e -> card.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 14 16 14 16;"));
+        card.setOnMouseEntered(e -> card.getStyleClass().add("my-course-card-entered"));
+        card.setOnMouseExited(e -> card.getStyleClass().add("my-course-card-exited"));
 
         return card;
     }
@@ -1319,6 +1274,7 @@ public class Scene1Controller implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/ImageViewer.fxml"));
             Parent root = loader.load();
             ImageViewerController controller = loader.getController();
+            controller.applyCurrentTheme();
 
             File parentDir = imageFile.getParentFile();
             List<File> downloadedImages = new java.util.ArrayList<>();
@@ -1398,14 +1354,11 @@ public class Scene1Controller implements Initializable {
 
     private VBox buildBrowseView() {
         VBox root = new VBox(20);
-        root.setStyle("-fx-padding: 28; -fx-background-color: #0a0a0a;");
+        root.getStyleClass().add("browse");
 
         // ── Page title 
         Label title = new Label("Browse Resources");
-        title.setStyle(
-                "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 22px;"
-                + "-fx-font-weight: bold;");
+        title.getStyleClass().add("browse-label");
 
         Label sub = new Label("Search for courses and download their PDFs");
         sub.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
@@ -1413,42 +1366,17 @@ public class Scene1Controller implements Initializable {
         VBox header = new VBox(4, title, sub);
 
         // ── Search bar 
-        browseSearchField = new javafx.scene.control.TextField();
+        browseSearchField = new TextField();
         browseSearchField.setPromptText("🔍  Search courses e.g. \"data\", \"network\"...");
-        browseSearchField.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 10;"
-                + "-fx-background-radius: 10;"
-                + "-fx-text-fill: #f1f5f9;"
-                + "-fx-prompt-text-fill: #475569;"
-                + "-fx-font-size: 14px;"
-                + "-fx-padding: 12 16 12 16;");
+        browseSearchField.getStyleClass().add("browse-search-field");
         browseSearchField.setPrefHeight(46);
 
         // Focus style
         browseSearchField.focusedProperty().addListener((obs, old, focused) -> {
             if (focused) {
-                browseSearchField.setStyle(
-                        "-fx-background-color: #1e293b;"
-                        + "-fx-border-color: #6366f1;"
-                        + "-fx-border-width: 1.5;"
-                        + "-fx-border-radius: 10;"
-                        + "-fx-background-radius: 10;"
-                        + "-fx-text-fill: #f1f5f9;"
-                        + "-fx-prompt-text-fill: #475569;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-padding: 12 16 12 16;");
+                browseSearchField.getStyleClass().add("browse-search-field-focused");
             } else {
-                browseSearchField.setStyle(
-                        "-fx-background-color: #1e293b;"
-                        + "-fx-border-color: #334155;"
-                        + "-fx-border-radius: 10;"
-                        + "-fx-background-radius: 10;"
-                        + "-fx-text-fill: #f1f5f9;"
-                        + "-fx-prompt-text-fill: #475569;"
-                        + "-fx-font-size: 14px;"
-                        + "-fx-padding: 12 16 12 16;");
+                browseSearchField.getStyleClass().add("browse-search-field-focused-else");
             }
         });
 
@@ -1581,12 +1509,7 @@ public class Scene1Controller implements Initializable {
 
     private VBox buildBrowseCourseCard(courseModel course) {
         VBox card = new VBox(10);
-        card.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 16;");
+        card.getStyleClass().add("browse-card");
 
         // ── Course header 
         Label codeLabel = new Label(course.getCode());
@@ -1599,10 +1522,7 @@ public class Scene1Controller implements Initializable {
                 + "-fx-padding: 3 10 3 10;");
 
         Label nameLabel = new Label(course.getCourseName());
-        nameLabel.setStyle(
-                "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 14px;"
-                + "-fx-font-weight: bold;");
+        nameLabel.getStyleClass().add("browse-card-label");
         nameLabel.setWrapText(true);
 
         HBox courseHeader = new HBox(10, codeLabel, nameLabel);
@@ -1646,7 +1566,7 @@ public class Scene1Controller implements Initializable {
                 // Expand and load resources
                 resourcesList.setVisible(true);
                 resourcesList.setManaged(true);
-                toggleBtn.setText("▲  Hide Resources");
+                toggleBtn.setText("▲ Hide Resources");
                 expanded[0] = true;
 
                 // Load resources from API
@@ -1655,7 +1575,7 @@ public class Scene1Controller implements Initializable {
                 // Collapse
                 resourcesList.setVisible(false);
                 resourcesList.setManaged(false);
-                toggleBtn.setText("▼  View Resources");
+                toggleBtn.setText("▼ View Resources");
                 expanded[0] = false;
             }
         });
@@ -1664,18 +1584,8 @@ public class Scene1Controller implements Initializable {
                 courseHeader, toggleBtn, resourcesList);
 
         // Card hover
-        card.setOnMouseEntered(ev -> card.setStyle(
-                "-fx-background-color: #1a2540;"
-                + "-fx-border-color: #6366f1;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 16;"));
-        card.setOnMouseExited(ev -> card.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 12;"
-                + "-fx-background-radius: 12;"
-                + "-fx-padding: 16;"));
+        card.setOnMouseEntered(ev -> card.getStyleClass().add("browse-card-entered"));
+        card.setOnMouseExited(ev -> card.getStyleClass().add("browse-card-exited"));
 
         return card;
     }
@@ -1722,14 +1632,9 @@ public class Scene1Controller implements Initializable {
     private HBox buildBrowseResourceRow(courseModel course, courseResourceModel resource) {
         HBox row = new HBox(10);
         row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-        row.setStyle(
-                "-fx-background-color: #111827;"
-                + "-fx-border-color: #1e293b;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-padding: 10 14 10 14;");
+        row.getStyleClass().add("browse-row");
 
-        // ✅ Choose icon based on type or file extension
+        // Choose icon based on type or file extension
         String typeStr = resource.getType() != null
                 ? resource.getType().toUpperCase() : "";
         String fileStr = resource.getFileName() != null
@@ -1748,9 +1653,7 @@ public class Scene1Controller implements Initializable {
 
         // Resource title
         Label titleLabel = new Label(resource.getTitle());
-        titleLabel.setStyle(
-                "-fx-text-fill: #94a3b8;"
-                + "-fx-font-size: 12px;");
+        titleLabel.getStyleClass().add("browse-row-title");
         titleLabel.setWrapText(true);
         HBox.setHgrow(titleLabel, javafx.scene.layout.Priority.ALWAYS);
 
@@ -1779,15 +1682,7 @@ public class Scene1Controller implements Initializable {
 
         } else {
             actionBtn = new Button("⬇ Download");
-            actionBtn.setStyle(
-                    "-fx-background-color: #1e293b;"
-                    + "-fx-border-color: #6366f1;"
-                    + "-fx-border-radius: 8;"
-                    + "-fx-background-radius: 8;"
-                    + "-fx-text-fill: #818cf8;"
-                    + "-fx-font-size: 11px;"
-                    + "-fx-padding: 5 12 5 12;"
-                    + "-fx-cursor: hand;");
+            actionBtn.getStyleClass().add("browse-row-download-btn");
 
             final Button finalBtn = actionBtn;
             final String finalFileName = safeName;
@@ -1798,18 +1693,8 @@ public class Scene1Controller implements Initializable {
 
         row.getChildren().addAll(iconLabel, titleLabel, actionBtn);
 
-        row.setOnMouseEntered(e -> row.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-padding: 10 14 10 14;"));
-        row.setOnMouseExited(e -> row.setStyle(
-                "-fx-background-color: #111827;"
-                + "-fx-border-color: #1e293b;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-padding: 10 14 10 14;"));
+        row.setOnMouseEntered(e -> row.getStyleClass().add("browse-row-entered"));
+        row.setOnMouseExited(e -> row.getStyleClass().add("browse-row-exited"));
 
         return row;
     }
@@ -1941,6 +1826,27 @@ public class Scene1Controller implements Initializable {
             return ".pdf";
         }
         return fileName.substring(dot);
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        themeManager.toggleTheme();
+        Scene scene = rootPane.getScene();
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear();
+        if (!themeManager.isDarkMode()) {
+            scene.getStylesheets().add(getClass().getResource("/CSS/lightmode.css").toExternalForm());
+            themeToggleBtn.setText("🌙");
+            System.out.println("LIGHT MODE");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/CSS/scene1.css").toExternalForm());
+            themeToggleBtn.setText("☀");
+            System.out.println("DARK MODE");
+        }
+        scene.getRoot().applyCss();
+        scene.getRoot().layout();
     }
 
 }

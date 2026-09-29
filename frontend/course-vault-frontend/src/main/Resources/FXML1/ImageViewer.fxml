@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="image-viewer-root" stylesheets="@../CSS/imageviewer.css" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.ImageViewerController">
+<BorderPane fx:id="imageViewPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="image-viewer-root" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.ImageViewerController">
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="12.0" styleClass="image-viewer-header" BorderPane.alignment="CENTER">
          <children>

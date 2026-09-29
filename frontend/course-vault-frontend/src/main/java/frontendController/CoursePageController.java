@@ -5,6 +5,7 @@ import com.mycompany.model.courseResourceModel;
 import com.mycompany.model.externalLinkModel;
 import com.mycompany.service.courseResourceService;
 import com.mycompany.service.externalLinkService;
+import com.mycompany.theme.themeManager;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.application.HostServices;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -107,6 +109,13 @@ public class CoursePageController implements Initializable {
 
         // Start with "All" tab active
         setActiveTab(allBtn);
+
+        courseRoot.sceneProperty().addListener(
+                (obs, oldScene, newScene) -> {
+                    if (newScene != null) {
+                        applyCurrentTheme();
+                    }
+                });
     }
 
     // ── Highlight the active tab button 
@@ -115,31 +124,16 @@ public class CoursePageController implements Initializable {
         Button[] tabs = {allBtn, notesBtn, midtermBtn, finalBtn, externalBtn, aiBtn};
         for (Button tab : tabs) {
             if (tab != null) {
-                tab.setStyle(
-                        "-fx-background-color: #1e293b;"
-                        + "-fx-border-color: #334155;"
-                        + "-fx-border-radius: 20;"
-                        + "-fx-background-radius: 20;"
-                        + "-fx-text-fill: #94a3b8;"
-                        + "-fx-font-size: 12px;"
-                        + "-fx-padding: 6 14 6 14;"
-                        + "-fx-cursor: hand;"
-                );
+                tab.getStyleClass().remove("course-page-tab-btn");
+                tab.getStyleClass().remove("course-page-tab-btn-selected");
+
+                tab.getStyleClass().add("course-page-tab-btn");
             }
         }
         // Highlight the selected tab
         if (selected != null) {
-            selected.setStyle(
-                    "-fx-background-color: #312e81;"
-                    + "-fx-border-color: #6366f1;"
-                    + "-fx-border-radius: 20;"
-                    + "-fx-background-radius: 20;"
-                    + "-fx-text-fill: #a5b4fc;"
-                    + "-fx-font-size: 12px;"
-                    + "-fx-font-weight: bold;"
-                    + "-fx-padding: 6 14 6 14;"
-                    + "-fx-cursor: hand;"
-            );
+            selected.getStyleClass().remove("course-page-tab-btn");
+            selected.getStyleClass().add("course-page-tab-btn-selected");
         }
         activeTab = selected;
     }
@@ -317,36 +311,6 @@ public class CoursePageController implements Initializable {
         card.setMaxWidth(Double.MAX_VALUE);
         card.setAlignment(Pos.CENTER_LEFT);
 
-        String baseStyle
-                = "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #94a3b8;"
-                + "-fx-font-size: 13px;"
-                + "-fx-padding: 12 16 12 16;"
-                + "-fx-cursor: hand;";
-
-        String hoverStyle
-                = "-fx-background-color: #273344;"
-                + "-fx-border-color: #6366f1;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #f1f5f9;"
-                + "-fx-font-size: 13px;"
-                + "-fx-padding: 12 16 12 16;"
-                + "-fx-cursor: hand;";
-
-        String downloadedStyle
-                = "-fx-background-color: #14532d;"
-                + "-fx-border-color: #22c55e;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #86efac;"
-                + "-fx-font-size: 13px;"
-                + "-fx-padding: 12 16 12 16;"
-                + "-fx-cursor: hand;";
-
         // Check if already downloaded — show green style immediately
         String resourceKey = course.getId() + "_" + resource.getId();
         File courseVaultFolder = getCourseVaultFolder();
@@ -354,39 +318,34 @@ public class CoursePageController implements Initializable {
 
         if (existingFile.exists()
                 || downloadedFiles.containsKey(resourceKey)) {
-            card.setStyle(downloadedStyle);
+            card.getStyleClass().setAll("button", "course-page-resources-card-downloaded");
             card.setText("✅  " + resource.getTitle());
         } else {
-            card.setStyle(baseStyle);
+            card.getStyleClass().setAll("button", "course-page-resources-card");
         }
 
         card.setOnMouseEntered(e -> {
             if (!card.getText().startsWith("✅")
                     && !card.getText().startsWith("⬇")) {
-                card.setStyle(hoverStyle);
+                card.getStyleClass().setAll("button", "course-page-resources-card-hover");
             }
         });
         card.setOnMouseExited(e -> {
             if (!card.getText().startsWith("✅")
                     && !card.getText().startsWith("⬇")) {
-                card.setStyle(baseStyle);
+                card.getStyleClass().setAll("button", "course-page-resources-card");
             }
         });
 
         // Click handler
         card.setOnAction(e
-                -> handleResourceClick(resource, card,
-                        baseStyle, downloadedStyle));
+                -> handleResourceClick(resource, card));
 
         return card;
     }
 
     // ── Smart click: open if downloaded, Save As if not 
-    private void handleResourceClick(
-            courseResourceModel resource,
-            Button card,
-            String baseStyle,
-            String downloadedStyle) {
+    private void handleResourceClick(courseResourceModel resource,Button card) {
 
         String resourceKey = course.getId() + "_" + resource.getId();
 
@@ -416,8 +375,7 @@ public class CoursePageController implements Initializable {
         }
 
         // 3. Not downloaded — show Save As dialog
-        downloadWithSaveDialog(resource, resourceKey, card,
-                baseStyle, downloadedStyle);
+        downloadWithSaveDialog(resource, resourceKey, card);
     }
 
     private boolean isImageResource(
@@ -430,12 +388,7 @@ public class CoursePageController implements Initializable {
     }
     // ── Save As dialog — like browser save image 
 
-    private void downloadWithSaveDialog(
-            courseResourceModel resource,
-            String resourceKey,
-            Button card,
-            String baseStyle,
-            String downloadedStyle) {
+    private void downloadWithSaveDialog(courseResourceModel resource, String resourceKey, Button card) {
 
         FileChooser fileChooser = new FileChooser();
         if (isImageResource(resource)) {
@@ -490,7 +443,7 @@ public class CoursePageController implements Initializable {
                     Platform.runLater(() -> {
                         card.setDisable(false);
                         card.setText("✅ " + resource.getTitle());
-                        card.setStyle(downloadedStyle);
+                        card.getStyleClass().setAll("button", "course-page-resources-card-downloaded");
                         String fileName = finalDest.getName().toLowerCase();
                         if (isImageResource(resource)) {
                             openImageViewer(finalDest);
@@ -508,7 +461,7 @@ public class CoursePageController implements Initializable {
                 Platform.runLater(() -> {
                     card.setDisable(false);
                     card.setText(resource.getTitle());
-                    card.setStyle(baseStyle);
+                    card.getStyleClass().setAll("button", "course-page-resources-card");
                     showErrorAlert("Download Failed",
                             "Could not download the file.\n" + e.getMessage());
                 });
@@ -695,4 +648,30 @@ public class CoursePageController implements Initializable {
         }
     }
 
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        themeManager.toggleTheme();
+        applyCurrentTheme();
+    }
+
+    public void applyCurrentTheme() {
+        if (courseRoot == null) {
+            return;
+        }
+        Scene scene = courseRoot.getScene();
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear();
+        if (!themeManager.isDarkMode()) {
+            scene.getStylesheets().add(
+                    getClass().getResource("/CSS/coursepagelightmode.css").toExternalForm());
+            System.out.println("CoursePage: LIGHT MODE APPLIED");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/CSS/coursepage.css").toExternalForm());
+            System.out.println("CoursePage: DARK MODE APPLIED");
+        }
+        scene.getRoot().applyCss();
+        scene.getRoot().layout();
+    }
 }

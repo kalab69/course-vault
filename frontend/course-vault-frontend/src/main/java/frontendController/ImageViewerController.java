@@ -4,16 +4,20 @@
  */
 package frontendController;
 
+import com.mycompany.theme.themeManager;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -46,6 +50,9 @@ public class ImageViewerController implements Initializable {
 
     @FXML
     private Button prevBtn;
+
+    @FXML
+    private BorderPane imageViewPane;
 
     private double zoomFactor = 1.0;
     private double startX;
@@ -139,6 +146,13 @@ public class ImageViewerController implements Initializable {
                 });
             }
         });
+
+        imageViewPane.sceneProperty().addListener(
+                (obs, oldScene, newScene) -> {
+                    if (newScene != null) {
+                        applyCurrentTheme();
+                    }
+                });
     }
 
     private void updateZoom() {
@@ -166,5 +180,32 @@ public class ImageViewerController implements Initializable {
             prevBtn.setDisable(currentIndex == 0);
             nextBtn.setDisable(currentIndex == images.size() - 1);
         }
+    }
+
+    @FXML
+    private void toggleTheme(ActionEvent event) {
+        themeManager.toggleTheme();
+        applyCurrentTheme();
+    }
+
+    public void applyCurrentTheme() {
+        if (imageViewPane == null) {
+            return;
+        }
+        Scene scene = imageViewPane.getScene();
+        if (scene == null) {
+            return;
+        }
+        scene.getStylesheets().clear();
+        if (!themeManager.isDarkMode()) {
+            scene.getStylesheets().add(
+                    getClass().getResource("/CSS/imageviewerlightmode.css").toExternalForm());
+            System.out.println("CoursePage: LIGHT MODE APPLIED");
+        } else {
+            scene.getStylesheets().add(getClass().getResource("/CSS/imageviewer.css").toExternalForm());
+            System.out.println("CoursePage: DARK MODE APPLIED");
+        }
+        scene.getRoot().applyCss();
+        scene.getRoot().layout();
     }
 }

@@ -1,19 +1,29 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Sep 29, 2026, 9:36:52 PM
+    Author     : Abreham
+*/
+
+/* ═══ LIGHT MODE VERSION ═══ */
+
 /* ── Root — transparent with frosted glass effect ── */
 .course-page-root {
-    -fx-background-color: rgba(15, 23, 42, 0.85); /* dark + transparent */
+    -fx-background-color: rgba(248, 250, 252, 0.85); 
     -fx-background-radius: 16;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(15, 23, 42, 0.08);
     -fx-border-radius: 16;
     -fx-border-width: 1;
-    /* Soft shadow around the window */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.6), 30, 0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.15), 30, 0, 0, 8);
 }
 
 /* ── Header ── */
 .course-header {
-    -fx-background-color: rgba(17, 24, 39, 0.90);
-    -fx-background-radius: 16 16 0 0;  /* rounded only on top */
-    -fx-border-color: transparent transparent rgba(255,255,255,0.06) transparent;
+    -fx-background-color: rgba(255, 255, 255, 0.90);
+    -fx-background-radius: 16 16 0 0;  
+    -fx-border-color: transparent transparent rgba(15, 23, 42, 0.06) transparent;
     -fx-border-width: 0 0 1 0;
     -fx-min-height: 56px;
     -fx-max-height: 56px;
@@ -31,9 +41,9 @@
 
 /* ── Notes section box ── */
 .course-section {
-    -fx-background-color: rgba(30, 41, 59, 0.60);  /* semi-transparent */
+    -fx-background-color: rgba(241, 245, 249, 0.60);  
     -fx-background-radius: 12;
-    -fx-border-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(15, 23, 42, 0.08);
     -fx-border-radius: 12;
     -fx-border-width: 1;
     -fx-padding: 20;
@@ -41,22 +51,22 @@
 
 /* ── Section title ── */
 .course-section-title {
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 13px;
     -fx-font-weight: bold;
 }
 
 /* ── Course title ── */
 .course-page-title {
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #0F172A;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
 /* ── Course code chip ── */
 .course-page-tag {
-    -fx-background-color: #312e81;
-    -fx-text-fill: #a5b4fc;
+    -fx-background-color: #E0E7FF;
+    -fx-text-fill: #4338CA;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-background-radius: 6;
@@ -65,8 +75,8 @@
 
 /* ── Close button ── */
 .course-close-btn {
-    -fx-background-color: rgba(30, 41, 59, 0.8);
-    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-background-color: rgba(226, 232, 240, 0.8);
+    -fx-border-color: rgba(15, 23, 42, 0.1);
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-min-width: 32px;
@@ -77,8 +87,9 @@
     -fx-cursor: hand;
 }
 .course-close-btn:hover {
-    -fx-background-color: #ef4444;
-    -fx-border-color: #ef4444;
+    -fx-background-color: #EF4444;
+    -fx-border-color: #EF4444;
+    -fx-text-fill: white;
 }
 
 /* ── Scrollbar ── */
@@ -87,7 +98,7 @@
     -fx-background-color: transparent;
 }
 .course-scroll .scroll-bar:vertical .thumb {
-    -fx-background-color: rgba(255,255,255,0.15);
+    -fx-background-color: rgba(15, 23, 42, 0.15);
     -fx-background-radius: 4;
 }
 .course-scroll .scroll-bar:vertical .track,
@@ -99,11 +110,11 @@
 
 /* ── PDF viewer toolbar buttons ── */
 .pdf-nav-btn {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-text-fill: #f1f5f9;
+    -fx-text-fill: #475569;
     -fx-font-size: 14px;
     -fx-min-width: 34px;
     -fx-min-height: 34px;
@@ -111,44 +122,45 @@
     -fx-padding: 0;
 }
 .pdf-nav-btn:hover {
-    -fx-background-color: #6366f1;
-    -fx-border-color: #6366f1;
+    -fx-background-color: #4F46E5;
+    -fx-border-color: #4F46E5;
+    -fx-text-fill: #FFFFFF;
 }
 .pdf-nav-btn:disabled {
-    -fx-opacity: 0.4;
+    -fx-opacity: 0.3;
     -fx-cursor: default;
 }
 
 /* ── Page label ── */
 .pdf-page-label {
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 13px;
     -fx-padding: 0 8 0 8;
 }
 
 /* ── Filter tab buttons ── */
 .filter-tab {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
 .filter-tab:hover {
-    -fx-background-color: #273344;
-    -fx-text-fill: #f1f5f9;
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #0F172A;
 }
 
 /* Active filter tab */
 .filter-tab-active {
-    -fx-background-color: #312e81;
-    -fx-border-color: #6366f1;
+    -fx-background-color: #E0E7FF;
+    -fx-border-color: #6366F1;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #a5b4fc;
+    -fx-text-fill: #4338CA;
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
@@ -157,11 +169,11 @@
 
 /* ── Resource card items ── */
 .course-section .button {
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+    -fx-background-color: #F8FAFC;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;
     -fx-font-size: 12px;
     -fx-padding: 10 16 10 16;
     -fx-cursor: hand;
@@ -169,47 +181,48 @@
     -fx-alignment: CENTER_LEFT;
 }
 .course-section .button:hover {
-    -fx-background-color: #273344;
-    -fx-text-fill: #f1f5f9;
+    -fx-background-color: #F1F5F9;
+    -fx-text-fill: #0F172A;
+    -fx-border-color: #94A3B8;
 }
 
-.course-page-tab-btn{
-    -fx-background-color: #1e293b;
-    -fx-border-color: #334155;
+.course-page-tab-btn {
+    -fx-background-color: #F1F5F9; 
+    -fx-border-color: #CBD5E1;     
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #94a3b8;
+    -fx-text-fill: #475569;        
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
 .course-page-tab-btn:hover {
-    -fx-background-color: #2A3952;
+    -fx-background-color: #E2E8F0;
+    -fx-text-fill: #0F172A;
 }
-.course-page-tab-btn-selected{
-    -fx-background-color: #312e81;
-    -fx-border-color: #6366f1;
+.course-page-tab-btn-selected {
+    -fx-background-color: #E0E7FF; 
+    -fx-border-color: #6366F1;     
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #a5b4fc;
+    -fx-text-fill: #4338CA;        
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
-
 .course-section .button.course-page-resources-card {
-    -fx-background-color: #1e293b;
-    -fx-border-color: transparent;
-    -fx-text-fill: #94a3b8;
+    -fx-background-color: #F1F5F9; 
+    -fx-border-color: #CBD5E1;     
+    -fx-text-fill: #475569;        
 }
 .course-section .button.course-page-resources-card-hover {
-    -fx-background-color: #273344;
-    -fx-border-color: #6366f1;
-    -fx-text-fill: #f1f5f9;
+    -fx-background-color: #E2E8F0; 
+    -fx-border-color: #4F46E5;     
+    -fx-text-fill: #0F172A;        
 }
 .course-section .button.course-page-resources-card-downloaded {
-    -fx-background-color: #14532d;
-    -fx-border-color: #22c55e;
-    -fx-text-fill: #86efac;
+    -fx-background-color: #DCFCE7;
+    -fx-border-color: #16A34A;    
+    -fx-text-fill: #15803D;       
 }
