@@ -1335,6 +1335,7 @@ public class Scene1Controller implements Initializable {
 
     private TextField browseSearchField;
     private VBox browseResultsContainer;
+    private PauseTransition searchDebounceTimer;
 
     private void showBrowse() {
         // Save home content first time
@@ -1384,6 +1385,33 @@ public class Scene1Controller implements Initializable {
             } else {
                 browseSearchField.getStyleClass().add("browse-search-field-focused-else");
             }
+        });
+
+        browseSearchField.textProperty().addListener((obs, oldText, newText) -> {
+            String query = newText.trim();
+            if (query.length() < 2) {
+                browseResultsContainer.getChildren().clear();
+                if (query.isEmpty()) {
+                    Label hint = new Label(
+                            "Type a course name to search...");
+                    hint.setStyle(
+                            "-fx-text-fill: #334155; -fx-font-size: 13px;");
+                    browseResultsContainer.getChildren().add(hint);
+                }
+                if (searchDebounceTimer != null) {
+                    searchDebounceTimer.stop();
+                }
+                return;
+            }
+            if (searchDebounceTimer != null) {
+                searchDebounceTimer.stop();
+            }
+
+            searchDebounceTimer = new javafx.animation.PauseTransition(
+                    javafx.util.Duration.millis(300));
+            searchDebounceTimer.setOnFinished(e
+                    -> performBrowseSearch(query));
+            searchDebounceTimer.play();
         });
 
         // Search on Enter key
@@ -1450,6 +1478,21 @@ public class Scene1Controller implements Initializable {
 
         browseResultsContainer.getChildren().clear();
 
+        HBox loadingRow = new HBox(8);
+        loadingRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        Label spinner = new Label("⟳");
+        spinner.setStyle(
+                "-fx-text-fill: #6366f1;"
+                + "-fx-font-size: 16px;");
+
+        // Rotate the spinner
+        RotateTransition rotate = new RotateTransition(Duration.millis(600), spinner);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        rotate.setInterpolator(javafx.animation.Interpolator.LINEAR);
+        rotate.play();
+
         // Loading indicator
         Label loading = new Label("⏳ Searching for \"" + query + "\"...");
         loading.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
@@ -1470,6 +1513,7 @@ public class Scene1Controller implements Initializable {
                 courseModel[] courses = mapper.readValue(response.body(), courseModel[].class);
 
                 Platform.runLater(() -> {
+                    rotate.stop();
                     browseResultsContainer.getChildren().clear();
 
                     if (courses == null || courses.length == 0) {
