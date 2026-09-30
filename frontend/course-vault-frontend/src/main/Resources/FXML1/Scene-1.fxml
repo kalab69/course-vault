@@ -196,7 +196,7 @@
       </ScrollPane>
    </center>
 <top>
-    <HBox prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
+    <HBox fx:id="navHbox" prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
         <children>
 
             <!-- ── Sidebar toggle button ── -->
@@ -205,17 +205,17 @@
                     <StackPane>
                         <children>
 
-                            <!-- Hamburger icon — visible when sidebar is OPEN -->
-                            <ImageView fx:id="menuOpenIcon" fitHeight="22.0" fitWidth="22.0" layoutX="10.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" visible="true">
+                            <!-- Close icon — visible when sidebar is CLOSED -->
+                            <ImageView fx:id="menuCloseIcon" fitHeight="22.0" fitWidth="101.0" pickOnBounds="true" preserveRatio="true">
                                 <image>
-                                    <Image url="@../Images/side-menu.png" />
+                                    <Image url="@../Images/close.png" />
                                 </image>
                             </ImageView>
 
-                            <!-- Close icon — visible when sidebar is CLOSED -->
-                            <ImageView fx:id="menuCloseIcon" fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                            <!-- Hamburger icon — visible when sidebar is OPEN -->
+                            <ImageView fx:id="menuOpenIcon" fitHeight="22.0" fitWidth="22.0" layoutX="10.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true" visible="false">
                                 <image>
-                                    <Image url="@../Images/close.png" />
+                                    <Image url="@../Images/side-menu.png" />
                                 </image>
                             </ImageView>
 

@@ -58,7 +58,9 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 
 public class Scene1Controller implements Initializable {
@@ -285,7 +287,7 @@ public class Scene1Controller implements Initializable {
                 verticalFadeTransition.stop();
                 verticalFadeTransition.setToValue(0.0);
                 verticalFadeTransition.play();
-                hideAllFlyouts(departmentsFlyout, examFlyout, externalFlyout);
+                hideAllFlyouts(departmentsFlyout);
             }
         });
 
@@ -308,7 +310,8 @@ public class Scene1Controller implements Initializable {
         welcomeSub.setText("52 courses you have enrolled in");
 
         enrolledNum.setText("52");
-        completedNum.setText(String.valueOf(countDownloadedFiles()));
+        downloadedCount.set(countDownloadedFiles());
+        completedNum.textProperty().bind(downloadedCount.asString());
 
         // ---------------------------------------
         // PART 4 — CARD HOVER ANIMATIONS
@@ -453,6 +456,9 @@ public class Scene1Controller implements Initializable {
         return card;
     }
 
+    // ── Live download counter 
+    private final IntegerProperty downloadedCount = new SimpleIntegerProperty(0);
+
     private int countDownloadedFiles() {
         File courseVaultFolder = new File(System.getProperty("user.home") + File.separator + "Downloads" + File.separator + "CourseVault");
         if (!courseVaultFolder.exists()) {
@@ -464,6 +470,20 @@ public class Scene1Controller implements Initializable {
             return 0;
         }
         return files.length;
+    }
+
+    public void incrementDownloadCount() {
+        Platform.runLater(()
+                -> downloadedCount.set(downloadedCount.get() + 1));
+    }
+
+    public void decrementDownloadCount() {
+        Platform.runLater(() -> {
+            int current = downloadedCount.get();
+            if (current > 0) {
+                downloadedCount.set(current - 1);
+            }
+        });
     }
 
     private String getYearTagStyle(String yearLevel) {
@@ -621,8 +641,8 @@ public class Scene1Controller implements Initializable {
     // showMenuIcon=true  → show hamburger (sidebar is open)
     // showMenuIcon=false → show close icon (sidebar is closed)
     private void swapIcon(boolean showMenuIcon) {
-        ImageView fadeOutView = showMenuIcon ? menuCloseIcon : menuOpenIcon;
-        ImageView fadeInView = showMenuIcon ? menuOpenIcon : menuCloseIcon;
+        ImageView fadeOutView = showMenuIcon ? menuOpenIcon : menuCloseIcon;
+        ImageView fadeInView = showMenuIcon ?  menuCloseIcon : menuOpenIcon;
 
         FadeTransition out = new FadeTransition(Duration.millis(150), fadeOutView);
         out.setFromValue(1.0);
@@ -769,6 +789,7 @@ public class Scene1Controller implements Initializable {
             CoursePageController controller = loader.getController();
             controller.setCourse(course);
             controller.applyCurrentTheme();
+            controller.setMainController(this);
 
             Stage courseStage = new Stage();
             courseStage.setTitle(course.getCourseName());
@@ -1214,7 +1235,7 @@ public class Scene1Controller implements Initializable {
                 + "-fx-padding: 4 8 4 8;"));
         deleteBtn.setOnAction(e -> {
             file.delete();
-
+            decrementDownloadCount();
             showMyCourses();
         });
 
@@ -1796,6 +1817,8 @@ public class Scene1Controller implements Initializable {
                             response.body(),
                             destination.toPath(),
                             java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    
+                    incrementDownloadCount();
 
                     System.out.println("✅ Saved: "
                             + destination.length() + " bytes");

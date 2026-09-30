@@ -58,8 +58,9 @@
     -fx-font-weight: bold;
 }
 
-#themeToggleBtn{
-    -fx-background-color: #E3E1E1;
+#navHbox{
+     -fx-background-color: #E3E1E1;
+     -fx-padding: 10 0 0 0;
 }
 
 .selectable-title {

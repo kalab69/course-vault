@@ -345,7 +345,7 @@ public class CoursePageController implements Initializable {
     }
 
     // ── Smart click: open if downloaded, Save As if not 
-    private void handleResourceClick(courseResourceModel resource,Button card) {
+    private void handleResourceClick(courseResourceModel resource, Button card) {
 
         String resourceKey = course.getId() + "_" + resource.getId();
 
@@ -445,6 +445,10 @@ public class CoursePageController implements Initializable {
                         card.setText("✅ " + resource.getTitle());
                         card.getStyleClass().setAll("button", "course-page-resources-card-downloaded");
                         String fileName = finalDest.getName().toLowerCase();
+                        
+                        if (mainController != null) {
+                            mainController.incrementDownloadCount();
+                        }
                         if (isImageResource(resource)) {
                             openImageViewer(finalDest);
                         } else {
@@ -526,6 +530,12 @@ public class CoursePageController implements Initializable {
     public void closeWindow() {
         Stage stage = (Stage) courseRoot.getScene().getWindow();
         stage.close();
+    }
+
+    private Scene1Controller mainController;
+
+    public void setMainController(Scene1Controller controller) {
+        this.mainController = controller;
     }
 
     private void openImageViewer(File imageFile) {
