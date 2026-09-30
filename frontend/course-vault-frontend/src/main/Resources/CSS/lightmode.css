@@ -510,3 +510,13 @@
     -fx-padding: 5 12 5 12;
     -fx-cursor: hand;
 }
+
+#imageTogglehbox1{
+    -fx-background-color: #E3E1E1;
+    -fx-padding: 5 0 2 6;
+}
+
+#imageTogglehbox2{
+    -fx-background-color: #E3E1E1;
+    -fx-padding: 5 0 2 6;
+}

@@ -32,22 +32,30 @@
                      <children>
                         <VBox fx:id="statCard1" prefHeight="200.0" prefWidth="100.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                            <children>
-                              <ImageView fitHeight="149.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Images/book.png" />
-                                 </image>
-                              </ImageView>
+                              <HBox fx:id="imageTogglehbox1" prefHeight="30.0" prefWidth="218.0">
+                                 <children>
+                                    <ImageView fitHeight="149.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Images/book.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
                               <Label fx:id="enrolledNum" styleClass="stat-number" text="___" />
                               <Label styleClass="stat-label" text="Enrolled" />
                            </children>
                         </VBox>
                         <VBox fx:id="statCard2" prefHeight="200.0" prefWidth="180.0" styleClass="stat-card" HBox.hgrow="ALWAYS">
                            <children>
-                              <ImageView fitHeight="149.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Images/check.png" />
-                                 </image>
-                              </ImageView>
+                              <HBox fx:id="imageTogglehbox2" prefHeight="26.0" prefWidth="298.0">
+                                 <children>
+                                    <ImageView fitHeight="149.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Images/check.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </HBox>
                               <Label fx:id="completedNum" styleClass="stat-number" text="___" />
                               <Label styleClass="stat-label" text="Resources Downloaded" />
                            </children>

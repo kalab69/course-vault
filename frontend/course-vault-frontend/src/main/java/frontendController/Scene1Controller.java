@@ -212,6 +212,12 @@ public class Scene1Controller implements Initializable {
         setupSlidingHover(myCourseButton);
         setupSlidingHover(browseButton);
 
+        themeToggleBtn.setOnMouseEntered(e -> {
+            fadeTransition.stop();
+            fadeTransition.setToValue(0.0);
+            fadeTransition.play();
+        });
+
         navBar.setOnMouseExited(e -> {
             fadeTransition.stop();
             fadeTransition.setToValue(0.0);
