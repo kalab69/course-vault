@@ -10,20 +10,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 @Service
-public class GeminiClient {
+public class GroqClient {
 
-    private static final String GEMINI_URL =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent";
+    private static final String GROQ_URL =
+            "https://api.groq.com/openai/v1/chat/completions";
 
-    private static final int MAX_CHARS = 20000;
+    private static final String MODEL = "openai/gpt-oss-120b";
 
-    public String generateSummary(String content) {
-        // Truncate BEFORE sending to reduce token usage
-        if (content != null && content.length() > MAX_CHARS) {
-            content = content.substring(0, MAX_CHARS) + "\n\n[...truncated...]";
-        }
-
-        String prompt = buildPrompt(content);
+    public String generateCourseDescription(String courseName, String courseCode, String yearLevel) {
+        String prompt = buildCoursePrompt(courseName, courseCode, yearLevel);
         String rawResponse = sendWithRetry(prompt, 3);
 
         if (rawResponse == null) {
@@ -37,9 +32,9 @@ public class GeminiClient {
     private String sendWithRetry(String prompt, int maxAttempts) {
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
-                String apiKey = System.getenv("GEMINI_API_KEY");
+                String apiKey = System.getenv("GROQ_API_KEY");
                 if (apiKey == null || apiKey.isEmpty()) {
-                    throw new RuntimeException("GEMINI_API_KEY env variable is not set.");
+                    throw new RuntimeException("GROQ_API_KEY env variable is not set.");
                 }
 
                 String escaped = prompt
@@ -49,19 +44,17 @@ public class GeminiClient {
                         .replace("\r", "\\r");
 
                 String requestBody = "{\n"
-                        + "  \"contents\": [\n"
-                        + "    {\n"
-                        + "      \"parts\": [\n"
-                        + "        { \"text\": \"" + escaped + "\" }\n"
-                        + "      ]\n"
-                        + "    }\n"
+                        + "  \"model\": \"" + MODEL + "\",\n"
+                        + "  \"messages\": [\n"
+                        + "    { \"role\": \"user\", \"content\": \"" + escaped + "\" }\n"
                         + "  ]\n"
                         + "}";
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(GEMINI_URL + "?key=" + apiKey))
+                        .uri(URI.create(GROQ_URL))
                         .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + apiKey)
                         .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                         .build();
 
@@ -77,60 +70,62 @@ public class GeminiClient {
                     return body;
                 }
 
-                // Handle quota/retry errors with longer waits
-                if ((statusCode == 503 || statusCode == 429) && attempt < maxAttempts) {
-                    long waitMs = (statusCode == 429) ? (attempt * 20000L) : (attempt * 3000L);
-                    System.out.println("Gemini " + statusCode + " — waiting "
+                if ((statusCode == 429 || statusCode >= 500) && attempt < maxAttempts) {
+                    long waitMs = (statusCode == 429) ? (attempt * 5000L) : (attempt * 2000L);
+                    System.out.println("Groq " + statusCode + " — waiting "
                             + (waitMs / 1000) + "s before retry " + (attempt + 1));
                     Thread.sleep(waitMs);
                     continue;
                 }
 
-                System.err.println("Gemini HTTP " + statusCode + ": " + body);
+                System.err.println("Groq HTTP " + statusCode + ": " + body);
                 return null;
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 return null;
             } catch (Exception e) {
-                System.err.println("Gemini attempt " + attempt + " failed: " + e.getMessage());
+                System.err.println("Groq attempt " + attempt + " failed: " + e.getMessage());
                 if (attempt < maxAttempts) {
-                    try { Thread.sleep(attempt * 3000L); } catch (InterruptedException ignored) {}
+                    try { Thread.sleep(attempt * 2000L); } catch (InterruptedException ignored) {}
                 }
             }
         }
         return null;
     }
 
-    private String buildPrompt(String content) {
-        return "You are analyzing a document for a university course library.\n\n"
-                + "Write a factual description of this document, in this exact format. "
+    private String buildCoursePrompt(String courseName, String courseCode, String yearLevel) {
+        return "You are describing a university course for a student.\n\n"
+                + "Course name: " + courseName + "\n"
+                + "Course code: " + courseCode + "\n"
+                + "Year level: " + yearLevel + "\n\n"
+                + "Write a factual description of this course, in this exact format. "
                 + "Do NOT write greetings, introductions, or phrases like "
-                + "'Here is a summary' or 'This document provides'. "
+                + "'Here is a summary' or 'This course provides'. "
                 + "Start directly with the first heading.\n\n"
-                + "What This Document Covers\n"
-                + "(2-3 sentences describing the type and subject of the document)\n\n"
+                + "What This Course Covers\n"
+                + "(2-3 sentences describing the subject)\n\n"
                 + "Main Topics\n"
-                + "(bullet list of the major topics covered)\n\n"
+                + "(bullet list of major topics covered)\n\n"
                 + "Who This Is For\n"
-                + "(1 sentence on the target audience)\n\n"
+                + "(1 sentence on the target student)\n\n"
                 + "What You Will Be Able To Do\n"
-                + "(3-5 skills or abilities the reader will gain)\n\n"
+                + "(3-5 skills or abilities gained)\n\n"
                 + "Key Points\n"
-                + "(3-5 short bullets of the most important takeaways)\n\n"
-                + "Document content:\n\n"
-                + content;
+                + "(3-5 short important takeaways)";
     }
 
     private String extractTextFromJson(String json) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(json);
+
+            // Groq: choices[0].message.content
             JsonNode textNode = root
-                    .path("candidates").get(0)
-                    .path("content")
-                    .path("parts").get(0)
-                    .path("text");
+                    .path("choices").get(0)
+                    .path("message")
+                    .path("content");
+
             return textNode.asText();
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse AI response: " + e.getMessage(), e);
