@@ -1,5 +1,13 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+
 import SplashScreen from "./components/SplashScreen";
+
+import Home from "./pages/Home";
+import Courses from "./pages/Courses";
+import CourseDetails from "./pages/CourseDetail";
+import Footer from "./pages/Footer";
+import NavBar from "./components/NavBar";
 
 function App() {
 
@@ -14,13 +22,19 @@ function App() {
     }
 
     return (
-        <div>
-            {/* Your actual website */}
+        <>
+        <NavBar/>
+        <Routes>
 
-            <h1>CourseVault Website</h1>
+            <Route path="/" element={<Home />} />
 
-        </div>
-    );
+            <Route path="/courses" element={<Courses />} />
+
+            <Route path="/courses/:id" element={<CourseDetails />} />
+            
+        </Routes>
+        <Footer/>
+    </>);
 }
 
 export default App;
