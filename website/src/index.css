@@ -1406,3 +1406,645 @@
     }
 
 }
+/* =========================================
+   HOW IT WORKS
+========================================= */
+
+.how-it-works {
+    width: 100%;
+
+    min-height: calc(100vh - 85px);
+
+    box-sizing: border-box;
+
+    padding: 55px 45px 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(37, 99, 235, 0.07),
+            transparent 45%
+        );
+
+    text-align: center;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.how-label {
+    width: fit-content;
+
+    margin: 0 auto 14px;
+
+    padding: 7px 15px;
+
+    border: 1px solid #dbe5ff;
+    border-radius: 999px;
+
+    background: #f5f8ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.how-it-works h2 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 50px;
+
+    line-height: 1.05;
+
+    letter-spacing: -2.5px;
+}
+
+
+.how-it-works h2 span {
+    color: #2563eb;
+}
+
+
+.how-description {
+    max-width: 750px;
+
+    margin: 16px auto 38px;
+
+    color: #6b7280;
+
+    font-size: 16px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================
+   STEPS
+========================================= */
+
+.steps-container {
+    width: 100%;
+
+    max-width: 1450px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 20px;
+
+    text-align: left;
+}
+
+
+/* =========================================
+   STEP CARD
+========================================= */
+
+.step {
+    height: 450px;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.045);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+.step:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+
+/* Step number */
+
+.step-number {
+    color: #2563eb;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+}
+
+
+/* Step heading */
+
+.step-content h3 {
+    margin: 10px 0 8px;
+
+    color: #111827;
+
+    font-size: 21px;
+
+    line-height: 1.2;
+}
+
+
+/* Step description */
+
+.step-content > p {
+    height: 58px;
+
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    line-height: 1.55;
+}
+
+
+/* =========================================
+   STEP 1 — COURSE SEARCH
+========================================= */
+
+.course-browser {
+    margin-top: 25px;
+
+    padding: 17px;
+
+    border-radius: 15px;
+
+    background: #f5f8ff;
+}
+
+
+/* Search */
+
+.search-box {
+    height: 43px;
+
+    padding: 0 13px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    border: 1px solid #dfe5ef;
+
+    border-radius: 10px;
+
+    background: white;
+
+    color: #9ca3af;
+
+    font-size: 17px;
+}
+
+
+.search-placeholder {
+    font-size: 12px;
+}
+
+
+/* Year title */
+
+.year-title {
+    margin: 18px 0 9px;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* Year buttons */
+
+.year-buttons {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.year {
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    color: #6b7280;
+
+    background: white;
+
+    font-size: 11px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.year.active {
+    color: #2563eb;
+
+    background: #e7efff;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   STEP 2 — COURSE
+========================================= */
+
+.course-preview {
+    margin-top: 45px;
+
+    padding: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+
+.course-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eaf1ff;
+
+    color: #2563eb;
+
+    font-size: 15px;
+
+    font-weight: bold;
+}
+
+
+.course-info {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+.course-info strong {
+    color: #111827;
+
+    font-size: 13px;
+}
+
+
+.course-info span {
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+
+.open-arrow {
+    color: #2563eb;
+
+    font-size: 20px;
+}
+
+
+/* =========================================
+   STEP 3 — RESOURCE NAVIGATION
+========================================= */
+
+.course-navigation {
+    margin-top: 27px;
+
+    padding: 6px;
+
+    display: flex;
+
+    gap: 4px;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+}
+
+
+.course-nav {
+    flex: 1;
+
+    padding: 9px 4px;
+
+    border-radius: 7px;
+
+    color: #6b7280;
+
+    text-align: center;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+.course-nav.active {
+    background: white;
+
+    color: #111827;
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.07);
+}
+
+
+.course-nav.ai {
+    color: #7c3aed;
+}
+
+
+/* Resource list */
+
+.resource-mini-list {
+    margin-top: 14px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.resource-mini-list div {
+    padding: 10px 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    border-radius: 8px;
+
+    background: #fafafa;
+
+    color: #4b5563;
+
+    font-size: 10px;
+}
+
+
+.resource-mini-list div b {
+    margin-left: auto;
+
+    color: #2563eb;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   STEP 4 — VIEW / DOWNLOAD
+========================================= */
+
+.view-download {
+    margin-top: 45px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+}
+
+
+.action-card {
+    min-height: 145px;
+
+    padding: 18px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    border: 1px solid #e6e9ee;
+
+    border-radius: 14px;
+
+    background: #fafafa;
+}
+
+
+.action-icon {
+    width: 43px;
+    height: 43px;
+
+    margin-bottom: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eaf1ff;
+
+    color: #2563eb;
+
+    font-size: 19px;
+}
+
+
+.action-icon.download {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.action-card strong {
+    color: #111827;
+
+    font-size: 12px;
+}
+
+
+.action-card span {
+    margin-top: 5px;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    line-height: 1.45;
+}
+
+
+/* =========================================
+   AI MESSAGE
+========================================= */
+
+.how-bottom {
+    max-width: 900px;
+
+    margin: 25px auto 0;
+
+    padding: 13px 20px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    border: 1px solid #e3d9ff;
+
+    border-radius: 14px;
+
+    background: #faf8ff;
+
+    text-align: left;
+}
+
+
+.how-bottom > span {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #7c3aed;
+
+    color: white;
+
+    font-size: 17px;
+}
+
+
+.how-bottom strong {
+    color: #4c1d95;
+
+    font-size: 12px;
+}
+
+
+.how-bottom p {
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 11px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1150px) {
+
+    .steps-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .how-it-works {
+        min-height: auto;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .how-it-works {
+        padding: 70px 20px 40px;
+    }
+
+    .how-it-works h2 {
+        font-size: 38px;
+    }
+
+    .how-description {
+        font-size: 14px;
+    }
+
+    .steps-container {
+        grid-template-columns: 1fr;
+    }
+
+    .step {
+        height: auto;
+
+        min-height: 420px;
+    }
+
+    .how-bottom {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+}
