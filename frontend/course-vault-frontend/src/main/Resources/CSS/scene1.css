@@ -81,6 +81,9 @@
     -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
 }
+#navHbox{
+     -fx-padding: 10 0 0 0;
+}
 
 .selectable-title {
     -fx-background-color: transparent;
