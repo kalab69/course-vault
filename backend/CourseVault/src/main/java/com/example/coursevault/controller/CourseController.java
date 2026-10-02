@@ -1,9 +1,11 @@
 package com.example.coursevault.controller;
 
+import com.example.coursevault.dto.CourseDescriptionResponse;
 import com.example.coursevault.dto.CourseRequest;
 import com.example.coursevault.dto.CourseResponse;
 import com.example.coursevault.model.Course;
 import com.example.coursevault.model.YearLevel;
+import com.example.coursevault.service.CourseDescriptionService;
 import com.example.coursevault.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,13 @@ import java.util.List;
 @RestController
 public class CourseController {
     CourseService courseService;
+    CourseDescriptionService courseDescriptionService;
 
     @Autowired
-    CourseController(CourseService courseService) {
+    CourseController(CourseService courseService,
+                     CourseDescriptionService courseDescriptionService) {
         this.courseService = courseService;
+        this.courseDescriptionService = courseDescriptionService;
     }
 
     @GetMapping("/api/courses")
@@ -36,14 +41,13 @@ public class CourseController {
         Course course = courseService.findCourse(id);
         return ResponseEntity.ok(toResponse(course));
     }
+
     @GetMapping("/api/courses/search")
     public ResponseEntity<List<CourseResponse>> searchCourses(@RequestParam String name) {
         List<Course> courses = courseService.searchCourses(name);
-
         List<CourseResponse> courseResponse = courses.stream()
                 .map(this::toResponse)
                 .toList();
-
         return ResponseEntity.ok(courseResponse);
     }
 
@@ -71,6 +75,15 @@ public class CourseController {
         course.setCode(req.getCode());
         Course newCourse = courseService.addCourse(course);
         return ResponseEntity.status(201).body(toResponse(newCourse));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // NEW: AI Course Description endpoint
+    // ═══════════════════════════════════════════════════════════════
+    @PostMapping("/api/courses/{id}/ai-description")
+    public ResponseEntity<CourseDescriptionResponse> getAiDescription(@PathVariable int id) {
+        CourseDescriptionResponse response = courseDescriptionService.getOrGenerate(id);
+        return ResponseEntity.ok(response);
     }
 
     private CourseResponse toResponse(Course course) {

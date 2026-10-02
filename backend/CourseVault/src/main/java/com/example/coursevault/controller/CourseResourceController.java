@@ -1,10 +1,8 @@
 package com.example.coursevault.controller;
 
-import com.example.coursevault.dto.AiSummaryResponse;
 import com.example.coursevault.dto.CourseResourceResponse;
 import com.example.coursevault.model.CourseResource;
 import com.example.coursevault.model.ResourceType;
-import com.example.coursevault.service.AiSummaryService;
 import com.example.coursevault.service.CourseResourceService;
 import com.example.coursevault.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,22 +13,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 public class CourseResourceController {
     CourseResourceService courseResourceService;
     FileStorageService fileStorageService;
-    AiSummaryService aiSummaryService;
 
     @Autowired
     CourseResourceController(CourseResourceService courseResourceService,
-                             FileStorageService fileStorageService,
-                             AiSummaryService aiSummaryService) {
+                             FileStorageService fileStorageService) {
         this.courseResourceService = courseResourceService;
         this.fileStorageService = fileStorageService;
-        this.aiSummaryService = aiSummaryService;
     }
 
     @PostMapping("/api/course-resources")
@@ -89,15 +83,6 @@ public class CourseResourceController {
     public ResponseEntity<Void> deleteResource(@PathVariable int id) {
         courseResourceService.deleteResource(id);
         return ResponseEntity.noContent().build();
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // NEW: AI Summary endpoint
-    // ═══════════════════════════════════════════════════════════════
-    @PostMapping("/api/course-resources/{id}/ai-summary")
-    public ResponseEntity<AiSummaryResponse> getAiSummary(@PathVariable int id) throws IOException {
-        AiSummaryResponse response = aiSummaryService.getOrGenerate(id);
-        return ResponseEntity.ok(response);
     }
 
     private CourseResourceResponse toResponse(CourseResource resource) {
