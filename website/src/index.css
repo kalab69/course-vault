@@ -228,6 +228,47 @@
 
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
+/* Base link styles */
+.nav-links {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.nav-link {
+  position: relative;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  /* Smooth transition for background, color, and underline transform */
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Active Pill Highlight */
+.nav-link.active {
+  color: #f5acac;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Optional Smooth Underline Indicator */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #6366f1; /* Accent color */
+  border-radius: 2px;
+  transform: translateX(-50%);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link.active::after {
+  width: 70%;
+}
 /*CSS FOR THE HOME PAGE*/
 .home {
     min-height: 100vh;
