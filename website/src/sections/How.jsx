@@ -1,6 +1,6 @@
 function How(){
     return (
-         <section className="how-it-works" id="how-to-use">
+         <section className="how-it-works" id="how">
 
                 <div className="how-label">
                     How it works

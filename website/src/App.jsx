@@ -8,6 +8,7 @@ import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetail";
 import Footer from "./pages/Footer";
 import NavBar from "./components/NavBar";
+import MyCourses from './pages/MyCourses';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/" element={<Home />} />
 
             <Route path="/courses" element={<Courses />} />
+            <Route path="/MyCourses" element={<MyCourses />} />
 
             <Route path="/courses/:id" element={<CourseDetails />} />
             
