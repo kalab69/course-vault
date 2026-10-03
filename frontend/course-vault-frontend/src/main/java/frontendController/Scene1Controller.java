@@ -1523,7 +1523,7 @@ public class Scene1Controller implements Initializable {
 
         new Thread(() -> {
             try {
-                String url = "http://localhost:8080/api/courses/search?name=" + encode(query, StandardCharsets.UTF_8);
+                String url = "http://localhost:8080/api/courses/search?search=" + encode(query, StandardCharsets.UTF_8);
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
