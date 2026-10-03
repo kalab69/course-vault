@@ -9,6 +9,7 @@ import CourseDetails from "./pages/CourseDetail";
 import Footer from "./pages/Footer";
 import NavBar from "./components/NavBar";
 import MyCourses from './pages/MyCourses';
+import Search from "./pages/Search";
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
 
             <Route path="/courses" element={<Courses />} />
             <Route path="/MyCourses" element={<MyCourses />} />
+            <Route path ="/Search" element = {<Search/>}/>
 
             <Route path="/courses/:id" element={<CourseDetails />} />
             

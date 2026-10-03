@@ -70,7 +70,7 @@ function Footer() {
                         university study resources.
                     </p>
 
-                    <a href="#how-to-use" className="footer-link">
+                    <a href="#how" className="footer-link">
                         How it works
                     </a>
 
