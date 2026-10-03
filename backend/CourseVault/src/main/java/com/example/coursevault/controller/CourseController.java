@@ -43,8 +43,8 @@ public class CourseController {
     }
 
     @GetMapping("/api/courses/search")
-    public ResponseEntity<List<CourseResponse>> searchCourses(@RequestParam String name) {
-        List<Course> courses = courseService.searchCourses(name);
+    public ResponseEntity<List<CourseResponse>> searchCourses(@RequestParam String search) {
+        List<Course> courses = courseService.searchCourses(search);
         List<CourseResponse> courseResponse = courses.stream()
                 .map(this::toResponse)
                 .toList();

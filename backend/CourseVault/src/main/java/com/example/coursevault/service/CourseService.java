@@ -37,8 +37,8 @@ public class CourseService {
         return courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found: " + id));
     }
-    public List<Course> searchCourses(String name) {
-        return courseRepository.findByCourseNameContainingIgnoreCase(name);
+    public List<Course> searchCourses(String search) {
+        return courseRepository.findByCourseNameContainingIgnoreCaseOrCodeContainingIgnoreCase(search,search);
     }
 
     public Course editCourse(Course course, int id) {
