@@ -642,7 +642,7 @@ public class Scene1Controller implements Initializable {
     // showMenuIcon=false → show close icon (sidebar is closed)
     private void swapIcon(boolean showMenuIcon) {
         ImageView fadeOutView = showMenuIcon ? menuOpenIcon : menuCloseIcon;
-        ImageView fadeInView = showMenuIcon ?  menuCloseIcon : menuOpenIcon;
+        ImageView fadeInView = showMenuIcon ? menuCloseIcon : menuOpenIcon;
 
         FadeTransition out = new FadeTransition(Duration.millis(150), fadeOutView);
         out.setFromValue(1.0);
@@ -804,6 +804,8 @@ public class Scene1Controller implements Initializable {
 
             courseStage.setScene(scene);
             courseStage.setResizable(true);
+            courseStage.setOnHidden(e
+                    -> themeManager.removeListener(controller.getThemeListener()));
 
             courseStage.show();
         } catch (java.io.IOException e) {
@@ -1817,7 +1819,7 @@ public class Scene1Controller implements Initializable {
                             response.body(),
                             destination.toPath(),
                             java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-                    
+
                     incrementDownloadCount();
 
                     System.out.println("✅ Saved: "

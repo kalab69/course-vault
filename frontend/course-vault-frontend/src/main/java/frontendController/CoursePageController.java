@@ -116,6 +116,8 @@ public class CoursePageController implements Initializable {
                         applyCurrentTheme();
                     }
                 });
+        themeListener = this::applyCurrentTheme;
+        themeManager.addListener(themeListener);
     }
 
     // ── Highlight the active tab button 
@@ -445,7 +447,7 @@ public class CoursePageController implements Initializable {
                         card.setText("✅ " + resource.getTitle());
                         card.getStyleClass().setAll("button", "course-page-resources-card-downloaded");
                         String fileName = finalDest.getName().toLowerCase();
-                        
+
                         if (mainController != null) {
                             mainController.incrementDownloadCount();
                         }
@@ -528,6 +530,9 @@ public class CoursePageController implements Initializable {
 
     @FXML
     public void closeWindow() {
+        if (themeListener != null) {
+            themeManager.removeListener(themeListener);
+        }
         Stage stage = (Stage) courseRoot.getScene().getWindow();
         stage.close();
     }
@@ -683,5 +688,10 @@ public class CoursePageController implements Initializable {
         }
         scene.getRoot().applyCss();
         scene.getRoot().layout();
+    }
+    private Runnable themeListener;
+
+    public Runnable getThemeListener() {
+        return themeListener;
     }
 }
