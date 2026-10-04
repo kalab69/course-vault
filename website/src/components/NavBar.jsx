@@ -88,12 +88,12 @@ function NavBar() {
         </Link>
 
         <Link
-          to="/MyCourses"
+          to="/Courses"
           className={`nav-link ${
             location.pathname.startsWith("/MyCourses") ? "active" : ""
           }`}
         >
-          My Courses
+          Courses
         </Link>
 
         <button>Download for desktop</button>
