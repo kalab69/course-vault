@@ -213,3 +213,37 @@
     -fx-border-color: #22c55e;
     -fx-text-fill: #86efac;
 }
+
+.ai-icon{
+    -fx-font-size: 16px;
+}
+.current-section-vbox{
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+    -fx-border-color: #334155;
+    -fx-border-radius: 10;
+    -fx-padding: 14;
+}
+.bullet-text{
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+.para-label{
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+.regenerate-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: #334155;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #64748b;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+.regenerate-btn:hover {
+    -fx-background-color: #1e293b;
+    -fx-border-color: #6366f1;
+    -fx-text-fill: #818cf8;
+}

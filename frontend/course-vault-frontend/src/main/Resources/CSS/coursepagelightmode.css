@@ -11,7 +11,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* ── Root — transparent with frosted glass effect ── */
 .course-page-root {
-    -fx-background-color: rgba(248, 250, 252, 0.85); 
+    -fx-background-color: rgba(248, 250, 252, 0.85);
     -fx-background-radius: 16;
     -fx-border-color: rgba(15, 23, 42, 0.08);
     -fx-border-radius: 16;
@@ -22,7 +22,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* ── Header ── */
 .course-header {
     -fx-background-color: rgba(255, 255, 255, 0.90);
-    -fx-background-radius: 16 16 0 0;  
+    -fx-background-radius: 16 16 0 0;
     -fx-border-color: transparent transparent rgba(15, 23, 42, 0.06) transparent;
     -fx-border-width: 0 0 1 0;
     -fx-min-height: 56px;
@@ -41,7 +41,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* ── Notes section box ── */
 .course-section {
-    -fx-background-color: rgba(241, 245, 249, 0.60);  
+    -fx-background-color: rgba(241, 245, 249, 0.60);
     -fx-background-radius: 12;
     -fx-border-color: rgba(15, 23, 42, 0.08);
     -fx-border-radius: 12;
@@ -187,11 +187,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 }
 
 .course-page-tab-btn {
-    -fx-background-color: #F1F5F9; 
-    -fx-border-color: #CBD5E1;     
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #475569;        
+    -fx-text-fill: #475569;
     -fx-font-size: 12px;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
@@ -201,28 +201,63 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-text-fill: #0F172A;
 }
 .course-page-tab-btn-selected {
-    -fx-background-color: #E0E7FF; 
-    -fx-border-color: #6366F1;     
+    -fx-background-color: #E0E7FF;
+    -fx-border-color: #6366F1;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
-    -fx-text-fill: #4338CA;        
+    -fx-text-fill: #4338CA;
     -fx-font-size: 12px;
     -fx-font-weight: bold;
     -fx-padding: 6 14 6 14;
     -fx-cursor: hand;
 }
 .course-section .button.course-page-resources-card {
-    -fx-background-color: #F1F5F9; 
-    -fx-border-color: #CBD5E1;     
-    -fx-text-fill: #475569;        
+    -fx-background-color: #F1F5F9;
+    -fx-border-color: #CBD5E1;
+    -fx-text-fill: #475569;
 }
 .course-section .button.course-page-resources-card-hover {
-    -fx-background-color: #E2E8F0; 
-    -fx-border-color: #4F46E5;     
-    -fx-text-fill: #0F172A;        
+    -fx-background-color: #E2E8F0;
+    -fx-border-color: #4F46E5;
+    -fx-text-fill: #0F172A;
 }
 .course-section .button.course-page-resources-card-downloaded {
     -fx-background-color: #DCFCE7;
-    -fx-border-color: #16A34A;    
-    -fx-text-fill: #15803D;       
+    -fx-border-color: #16A34A;
+    -fx-text-fill: #15803D;
+}
+
+.ai-icon{
+    -fx-text-fill: #E3E1E1;
+    -fx-font-size: 16px;
+}
+.current-section-vbox {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 10;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 10;
+    -fx-padding: 14;
+}
+.bullet-text {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+.para-label{
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+}
+.regenerate-btn{
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e1; 
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #475569; 
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+.regenerate-btn:hover {
+    -fx-background-color: #e0e7ff;
+    -fx-border-color: #4f46e5;
+    -fx-text-fill: #4338ca;
 }
