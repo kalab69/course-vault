@@ -36,6 +36,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -65,6 +66,8 @@ public class CoursePageController implements Initializable {
     private Button allBtn;
     @FXML
     private Button aiBtn;
+    private boolean aiSummaryLoaded = false;
+    private String cachedAiSummary = null;
 
     // ── State 
     private courseModel course;
@@ -104,7 +107,7 @@ public class CoursePageController implements Initializable {
         });
         aiBtn.setOnAction(e -> {
             setActiveTab(aiBtn);
-            showResources("AI Summary");
+            showAiSummary();
         });
 
         // Start with "All" tab active
@@ -693,5 +696,253 @@ public class CoursePageController implements Initializable {
 
     public Runnable getThemeListener() {
         return themeListener;
+    }
+
+    private void showAiSummary() {
+        notesContainer.getChildren().clear();
+
+        // ✅ Use cached result if already fetched — no repeat API calls
+        if (cachedAiSummary != null) {
+            displayAiSummary(cachedAiSummary);
+            return;
+        }
+
+        // Loading state
+        javafx.scene.layout.HBox loadingRow
+                = new javafx.scene.layout.HBox(10);
+        loadingRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        loadingRow.setStyle("-fx-padding: 16 0 0 0;");
+
+        Label spinner = new Label("⟳");
+        spinner.setStyle(
+                "-fx-text-fill: #6366f1; -fx-font-size: 20px;");
+
+        javafx.animation.RotateTransition rotate
+                = new javafx.animation.RotateTransition(
+                        javafx.util.Duration.millis(800), spinner);
+        rotate.setByAngle(360);
+        rotate.setCycleCount(javafx.animation.Animation.INDEFINITE);
+        rotate.setInterpolator(javafx.animation.Interpolator.LINEAR);
+        rotate.play();
+
+        Label loadingText = new Label("Generating AI summary...");
+        loadingText.setStyle(
+                "-fx-text-fill: #64748b; -fx-font-size: 13px;");
+
+        loadingRow.getChildren().addAll(spinner, loadingText);
+        notesContainer.getChildren().add(loadingRow);
+
+        // ✅ Call API on background thread
+        new Thread(() -> {
+            try {
+                String url = "http://localhost:8080/api/courses/"
+                        + course.getId() + "/ai-description";
+
+                java.net.http.HttpClient client
+                        = java.net.http.HttpClient.newHttpClient();
+
+                // ✅ POST request — no body needed
+                java.net.http.HttpRequest request
+                        = java.net.http.HttpRequest.newBuilder()
+                                .uri(java.net.URI.create(url))
+                                .POST(java.net.http.HttpRequest.BodyPublishers.noBody())
+                                .header("Content-Type", "application/json")
+                                .build();
+
+                java.net.http.HttpResponse<String> response
+                        = client.send(request,
+                                java.net.http.HttpResponse.BodyHandlers.ofString());
+
+                System.out.println("AI Summary status: "
+                        + response.statusCode());
+                System.out.println("AI Summary body: " + response.body());
+
+                if (response.statusCode() == 200) {
+                    // ✅ Parse JSON response
+                    com.fasterxml.jackson.databind.ObjectMapper mapper
+                            = new com.fasterxml.jackson.databind.ObjectMapper();
+                    com.fasterxml.jackson.databind.JsonNode root
+                            = mapper.readTree(response.body());
+
+                    // Get description field from JSON
+                    String description = root.has("description")
+                            ? root.get("description").asText()
+                            : response.body();
+
+                    // Cache it so clicking tab again doesn't re-fetch
+                    cachedAiSummary = description;
+
+                    Platform.runLater(() -> {
+                        rotate.stop();
+                        notesContainer.getChildren().clear();
+                        displayAiSummary(description);
+                    });
+
+                } else {
+                    throw new Exception("Server returned: "
+                            + response.statusCode());
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    rotate.stop();
+                    notesContainer.getChildren().clear();
+
+                    Label err = new Label(
+                            "Failed to generate AI summary.\n"
+                            + ex.getMessage());
+                    err.setStyle(
+                            "-fx-text-fill: #ef4444; -fx-font-size: 13px;");
+                    err.setWrapText(true);
+                    notesContainer.getChildren().add(err);
+                });
+            }
+        }).start();
+    }
+
+// ── Render the AI summary text with markdown-like formatting 
+    private void displayAiSummary(String text) {
+        VBox summaryBox = new VBox(12);
+        summaryBox.setStyle("-fx-padding: 8 0 0 0;");
+
+        // AI badge header
+        HBox aiHeader = new HBox(8);
+        aiHeader.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+
+        Label aiIcon = new Label("✨");
+        aiIcon.setStyle("-fx-font-size: 16px;");
+
+        Label aiLabel = new Label("AI Generated Summary");
+        aiLabel.setStyle(
+                "-fx-text-fill: #818cf8;"
+                + "-fx-font-size: 12px;"
+                + "-fx-font-weight: bold;");
+
+        Label aiDisclaimer = new Label("• May not be 100% accurate");
+        aiDisclaimer.setStyle(
+                "-fx-text-fill: #475569; -fx-font-size: 11px;");
+
+        aiHeader.getChildren().addAll(aiIcon, aiLabel, aiDisclaimer);
+        summaryBox.getChildren().add(aiHeader);
+
+        //Parse and render each section
+        String[] lines = text.split("\n");
+        VBox currentSection = null;
+
+        for (String line : lines) {
+            line = line.trim();
+            if (line.isEmpty()) {
+                continue;
+            }
+
+            if (line.startsWith("**") && line.endsWith("**")) {
+                // ── Section heading 
+                String heading = line.replace("**", "").trim();
+                currentSection = new VBox(6);
+                currentSection.setStyle(
+                        "-fx-background-color: #1e293b;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-border-color: #334155;"
+                        + "-fx-border-radius: 10;"
+                        + "-fx-padding: 14;");
+
+                Label headingLabel = new Label(heading);
+                headingLabel.setStyle(
+                        "-fx-text-fill: #a5b4fc;"
+                        + "-fx-font-size: 13px;"
+                        + "-fx-font-weight: bold;");
+                headingLabel.setWrapText(true);
+
+                currentSection.getChildren().add(headingLabel);
+                summaryBox.getChildren().add(currentSection);
+
+            } else if (line.startsWith("-")) {
+                // ── Bullet point 
+                String bullet = line.substring(1).trim();
+                // Clean up special chars from the API response
+                bullet = bullet.replace("â", "—")
+                        .replace("â¢", "•")
+                        .replace("Bâ", "B-");
+
+                HBox bulletRow = new HBox(8);
+                bulletRow.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+
+                Label dot = new Label("•");
+                dot.setStyle(
+                        "-fx-text-fill: #6366f1;"
+                        + "-fx-font-size: 13px;");
+                dot.setMinWidth(12);
+
+                Label bulletText = new Label(bullet);
+                bulletText.setStyle(
+                        "-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
+                bulletText.setWrapText(true);
+                HBox.setHgrow(bulletText,
+                        javafx.scene.layout.Priority.ALWAYS);
+
+                bulletRow.getChildren().addAll(dot, bulletText);
+
+                if (currentSection != null) {
+                    currentSection.getChildren().add(bulletRow);
+                } else {
+                    summaryBox.getChildren().add(bulletRow);
+                }
+
+            } else {
+                // ── Regular paragraph text 
+                String cleaned = line.replace("â", "—")
+                        .replace("â¢", "•");
+
+                Label paraLabel = new Label(cleaned);
+                paraLabel.setStyle(
+                        "-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
+                paraLabel.setWrapText(true);
+
+                if (currentSection != null) {
+                    currentSection.getChildren().add(paraLabel);
+                } else {
+                    summaryBox.getChildren().add(paraLabel);
+                }
+            }
+        }
+
+        //Regenerate button — lets user refresh the AI summary
+        Button regenerateBtn = new Button("🔄  Regenerate Summary");
+        regenerateBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #64748b;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 8 16 8 16;"
+                + "-fx-cursor: hand;");
+        regenerateBtn.setOnMouseEntered(e -> regenerateBtn.setStyle(
+                "-fx-background-color: #1e293b;"
+                + "-fx-border-color: #6366f1;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #818cf8;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 8 16 8 16;"
+                + "-fx-cursor: hand;"));
+        regenerateBtn.setOnMouseExited(e -> regenerateBtn.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-border-color: #334155;"
+                + "-fx-border-radius: 8;"
+                + "-fx-background-radius: 8;"
+                + "-fx-text-fill: #64748b;"
+                + "-fx-font-size: 12px;"
+                + "-fx-padding: 8 16 8 16;"
+                + "-fx-cursor: hand;"));
+        regenerateBtn.setOnAction(e -> {
+            // Clear cache and re-fetch
+            cachedAiSummary = null;
+            showAiSummary();
+        });
+
+        summaryBox.getChildren().add(regenerateBtn);
+        notesContainer.getChildren().add(summaryBox);
     }
 }
