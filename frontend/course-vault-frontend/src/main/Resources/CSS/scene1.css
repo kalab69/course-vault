@@ -82,7 +82,7 @@
     -fx-font-weight: bold;
 }
 #navHbox{
-     -fx-padding: 10 0 0 0;
+    -fx-padding: 10 0 0 0;
 }
 
 .selectable-title {
@@ -396,16 +396,16 @@
 }
 
 .my-course{
-    -fx-padding: 28; 
+    -fx-padding: 28;
     -fx-background-color: #0a0a0a;
 }
 .my-course-label{
-    -fx-text-fill: #f1f5f9; 
+    -fx-text-fill: #f1f5f9;
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 }
 .my-course-sub-label{
-    -fx-text-fill: #64748b; 
+    -fx-text-fill: #64748b;
     -fx-font-size: 13px;
 }
 
@@ -470,7 +470,7 @@
 }
 
 .browse{
-    -fx-padding: 28; 
+    -fx-padding: 28;
     -fx-background-color: #0a0a0a;
 }
 .browse-label{
@@ -569,4 +569,84 @@
     -fx-font-size: 11px;
     -fx-padding: 5 12 5 12;
     -fx-cursor: hand;
+}
+
+/* ═══════════════════════════════════
+   FOOTER
+═══════════════════════════════════ */
+
+/* Outer wrapper */
+.footer-root {
+    -fx-background-color: #0f172a;
+    -fx-border-color: #1e293b transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+/* Main content area */
+.footer-body {
+    -fx-background-color: #0A0A0A;
+}
+
+/* Brand name */
+.footer-logo {
+    -fx-text-fill: #818cf8;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+/* Brand description */
+.footer-brand-desc {
+    -fx-text-fill: #475569;
+    -fx-font-size: 11px;
+    -fx-line-spacing: 3;
+    -fx-max-width: 280px;
+}
+
+/* Vertical divider between columns */
+.footer-divider {
+    -fx-background-color: #1e293b;
+    -fx-pref-width: 1px;
+    -fx-opacity: 1;
+}
+
+/* Column title e.g. "App", "Links" */
+.footer-col-title {
+    -fx-text-fill: #334155;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 0.08em;
+}
+
+/* Hyperlinks */
+.footer-link {
+    -fx-text-fill: #475569;
+    -fx-font-size: 12px;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+.footer-link:hover {
+    -fx-text-fill: #818cf8;
+    -fx-underline: false;
+}
+.footer-link:visited {
+    -fx-text-fill: #475569;
+}
+
+/* Bottom copyright bar */
+.footer-bottom {
+    -fx-background-color: #080f1a;
+    -fx-border-color: #1e293b transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-copy {
+    -fx-text-fill: #475569;
+    -fx-font-size: 11px;
+}
+
+.footer-version {
+    -fx-text-fill: #334155;
+    -fx-font-size: 11px;
 }

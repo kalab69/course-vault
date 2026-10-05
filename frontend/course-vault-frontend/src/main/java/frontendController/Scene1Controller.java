@@ -333,16 +333,21 @@ public class Scene1Controller implements Initializable {
                 HBox yearThreeRow = (HBox) yearThreeSection.getChildren().get(1);
                 HBox yearFourRow = (HBox) yearFourSection.getChildren().get(1);
 
+                collapseImmediately(yearOneRow);
+                collapseImmediately(yearTwoRow);
+                collapseImmediately(yearThreeRow);
+                collapseImmediately(yearFourRow);
+
                 setupAccordion(yearOneHeader, yearOneArrow, yearOneRow);
                 setupAccordion(yearTwoHeader, yearTwoArrow, yearTwoRow);
                 setupAccordion(yearThreeHeader, yearThreeArrow, yearThreeRow);
                 setupAccordion(yearFourHeader, yearFourArrow, yearFourRow);
 
                 // Arrows point right = opened
-                yearOneArrow.setRotate(90);
-                yearTwoArrow.setRotate(90);
-                yearThreeArrow.setRotate(90);
-                yearFourArrow.setRotate(90);
+                yearOneArrow.setRotate(0);
+                yearTwoArrow.setRotate(0);
+                yearThreeArrow.setRotate(0);
+                yearFourArrow.setRotate(0);
             });
             wait.play();
         });
@@ -1000,7 +1005,7 @@ public class Scene1Controller implements Initializable {
     // ACCORDION METHODS
     // ----------------------------------------------------------
     private void setupAccordion(Button headerBtn, ImageView arrowImg, HBox... contentRows) {
-        boolean[] isOpen = {true};
+        boolean[] isOpen = {false};
         List<HBox> rows = Arrays.asList(contentRows);
 
         headerBtn.setStyle(
@@ -1010,7 +1015,7 @@ public class Scene1Controller implements Initializable {
                 + "-fx-padding: 0;"
         );
 
-        arrowImg.setRotate(90);
+        arrowImg.setRotate(0);
 
         headerBtn.setOnMouseClicked(e -> {
 
@@ -1077,10 +1082,25 @@ public class Scene1Controller implements Initializable {
         });
     }
 
+    private void collapseImmediately(HBox row) {
+        row.setVisible(false);
+        row.setManaged(false);
+        row.setMaxHeight(0);
+        row.setOpacity(0);
+    }
+
+    @FXML
+    private VBox footerRoot;
+
     private void showHome() {
         if (homeContent != null) {
             rootPane.setLeft(sidebarPane);
             rootPane.setCenter(homeContent);
+        }
+
+        if (footerRoot != null) {
+            footerRoot.setVisible(true);
+            footerRoot.setManaged(true);
         }
         setNavActive(homeButton);
     }
@@ -1091,6 +1111,11 @@ public class Scene1Controller implements Initializable {
         }
 
         setNavActive(myCourseButton);
+
+        if (footerRoot != null) {
+            footerRoot.setVisible(false);
+            footerRoot.setManaged(false);
+        }
 
         VBox myCoursesContent = buildMyCoursesView();
 
@@ -1367,6 +1392,11 @@ public class Scene1Controller implements Initializable {
         }
 
         setNavActive(browseButton);
+
+        if (footerRoot != null) {
+            footerRoot.setVisible(false);
+            footerRoot.setManaged(false);
+        }
 
         // Build browse view
         VBox browseContent = buildBrowseView();
@@ -1924,4 +1954,59 @@ public class Scene1Controller implements Initializable {
         scene.getRoot().layout();
     }
 
+    @FXML
+    public void openAbout() {
+        showAboutDialog();
+    }
+
+    @FXML
+    public void openGithub() {
+        openUrl("https://github.com/kalab69/course-vault");
+    }
+
+    @FXML
+    public void openReport() {
+        openUrl("https://github.com/yourusername/course-vault/issues");
+    }
+
+    @FXML
+    public void openWebsite() {
+        openUrl("https://yourwebsite.com");
+    }
+
+    @FXML
+    public void openContact() {
+        try {
+            Desktop.getDesktop().mail(new URI("mailto:abreham.m216@gmail.com")
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openUrl(String url) {
+        new Thread(() -> {
+            try {
+                if (Desktop.isDesktopSupported()) {
+                    Desktop.getDesktop().browse(
+                            new java.net.URI(url));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void showAboutDialog() {
+        javafx.scene.control.Alert alert
+                = new javafx.scene.control.Alert(
+                        javafx.scene.control.Alert.AlertType.INFORMATION);
+        alert.setTitle("About CourseVault");
+        alert.setHeaderText("CourseVault v1.0.0");
+        alert.setContentText(
+                "A centralized learning platform for university students.\n\n"
+                + "Built with JavaFX + Spring Boot\n"
+                + "© 2026 CourseVault");
+        alert.showAndWait();
+    }
 }

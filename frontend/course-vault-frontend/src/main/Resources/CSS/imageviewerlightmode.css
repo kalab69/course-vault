@@ -7,7 +7,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     Author     : Abreham
 */
 .image-viewer-root {
-    -fx-background-color: rgba(248, 250, 252, 0.85); 
+    -fx-background-color: #DFE3ED;
     -fx-background-radius: 16;
     -fx-border-color: rgba(15, 23, 42, 0.08);
     -fx-border-radius: 16;
@@ -17,7 +17,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* ── Header Bar ── */
 .image-viewer-header {
-    -fx-background-color: rgba(255, 255, 255, 0.90);
+    -fx-background-color: #E6E9F0;
     -fx-background-radius: 16 16 0 0;
     -fx-border-color: transparent transparent rgba(15, 23, 42, 0.06) transparent;
     -fx-border-width: 0 0 1 0;
@@ -28,8 +28,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 
 /* ── Toolbar/Navigation Buttons (+, -, <, >) ── */
 .image-nav-btn {
-    -fx-background-color: #F1F5F9; 
-    -fx-border-color: #CBD5E1;     
+    -fx-background-color: #E6E9F0; 
+    -fx-border-color: #7D7F80;     
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-text-fill: #475569;        
@@ -56,7 +56,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 /* ── Close Button (X) ── */
 .image-close-btn {
     -fx-background-color: rgba(226, 232, 240, 0.8);
-    -fx-border-color: rgba(15, 23, 42, 0.1);
+    -fx-border-color: #7D7F80;
     -fx-border-radius: 8;
     -fx-background-radius: 8;
     -fx-min-width: 32px;

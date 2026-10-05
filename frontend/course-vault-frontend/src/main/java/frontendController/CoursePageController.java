@@ -811,7 +811,7 @@ public class CoursePageController implements Initializable {
         aiHeader.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Label aiIcon = new Label("✨");
-        aiIcon.setStyle("-fx-font-size: 16px;");
+        aiIcon.getStyleClass().add("ai-icon");
 
         Label aiLabel = new Label("AI Generated Summary");
         aiLabel.setStyle(
@@ -840,12 +840,7 @@ public class CoursePageController implements Initializable {
                 // ── Section heading 
                 String heading = line.replace("**", "").trim();
                 currentSection = new VBox(6);
-                currentSection.setStyle(
-                        "-fx-background-color: #1e293b;"
-                        + "-fx-background-radius: 10;"
-                        + "-fx-border-color: #334155;"
-                        + "-fx-border-radius: 10;"
-                        + "-fx-padding: 14;");
+                currentSection.getStyleClass().add("current-section-vbox");
 
                 Label headingLabel = new Label(heading);
                 headingLabel.setStyle(
@@ -875,8 +870,7 @@ public class CoursePageController implements Initializable {
                 dot.setMinWidth(12);
 
                 Label bulletText = new Label(bullet);
-                bulletText.setStyle(
-                        "-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
+                bulletText.getStyleClass().add("bullet-text");
                 bulletText.setWrapText(true);
                 HBox.setHgrow(bulletText,
                         javafx.scene.layout.Priority.ALWAYS);
@@ -895,8 +889,7 @@ public class CoursePageController implements Initializable {
                         .replace("â¢", "•");
 
                 Label paraLabel = new Label(cleaned);
-                paraLabel.setStyle(
-                        "-fx-text-fill: #94a3b8; -fx-font-size: 12px;");
+                paraLabel.getStyleClass().add("para-label");
                 paraLabel.setWrapText(true);
 
                 if (currentSection != null) {
@@ -908,34 +901,8 @@ public class CoursePageController implements Initializable {
         }
 
         //Regenerate button — lets user refresh the AI summary
-        Button regenerateBtn = new Button("🔄  Regenerate Summary");
-        regenerateBtn.setStyle(
-                "-fx-background-color: transparent;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #64748b;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 8 16 8 16;"
-                + "-fx-cursor: hand;");
-        regenerateBtn.setOnMouseEntered(e -> regenerateBtn.setStyle(
-                "-fx-background-color: #1e293b;"
-                + "-fx-border-color: #6366f1;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #818cf8;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 8 16 8 16;"
-                + "-fx-cursor: hand;"));
-        regenerateBtn.setOnMouseExited(e -> regenerateBtn.setStyle(
-                "-fx-background-color: transparent;"
-                + "-fx-border-color: #334155;"
-                + "-fx-border-radius: 8;"
-                + "-fx-background-radius: 8;"
-                + "-fx-text-fill: #64748b;"
-                + "-fx-font-size: 12px;"
-                + "-fx-padding: 8 16 8 16;"
-                + "-fx-cursor: hand;"));
+        Button regenerateBtn = new Button("🔄 Regenerate Summary");
+        regenerateBtn.getStyleClass().add("regenerate-btn");
         regenerateBtn.setOnAction(e -> {
             // Clear cache and re-fetch
             cachedAiSummary = null;
