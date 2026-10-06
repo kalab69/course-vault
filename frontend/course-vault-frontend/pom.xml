@@ -81,7 +81,64 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.mycompany.course.vault.frontend.CourseVaultFrontend</mainClass>
+                    <mainClass>
+                        com.mycompany.course.vault.frontend/com.mycompany.course.vault.frontend.CourseVaultFrontend
+                    </mainClass>
+                    
+                    <compress>2</compress>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <noManPages>true</noManPages>
+                    <stripDebug>true</stripDebug>
+                    <jlinkImageName>CourseVault</jlinkImageName>
+                    <launcher>coursevault</launcher>
+                    
+                    <options>
+                        <option>--add-modules</option>
+                        <option>ALL-MODULE-PATH</option>
+                    </options>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <!-- App info -->
+                    <name>CourseVault</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>Kalab</vendor>
+                    <copyright>© 2026 CourseVault</copyright>
+                    <description>
+                        A centralized learning platform for university students
+                    </description>
+
+                    <!-- Input — the jlink runtime image -->
+                    <runtimeImage>
+                        ${project.build.directory}/CourseVault
+                    </runtimeImage>
+
+                    <!-- Output folder -->
+                    <destination>${project.build.directory}/dist</destination>
+
+                    <!-- Main class -->
+                    <module>
+                        com.mycompany.course.vault.frontend/com.mycompany.course.vault.frontend.CourseVaultFrontend
+                    </module>
+
+                    <!-- Windows specific settings -->
+                    <winDirChooser>true</winDirChooser>
+                    <winShortcut>true</winShortcut>
+                    <winMenu>true</winMenu>
+                    <winMenuGroup>CourseVault</winMenuGroup>
+
+                    <!-- App icon — must be .ico format -->
+                    <icon>
+                        ${project.basedir}/src/main/resources/Images/Logo.ico
+                    </icon>
+
+                    <!-- Type — exe creates a standalone installer -->
+                    <type>EXE</type>
                 </configuration>
             </plugin>
         </plugins>

@@ -18,7 +18,7 @@
         public List<courseModel> fetchCoursesByYear(String year)
                 throws IOException, InterruptedException {
 
-            String url = "http://localhost:8080/api/courses?year=" + year;
+            String url = "https://course-vault-production-5ad8.up.railway.app/api/courses?year=" + year;
             System.out.println("Fetching: " + url);
 
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();

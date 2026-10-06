@@ -25,7 +25,7 @@ public class externalLinkService {
 
     public List<externalLinkModel> fetchCourseLinks(int courseId) {
         try {
-            String targetUrl = "http://localhost:8080/api/courses/" + courseId + "/links";
+            String targetUrl = "https://course-vault-production-5ad8.up.railway.app/api/courses/" + courseId + "/links";
 
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(targetUrl)).GET().build();
 
