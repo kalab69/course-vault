@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Hero from "../sections/hero";
+import Hero from "../sections/Hero";
 import What from "../sections/What";
 import How from "../sections/How";
 
