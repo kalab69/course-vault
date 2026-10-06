@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://course-vault-production-5ad8.up.railway.app";
 
 function CourseDetail() {
   const { id } = useParams();
