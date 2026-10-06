@@ -8,7 +8,7 @@ function Footer() {
                 <div className="footer-brand">
 
                     <img
-                        src="/src/assets/logo.png"
+                        src="/src/assets/Logo.png"
                         alt="CourseVault logo"
                         className="footer-logo"
                     />
