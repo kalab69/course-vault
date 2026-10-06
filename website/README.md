@@ -47,7 +47,7 @@ Step 2: Install Frontend Dependencies
 
 Open a new terminal window and navigate to the frontend directory:
 
-cd frontend
+cd website
 
 
 Install the required dependencies:
