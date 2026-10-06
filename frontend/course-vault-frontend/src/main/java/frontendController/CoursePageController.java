@@ -1,5 +1,7 @@
 package frontendController;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.model.courseModel;
 import com.mycompany.model.courseResourceModel;
 import com.mycompany.model.externalLinkModel;
@@ -431,7 +433,7 @@ public class CoursePageController implements Initializable {
         new Thread(() -> {
             try {
                 // Fetch from API
-                String apiUrl = "http://localhost:8080/api/course-resources/" + resource.getId() + "/download";
+                String apiUrl = "https://course-vault-production-5ad8.up.railway.app/api/course-resources/" + resource.getId() + "/download";
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(apiUrl)).GET().build();
@@ -732,37 +734,29 @@ public class CoursePageController implements Initializable {
         loadingRow.getChildren().addAll(spinner, loadingText);
         notesContainer.getChildren().add(loadingRow);
 
-        // ✅ Call API on background thread
+        // Call API on background thread
         new Thread(() -> {
             try {
-                String url = "http://localhost:8080/api/courses/"
-                        + course.getId() + "/ai-description";
+                String url = "https://course-vault-production-5ad8.up.railway.app/api/courses/" + course.getId() + "/ai-description";
 
                 java.net.http.HttpClient client
                         = java.net.http.HttpClient.newHttpClient();
 
-                // ✅ POST request — no body needed
-                java.net.http.HttpRequest request
-                        = java.net.http.HttpRequest.newBuilder()
-                                .uri(java.net.URI.create(url))
-                                .POST(java.net.http.HttpRequest.BodyPublishers.noBody())
+                // POST request — no body needed
+                HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).POST(HttpRequest.BodyPublishers.noBody())
                                 .header("Content-Type", "application/json")
                                 .build();
 
-                java.net.http.HttpResponse<String> response
-                        = client.send(request,
-                                java.net.http.HttpResponse.BodyHandlers.ofString());
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
                 System.out.println("AI Summary status: "
                         + response.statusCode());
                 System.out.println("AI Summary body: " + response.body());
 
                 if (response.statusCode() == 200) {
-                    // ✅ Parse JSON response
-                    com.fasterxml.jackson.databind.ObjectMapper mapper
-                            = new com.fasterxml.jackson.databind.ObjectMapper();
-                    com.fasterxml.jackson.databind.JsonNode root
-                            = mapper.readTree(response.body());
+                    // Parse JSON response
+                    ObjectMapper mapper = new ObjectMapper();
+                    JsonNode root = mapper.readTree(response.body());
 
                     // Get description field from JSON
                     String description = root.has("description")

@@ -18,12 +18,9 @@ import java.util.List;
  * @author Abreham
  */
 public class courseResourceService {
-     public List<courseResourceModel>
-            fetchCourseResources(int courseId)
-            throws Exception {
-
+     public List<courseResourceModel> fetchCourseResources(int courseId) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/api/courses/" + courseId + "/course-resources")).GET().build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://course-vault-production-5ad8.up.railway.app/api/courses/" + courseId + "/course-resources")).GET().build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         ObjectMapper mapper = new ObjectMapper();

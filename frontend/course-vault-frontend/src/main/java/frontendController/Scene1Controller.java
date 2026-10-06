@@ -820,8 +820,8 @@ public class Scene1Controller implements Initializable {
 
     public courseResourceModel getNotesPdf(int courseId) throws Exception {
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/api/resources/"
-                + courseId + "/notes")).GET().build();
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://course-vault-production-5ad8.up.railway.app/api/courses/"
+                + courseId + "/course-resources?type=NOTES")).GET().build();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(response.body(), courseResourceModel.class
@@ -1553,7 +1553,7 @@ public class Scene1Controller implements Initializable {
 
         new Thread(() -> {
             try {
-                String url = "http://localhost:8080/api/courses/search?search=" + encode(query, StandardCharsets.UTF_8);
+                String url = "https://course-vault-production-5ad8.up.railway.app/api/courses/search?search=" + encode(query, StandardCharsets.UTF_8);
 
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder().uri(java.net.URI.create(url)).GET().build();
@@ -1831,7 +1831,7 @@ public class Scene1Controller implements Initializable {
 
                 // Add base URL if relative path
                 if (!downloadUrl.startsWith("http")) {
-                    downloadUrl = "http://localhost:8080" + downloadUrl;
+                    downloadUrl = "https://course-vault-production-5ad8.up.railway.app" + downloadUrl;
                 }
 
                 System.out.println("Downloading from: " + downloadUrl);
