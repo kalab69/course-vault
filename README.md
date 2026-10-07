@@ -14,12 +14,12 @@ Experience the platform live: **[Visit Course Vault Website](https://course-vaul
 
 CourseVault is a shared study resource platform for university students. Find organized notes, past exams, and curated tutorials for your courses without digging through scattered Telegram groups and shared drives.
 
-### ☕ Backend (`backend/`)
+### Backend (`backend/`)
 The engine of Course Vault is powered by **Spring Boot**, leveraging Java's robust ecosystem to provide a highly secure and scalable RESTful API.
 *   **Architecture:** Built following clean architectural principles with controllers, services and repositories.
 *   **Data Management:** Utilizes Spring Data JPA for efficient, relational database management and transactional integrity.
 
-### 🎨 Frontend (`frontend/`)
+### Frontend (`frontend/`)
 The consumer-facing ecosystem is split into two specialized web and desktop applications to provide tailored user experiences.
 
 #### 1. 🌐 The Website (`website/`)
@@ -33,7 +33,7 @@ The command center for platform administrators.
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Public Website
 *Place your website screenshots here to showcase the user experience.*
@@ -45,7 +45,7 @@ The command center for platform administrators.
 
 ---
 
-## 🛠️ Step-by-Step Guide: Running the Admin Page locally
+## Step-by-Step Guide: Running the Admin Page locally
 
 Follow these clear, sequential instructions to launch the Admin Page on your local machine using the Windows Command Prompt (cmd).
 
@@ -77,7 +77,7 @@ node -v
    ```cmd
    npm install
    ```
-   > ℹ️ *Note: This might take a minute or two depending on your internet connection speed.*
+   > *Note: This might take a minute or two depending on your internet connection speed.*
 
 5. **Launch the Local Development Server**
    Execute the local build and run scripts by typing:
