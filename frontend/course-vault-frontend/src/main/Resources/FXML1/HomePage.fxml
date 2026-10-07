@@ -15,7 +15,8 @@
             <children>
                 <Label styleClass="hero-title" text="Your university resources." />
                 <Label styleClass="hero-title" text="All in one place." />
-                <Label prefWidth="650.0" styleClass="desc-text" text="CourseVault is a shared study resource platform for university students. Find organized notes, past exams, and curated tutorials for your courses without digging through scattered Telegram groups and shared drives." wrapText="true" />
+                <Label prefHeight="18.0" prefWidth="1062.0" styleClass="desc-text" text="CourseVault is a shared study resource platform for university students. Find organized notes, past exams and curated tutorials" wrapText="true" />
+            <Label styleClass="desc-text" text="for your courses without digging through scattered Telegram groups and shared drives." />
             </children>
         </VBox>
         
