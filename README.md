@@ -35,9 +35,11 @@ The command center for platform administrators.
 
 ## Screenshots
 
-### Public Website
-*Place your website screenshots here to showcase the user experience.*
-![Website Dashboard]()
+### Desktop app
+![App Dashboard](frontend/course-vault-frontend/src/main/Resources/Images/homepagelightmode.png)
+![App Dashboard](frontend/course-vault-frontend/src/main/Resources/Images/coursepagelightmode.png)
+![App Dashboard](frontend/course-vault-frontend/src/main/Resources/Images/mycourselightmode.png)
+![App Dashboard](frontend/course-vault-frontend/src/main/Resources/Images/resourcelightmode.png)
 
 ### Admin Dashboard
 *Place your admin dashboard screenshots here to showcase management features.*
