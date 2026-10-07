@@ -23,7 +23,6 @@
         
         <Separator prefWidth="200.0" />
         
-        <!-- ሁለተኛ ክፍል (Section 2) -->
         <VBox spacing="10.0">
             <children>
                 <Label styleClass="section-title" text="What is CourseVault?" />
