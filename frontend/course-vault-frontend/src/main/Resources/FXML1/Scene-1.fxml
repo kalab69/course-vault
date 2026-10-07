@@ -342,7 +342,7 @@
             <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="footer-bottom">
                <children>
                   <Label styleClass="footer-copy" text="© 2026 CourseVault. All rights reserved." HBox.hgrow="ALWAYS" />
-                  <Label styleClass="footer-version" text="v1.0.0" />
+                  <Label styleClass="footer-version" text="v1.0.1" />
                </children>
                <padding>
                   <Insets bottom="4.0" left="18.0" right="18.0" top="4.0" />
