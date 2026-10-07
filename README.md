@@ -42,8 +42,7 @@ The command center for platform administrators.
 ![App Dashboard](frontend/course-vault-frontend/src/main/Resources/Images/resourcelightmode.png)
 
 ### Admin Dashboard
-*Place your admin dashboard screenshots here to showcase management features.*
-![Admin Panel](https://course-vault-website.vercel.app/Courses)
+![Admin Panel](frontend/course-vault-frontend/src/main/Resources/Images/admin-page.png)
 
 ---
 
