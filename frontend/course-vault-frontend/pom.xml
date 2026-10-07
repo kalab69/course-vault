@@ -107,7 +107,7 @@
                 <configuration>
                     <!-- App info -->
                     <name>CourseVault</name>
-                    <appVersion>1.0.0</appVersion>
+                    <appVersion>1.0.1</appVersion>
                     <vendor>Kalab</vendor>
                     <copyright>© 2026 CourseVault</copyright>
                     <description>
