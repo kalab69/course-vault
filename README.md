@@ -1,4 +1,4 @@
-# 🏛️ Course Vault
+# ![Course Icon](frontend/course-vault-frontend/src/main/Resources/Images/Logo (1).png)Course Vault
 
 An intuitive, robust and professional platform designed to streamline course management, content delivery and academic administration. **Course Vault** provides a seamless experience for students exploring educational content through a public website and desktop app, while offering a comprehensive, secure dashboard for administrators to oversee operations.
 
@@ -37,7 +37,7 @@ The command center for platform administrators.
 
 ### Public Website
 *Place your website screenshots here to showcase the user experience.*
-![Website Dashboard](https://course-vault-website.vercel.app)
+![Website Dashboard]()
 
 ### Admin Dashboard
 *Place your admin dashboard screenshots here to showcase management features.*
