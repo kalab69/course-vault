@@ -89,14 +89,18 @@ function NavBar() {
 
         <Link
           to="/Courses"
-          className={`nav-link ${
-            location.pathname.startsWith("/MyCourses") ? "active" : ""
-          }`}
+          className={`nav-link ${location.pathname.startsWith("/MyCourses") ? "active" : ""
+            }`}
         >
           Courses
         </Link>
 
-        <button>Download for desktop</button>
+        <a
+          href="https://github.com/kalab69/course-vault/releases/download/v1.0.0/CourseVault-1.0.0.exe"
+          download
+        >
+          <button>Download for desktop</button>
+        </a>
       </div>
     </nav>
   );
