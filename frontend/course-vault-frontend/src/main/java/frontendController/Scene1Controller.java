@@ -2040,12 +2040,12 @@ public class Scene1Controller implements Initializable {
 
     @FXML
     public void openReport() {
-        openUrl("https://github.com/yourusername/course-vault/issues");
+        openUrl("https://github.com/kalab69/course-vault/issues/new");
     }
 
     @FXML
     public void openWebsite() {
-        openUrl("https://course-vault-website.vercel.app/#how");
+        openUrl("https://course-vault-website.vercel.app");
     }
 
     @FXML
