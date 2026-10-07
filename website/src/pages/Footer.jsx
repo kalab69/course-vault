@@ -1,3 +1,4 @@
+import logo from "../assets/logo.png";
 function Footer() {
     return (
         <footer className="site-footer" id="about">
@@ -8,7 +9,7 @@ function Footer() {
                 <div className="footer-brand">
 
                     <img
-                        src="/src/assets/logo.png"
+                       src={logo} alt="CourseVault"
                         alt="CourseVault logo"
                         className="footer-logo"
                     />

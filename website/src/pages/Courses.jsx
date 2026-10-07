@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://course-vault-production-5ad8.up.railway.app";
 
 const YEARS = [
   { label: "Year I", value: "FIRST" },
