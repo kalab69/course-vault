@@ -233,7 +233,7 @@
             <TextField fx:id="appTitle" editable="false" prefHeight="31.0" prefWidth="182.0" styleClass="selectable-title" text="CourseVault" />
 
             <!-- ── Spacer — pushes nav to the right ── -->
-            <Region HBox.hgrow="ALWAYS" />
+            <Region prefHeight="50.0" prefWidth="1.0" HBox.hgrow="ALWAYS" />
 
             <!-- ── Nav buttons + sliding indicator ── -->
             <AnchorPane prefHeight="50.0" prefWidth="560.0">
@@ -245,8 +245,14 @@
                     <!-- Nav button row -->
                     <HBox fx:id="navBar" prefHeight="34.0" prefWidth="560.0">
                         <children>
+                        <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Home">
+                           <styleClass>
+                              <String fx:value="nav-button" />
+                              <String fx:value="nav-border-both" />
+                           </styleClass>
+                        </Button>
 
-                            <Button fx:id="homeButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Home">
+                            <Button fx:id="courseButton" mnemonicParsing="false" prefHeight="34.0" prefWidth="135.0" text="Courses">
                                 <styleClass>
                                     <String fx:value="nav-button" />
                                     <String fx:value="nav-border-both" />
@@ -266,7 +272,7 @@
                                     <String fx:value="nav-border-both" />
                                 </styleClass>
                             </Button>
-                        <Button fx:id="themeToggleBtn" mnemonicParsing="false" onAction="#toggleTheme" styleClass="nav-button" stylesheets="@../CSS/scene1.css" text="☀" />
+                        <Button fx:id="themeToggleBtn" mnemonicParsing="false" onAction="#toggleTheme" prefHeight="36.0" prefWidth="65.0" styleClass="nav-button" stylesheets="@../CSS/scene1.css" text="☀" />
 
                         </children>
                     </HBox>

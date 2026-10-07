@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="homeRoot" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1079.0" prefWidth="966.0" spacing="25.0" styleClass="theme-dark" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontendController.HomePageController">
+    <children>
+        <VBox spacing="10.0">
+            <children>
+                <Label styleClass="hero-title" text="Your university resources." />
+                <Label styleClass="hero-title" text="All in one place." />
+                <Label prefWidth="650.0" styleClass="desc-text" text="CourseVault is a shared study resource platform for university students. Find organized notes, past exams, and curated tutorials for your courses without digging through scattered Telegram groups and shared drives." wrapText="true" />
+            </children>
+        </VBox>
+        
+        <Button fx:id="exploreCoursesBtn" mnemonicParsing="false" styleClass="btn-primary" text="Explore Courses" />
+        
+        <Separator prefWidth="200.0" />
+        
+        <!-- ሁለተኛ ክፍል (Section 2) -->
+        <VBox spacing="10.0">
+            <children>
+                <Label styleClass="section-title" text="What is CourseVault?" />
+                <Label style="-fx-font-weight: bold;" styleClass="desc-text" text="Everything you need to study. All in one place." />
+                <Label prefWidth="700.0" styleClass="desc-text" text="CourseVault brings together useful study resources, external learning links, and AI-powered course summaries so you can spend less time searching and more time learning." wrapText="true" />
+            </children>
+        </VBox>
+        
+        <HBox alignment="CENTER_LEFT" prefHeight="220.0" prefWidth="921.0" spacing="20.0">
+            <children>
+                <StackPane prefHeight="200.0" prefWidth="240.0" styleClass="chat-container">
+                    <children>
+                        <VBox fx:id="cardTelegram" spacing="12.0">
+                            <children>
+                                <Label styleClass="chat-title" text="Study Group" />
+                                <VBox spacing="8.0">
+                                    <children>
+                                        <Label styleClass="chat-bubble" text="Can anyone share DSA notes?" />
+                                        <Label styleClass="chat-bubble" text="Exam Papers?" />
+                                        <Label styleClass="chat-bubble" text="Check this drive 🔗" />
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+                
+                <StackPane prefHeight="200.0" prefWidth="240.0" styleClass="feature-card">
+                    <children>
+                        <VBox fx:id="cardLinks" spacing="12.0">
+                            <children>
+                                <TextField promptText="Search resources..." />
+                                <VBox spacing="5.0">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                            <children>
+                                                <Label styleClass="link-icon" text="▶" />
+                                                <Label styleClass="link-name" text="YouTube" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                            <children>
+                                                <Label styleClass="link-icon" text="W3" />
+                                                <Label styleClass="link-name" text="W3Schools" />
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                            <children>
+                                                <Label styleClass="link-icon" text="G" />
+                                                <Label styleClass="link-name" text="GeeksForGeeks" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+                <StackPane prefHeight="200.0" prefWidth="240.0" styleClass="feature-card">
+                    <children>
+                        <VBox fx:id="cardAI" alignment="TOP_LEFT" spacing="10.0">
+                            <children>
+                                <Label styleClass="chat-title" text="🤖 AI Summary" />
+                                <Label style="-fx-font-size: 13px;" styleClass="desc-text" text="Instant structured breakdown of your heavy university syllabus modules in one single click." wrapText="true" />
+                            </children>
+                        </VBox>
+                    </children>
+                </StackPane>
+            </children>
+        </HBox>
+      <StackPane prefHeight="53.0" prefWidth="776.0" styleClass="feature-card">
+         <children>
+            <HBox prefHeight="150.0" prefWidth="694.0" spacing="10.0">
+               <children>
+                  <Label styleClass="link-icon" text="&lt;/&gt;" />
+                  <VBox fx:id="cardSpecific" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label style="-fx-font-size: 15;" styleClass="desc-text" text="Currently focused on Computer Science students." wrapText="true" />
+                        <Label style="-fx-font-size: 13;" styleClass="desc-text" text="More courses and study areas coming soon." />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </StackPane>
+      <Separator prefWidth="200.0" />
+      <VBox spacing="10.0">
+         <children>
+            <Label styleClass="section-title" text="How it works?" />
+            <Label style="-fx-font-weight: bold;" styleClass="desc-text" text="Find it. Open it. Study it." />
+            <Label prefWidth="700.0" styleClass="desc-text" text="Find your course in seconds, explore organized resources, and study without digging through scattered files and links." wrapText="true" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_LEFT" spacing="20.0">
+         <children>
+            <StackPane minWidth="220.0" styleClass="feature-card">
+               <children>
+                  <VBox fx:id="cardFind" spacing="12.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-font-size: 15;" styleClass="desc-text" text="Find your course" />
+                        <Label styleClass="desc-text" text="Search for a course by name or browse courses organized by your year level." wrapText="true" />
+                        <TextField promptText="Search course..." />
+                        <VBox spacing="5.0">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                 <children>
+                                    <Label styleClass="link-name" text="First Year" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                 <children>
+                                    <Label styleClass="link-name" text="Second Year" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="link-row">
+                                 <children>
+                                    <Label styleClass="link-name" text="Third Year" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <StackPane minWidth="220.0" styleClass="chat-container">
+               <children>
+                  <VBox fx:id="cardOpen" spacing="12.0">
+                     <children>
+                        <VBox spacing="8.0">
+                           <children>
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 15;" styleClass="desc-text" text="Open a course" />
+                           </children>
+                        </VBox>
+                        <Label styleClass="desc-text" text="Select a course to see everything available for that course in one organized place." wrapText="true" />
+                        <HBox prefHeight="37.0" prefWidth="240.0" spacing="10.0">
+                           <children>
+                              <Label styleClass="link-icon" text="&lt;/&gt;" />
+                              <VBox prefHeight="38.0" prefWidth="181.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 13;" styleClass="desc-text" text="Data Structures" />
+                                    <Label style="-fx-font-size: 11;" styleClass="desc-text" text="CS201" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <StackPane minWidth="220.0" styleClass="feature-card">
+               <children>
+                  <VBox fx:id="cardChoose" alignment="TOP_LEFT" spacing="10.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold; -fx-font-size: 15;" styleClass="desc-text" text="Choose what you need" />
+                        <Label styleClass="desc-text" text="Navigate between notes, mid exams, final exams, all resources, and the AI course summary." wrapText="true" />
+                        <Label styleClass="chat-bubble" text="Lecture Notes" />
+                        <Label styleClass="chat-bubble" text="Mid Exam" />
+                        <Label styleClass="chat-bubble" text="Final Exam" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+            <StackPane minWidth="220.0" styleClass="chat-container">
+               <children>
+                  <VBox fx:id="cardView" spacing="12.0">
+                     <children>
+                        <VBox spacing="8.0">
+                           <children>
+                              <Label style="-fx-font-weight: bold; -fx-font-size: 15;" styleClass="desc-text" text="View or download" />
+                           </children>
+                        </VBox>
+                        <Label styleClass="desc-text" text="Open resources directly or download them when you want to study offline." wrapText="true" />
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox prefHeight="91.0" prefWidth="866.0" spacing="10.0">
+         <children>
+            <Label styleClass="link-icon" text="✦" />
+            <VBox fx:id="cardQuickReview" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label style="-fx-font-size: 15;" styleClass="desc-text" text="Need a quick overview?" wrapText="true" />
+                  <Label style="-fx-font-size: 13;" styleClass="desc-text" text="Use the AI Summary to understand what the course covers before diving into the resources." />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+    </children>
+    <padding>
+        <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+    </padding>
+</VBox>

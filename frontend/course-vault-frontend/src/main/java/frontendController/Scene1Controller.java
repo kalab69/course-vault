@@ -62,6 +62,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 public class Scene1Controller implements Initializable {
 
@@ -95,6 +97,9 @@ public class Scene1Controller implements Initializable {
 
     @FXML
     private Button homeButton;
+
+    @FXML
+    private Button courseButton;
 
     @FXML
     private ScrollPane mainScrollPane;
@@ -192,13 +197,13 @@ public class Scene1Controller implements Initializable {
     private ContextMenu departmentsFlyout;
     private ContextMenu examFlyout;
     private ContextMenu externalFlyout;
-    private ContextMenu profileDropdown;
 
     // ── Sidebar toggle state 
     private boolean sidebarOpen = true;
     private static final double SIDEBAR_WIDTH = 240.0;
 
-    Node homeContent = null;
+    private Node courseContent;
+    private Node homeContent;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -211,6 +216,7 @@ public class Scene1Controller implements Initializable {
         navIndicator.setOpacity(0.0);
 
         setupSlidingHover(homeButton);
+        setupSlidingHover(courseButton);
         setupSlidingHover(myCourseButton);
         setupSlidingHover(browseButton);
 
@@ -254,6 +260,9 @@ public class Scene1Controller implements Initializable {
         homeButton.setOnAction(e -> {
             setActiveNavButton(homeButton);
         });
+        courseButton.setOnAction(e -> {
+            setActiveNavButton(courseButton);
+        });
         myCourseButton.setOnAction(e -> {
             setActiveNavButton(myCourseButton);
         });
@@ -261,6 +270,7 @@ public class Scene1Controller implements Initializable {
             setActiveNavButton(browseButton);
         });
 
+        courseButton.setOnAction(e -> showCourse());
         myCourseButton.setOnAction(e -> showMyCourses());
         homeButton.setOnAction(e -> showHome());
         browseButton.setOnAction(e -> showBrowse());
@@ -385,6 +395,15 @@ public class Scene1Controller implements Initializable {
             new Thread(() -> {
                 populateDepartmentMenu();
             }).start();
+        });
+
+        Platform.runLater(() -> {
+            courseContent = rootPane.getCenter();
+        });
+        Platform.runLater(() -> {
+            courseContent = rootPane.getCenter();
+            showHome();
+
         });
     }
 
@@ -581,6 +600,7 @@ public class Scene1Controller implements Initializable {
 
     private void setActiveNavButton(Button activeButton) {
         homeButton.getStyleClass().remove("nav-active");
+        courseButton.getStyleClass().remove("nav-active");
         myCourseButton.getStyleClass().remove("nav-active");
         browseButton.getStyleClass().remove("nav-active");
         activeButton.getStyleClass().add("nav-active");
@@ -1092,18 +1112,72 @@ public class Scene1Controller implements Initializable {
     @FXML
     private VBox footerRoot;
 
-    private void showHome() {
-        if (homeContent != null) {
-            rootPane.setLeft(sidebarPane);
-            rootPane.setCenter(homeContent);
-        }
-
+    public void showCourse() {
+        rootPane.setCenter(courseContent);
         if (footerRoot != null) {
             footerRoot.setVisible(true);
             footerRoot.setManaged(true);
         }
-        setNavActive(homeButton);
+
+        setNavActive(courseButton);
     }
+
+    private void showHome() {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML1/HomePage.fxml"));
+        Parent homeView = loader.load();
+
+        HomePageController controller = loader.getController();
+        controller.setMainController(this);
+        
+        if (homeView instanceof VBox) {
+            VBox homeVBox = (VBox) homeView;
+            homeVBox.setMaxWidth(Double.MAX_VALUE);
+            homeVBox.setAlignment(javafx.geometry.Pos.TOP_LEFT);
+        }
+        VBox.setVgrow(homeView, Priority.ALWAYS);
+        ScrollPane homeScrollPane = new ScrollPane(homeView);
+        homeScrollPane.setFitToWidth(true); 
+        homeScrollPane.setFitToHeight(false); 
+        homeScrollPane.setStyle(
+                "-fx-background-color: transparent;"
+                + "-fx-background-insets: 0;"
+                + "-fx-padding: 0;"
+                + "-fx-border-width: 0;"
+        );
+        if (homeScrollPane.getSkin() != null) {
+            javafx.scene.Node viewport = homeScrollPane.lookup(".viewport");
+            if (viewport != null) {
+                viewport.setStyle("-fx-background-color: transparent;");
+            }
+        } else {
+            homeScrollPane.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+                if (newSkin != null) {
+                    javafx.scene.Node vport = homeScrollPane.lookup(".viewport");
+                    if (vport != null) vport.setStyle("-fx-background-color: transparent;");
+                }
+            });
+        }
+        rootPane.setCenter(homeScrollPane);
+        if (footerRoot != null) {
+            footerRoot.setVisible(true);
+            footerRoot.setManaged(true);
+            if (rootPane.getBottom() != footerRoot) {
+                rootPane.setBottom(footerRoot);
+            }
+        }
+        setNavActive(homeButton);
+        rootPane.centerProperty().addListener((obs, oldNode, newNode) -> {
+            if (oldNode == homeScrollPane && controller.getThemeListener() != null) {
+                themeManager.removeListener(controller.getThemeListener());
+            }
+        });
+        
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+}
+
 
     private void showMyCourses() {
         if (homeContent == null) {
@@ -1132,7 +1206,7 @@ public class Scene1Controller implements Initializable {
 
     // Highlight active nav button
     private void setNavActive(Button active) {
-        Button[] navBtns = {homeButton, myCourseButton, browseButton};
+        Button[] navBtns = {homeButton, courseButton, myCourseButton, browseButton};
         for (Button btn : navBtns) {
             btn.getStyleClass().remove("nav-active");
         }
@@ -1971,7 +2045,7 @@ public class Scene1Controller implements Initializable {
 
     @FXML
     public void openWebsite() {
-        openUrl("https://yourwebsite.com");
+        openUrl("https://course-vault-website.vercel.app/#how");
     }
 
     @FXML

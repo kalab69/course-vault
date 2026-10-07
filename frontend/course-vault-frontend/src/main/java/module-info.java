@@ -17,6 +17,7 @@ module com.mycompany.course.vault.frontend {
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.core;
     requires jdk.httpserver;
+    requires java.base;
 
     // ── Open packages to JavaFX for FXML reflection ───────────────────
     opens com.mycompany.course.vault.frontend to javafx.fxml;

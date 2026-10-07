@@ -35,7 +35,8 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
+            <version>26.0.2</version>
+            <type>jar</type>
         </dependency>
         
         <dependency>
