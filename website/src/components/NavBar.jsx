@@ -4,20 +4,18 @@ import logo from "../assets/logo.png";
 
 function NavBar() {
   const location = useLocation();
-  const [activeSection, setActiveSection] = useState("hero");
+  const [trackedSection, setTrackedSection] = useState("hero");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const activeSection = location.pathname === "/" ? trackedSection : "";
 
   useEffect(() => {
-    // If not on Home page, remove section highlights
-    if (location.pathname !== "/") {
-      setActiveSection("");
-      return;
-    }
+    if (location.pathname !== "/") return;
 
     const sectionIds = ["hero", "what", "how", "about"];
 
     const observerOptions = {
       root: null,
-      // Adjust margin so hero triggers as soon as you're near top
       rootMargin: "-10% 0px -40% 0px",
       threshold: 0,
     };
@@ -25,7 +23,7 @@ function NavBar() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          setTrackedSection(entry.target.id);
         }
       });
     }, observerOptions);
@@ -35,10 +33,9 @@ function NavBar() {
       if (element) observer.observe(element);
     });
 
-    // Also reset to 'hero' when scrolled to top
     const handleScroll = () => {
       if (window.scrollY < 100) {
-        setActiveSection("hero");
+        setTrackedSection("hero");
       }
     };
 
@@ -50,47 +47,63 @@ function NavBar() {
     };
   }, [location.pathname]);
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo">
+      <Link to="/" className="navbar-logo" onClick={closeMenu}>
         <img src={logo} alt="CourseVault" />
         <span>CourseVault</span>
       </Link>
 
-      <div className="nav-links">
-        {/* Point hero ID directly to Home link */}
+      {/* collaps nav bar*/}
+      <button
+        className={`hamburger ${menuOpen ? "open" : ""}`}
+        aria-label="Toggle menu"
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((o) => !o)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* dropdown class toggles on mobile */}
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         <Link
           to="/#hero"
           className={`nav-link ${activeSection === "hero" ? "active" : ""}`}
+          onClick={closeMenu}
         >
           Home
         </Link>
-
         <Link
           to="/#what"
           className={`nav-link ${activeSection === "what" ? "active" : ""}`}
+          onClick={closeMenu}
         >
           What
         </Link>
-
         <Link
           to="/#how"
           className={`nav-link ${activeSection === "how" ? "active" : ""}`}
+          onClick={closeMenu}
         >
           How
         </Link>
-
         <Link
           to="/#about"
           className={`nav-link ${activeSection === "about" ? "active" : ""}`}
+          onClick={closeMenu}
         >
           About
         </Link>
-
         <Link
           to="/Courses"
-          className={`nav-link ${location.pathname.startsWith("/MyCourses") ? "active" : ""
-            }`}
+          className={`nav-link ${
+            location.pathname.startsWith("/MyCourses") ? "active" : ""
+          }`}
+          onClick={closeMenu}
         >
           Courses
         </Link>
