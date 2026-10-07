@@ -6,7 +6,7 @@ An intuitive, robust and professional platform designed to streamline course man
 
 ## 🚀 Live Demo
 
-Experience the platform live: **[Visit Course Vault Website]([YOUR_DEPLOYMENT_LINK_HERE](https://course-vault-website.vercel.app/))**
+Experience the platform live: **[Visit Course Vault Website](https://course-vault-website.vercel.app/)**
 
 ---
 
