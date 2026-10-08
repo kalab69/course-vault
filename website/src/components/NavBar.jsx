@@ -109,7 +109,7 @@ function NavBar() {
         </Link>
 
         <a
-          href="https://github.com/kalab69/course-vault/releases/download/v1.0.0/CourseVault-1.0.0.exe"
+          href="https://github.com/kalab69/course-vault/releases/download/v1.0.1/CourseVault-1.0.1.exe"
           download
         >
           <button>Download for desktop</button>
