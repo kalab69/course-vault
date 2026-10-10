@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Analytics } from '@vercel/analytics/react';
 
 import SplashScreen from "./components/SplashScreen";
 
@@ -25,6 +26,7 @@ function App() {
 
     return (
         <>
+        <div className="app-container">
         <NavBar/>
         <Routes>
 
@@ -38,6 +40,8 @@ function App() {
             
         </Routes>
         <Footer/>
+        <Analytics />
+        </div>
     </>);
 }
 
